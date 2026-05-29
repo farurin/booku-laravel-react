@@ -11,7 +11,7 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
       <LanguageProvider>
-        <BrowserRouter basename="/magang/luthfiyana">
+        <BrowserRouter>
           <App />
         </BrowserRouter>
       </LanguageProvider>
