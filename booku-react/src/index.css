@@ -1,0 +1,99 @@
+@import "tailwindcss";
+@import "flowbite-react/plugin/tailwindcss";
+@source "../.flowbite-react/class-list.json";
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* KONFIGURASI WARNA TAILWIND V4 UNTUK TEMA BOOKU */
+@theme {
+  --color-booku-cream: #fff6de;
+  --color-booku-cyan: #8bdfdd;
+  --color-booku-coral: #f48f68;
+  --color-booku-yellow: #ffe394;
+}
+
+:root {
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* apply font nunito */
+  font-family: "Nunito", "sans-serif";
+}
+
+/* import font */
+@font-face {
+  font-family: "Nunito";
+  src: url("./assets/fonts/Nunito-Bold.ttf");
+}
+
+@font-face {
+  font-family: "Nunito";
+  src: url("./assets/fonts/Nunito-ExtraBold.ttf");
+  font-weight: 700; /* Tailwind memetakan font-extrabold ke weight 800 */
+}
+
+@font-face {
+  font-family: "Nunito";
+  src: url("./assets/fonts/Nunito-Light.ttf");
+  font-weight: 300;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* Jadikan warna cream sebagai background default menggantikan putih */
+  background-color: var(--color-booku-cream);
+}
+
+.swiper-pagination {
+  position: relative !important;
+  margin-top: 20px;
+  text-align: center;
+}
+
+/* swiper pagination style */
+.custom-list-swiper .swiper-pagination {
+  bottom: 0px !important;
+}
+.custom-list-swiper .swiper-pagination-bullet {
+  width: 12px;
+  height: 12px;
+  /* Warna bullet tidak aktif diubah ke cyan */
+  background: var(--color-booku-cyan) !important;
+  opacity: 0.5;
+  margin: 0 5px !important;
+}
+.custom-list-swiper .swiper-pagination-bullet-active {
+  opacity: 1;
+  /* Warna bullet aktif diubah ke coral */
+  background: var(--color-booku-coral) !important;
+}
+
+/* carousel pagination style */
+.custom-carousel-swiper {
+  padding-top: 15px !important;
+  padding-bottom: 50px !important;
+}
+.custom-carousel-swiper .swiper-pagination {
+  position: absolute;
+  bottom: 0px !important;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+.custom-carousel-swiper .swiper-pagination-bullet {
+  width: 12px;
+  height: 12px;
+  /* Warna bullet tidak aktif diubah ke cyan */
+  background: var(--color-booku-cyan) !important;
+  opacity: 0.5;
+  margin: 0 6px !important;
+  display: inline-block;
+}
+.custom-carousel-swiper .swiper-pagination-bullet-active {
+  opacity: 1;
+  /* Warna bullet aktif diubah ke coral */
+  background: var(--color-booku-coral) !important;
+}

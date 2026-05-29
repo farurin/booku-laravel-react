@@ -1,0 +1,125 @@
+import React, { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
+import { getUserProfile } from "../services/api";
+import { useLanguage } from "../context/LanguageContext";
+
+import badgeGoodJob from "../assets/badges/badge-goodjob.png";
+import badgeExcellent from "../assets/badges/badge-exellent.png";
+import badgeOutstanding from "../assets/badges/badge-outstanding.png";
+import badgeBrilliant from "../assets/badges/badge-brilliant.png";
+import badgeWellDone from "../assets/badges/badge-welldone.png";
+import badgeSuperb from "../assets/badges/badge-superb.png";
+
+const ProfileAchievement = () => {
+  const { token } = useAuth();
+  const { t } = useLanguage();
+  const [stats, setStats] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (!token) return;
+
+    const fetchStats = async () => {
+      try {
+        const data = await getUserProfile(token);
+        setStats(data);
+      } catch (err) {
+        console.error("Gagal ambil data rekor:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, [token]);
+
+  const badges = [
+    { id: 1, name: "Good Job", image: badgeGoodJob, isUnlocked: true },
+    { id: 2, name: "Excellent", image: badgeExcellent, isUnlocked: true },
+    { id: 3, name: "Outstanding", image: badgeOutstanding, isUnlocked: true },
+    { id: 4, name: "Brilliant", image: badgeBrilliant, isUnlocked: false },
+    { id: 5, name: "Well Done", image: badgeWellDone, isUnlocked: false },
+    { id: 6, name: "Superb", image: badgeSuperb, isUnlocked: false },
+  ];
+
+  if (isLoading) {
+    return (
+      <div className="text-center py-20 animate-pulse text-purple-600 font-bold text-sm md:text-base">
+        {t("pa_loading")}
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full max-w-5xl mx-auto animate-fade-in px-2 md:px-0">
+      <div className="mb-10 md:mb-12">
+        <h2 className="text-xl md:text-2xl font-extrabold text-gray-900 mb-4 md:mb-6 text-left">
+          {t("pa_title_record")}
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
+          <div className="bg-[#EAE8F0] border-[1.5px] border-[#A898FF] rounded-[20px] md:rounded-2xl p-5 md:p-8 flex flex-col justify-end min-h-25 md:min-h-35 shadow-sm hover:shadow-md transition-shadow">
+            <h3 className="text-lg md:text-2xl font-bold text-black mb-0.5 md:mb-1 leading-tight">
+              {t("pa_join_date")}
+            </h3>
+            <p className="text-[11px] md:text-sm text-gray-600 font-medium">
+              10 April 2026
+            </p>
+          </div>
+
+          <div className="bg-[#EAE8F0] border-[1.5px] border-[#A898FF] rounded-[20px] md:rounded-2xl p-5 md:p-8 flex flex-col justify-end min-h-25 md:min-h-35 shadow-sm hover:shadow-md transition-shadow">
+            <h3 className="text-lg md:text-2xl font-bold text-black mb-0.5 md:mb-1 leading-tight">
+              {t("pa_total_points")}
+            </h3>
+            <p className="text-[11px] md:text-sm text-gray-600 font-medium">
+              {stats?.total_points || 0} {t("pa_xp_collected")}
+            </p>
+          </div>
+
+          <div className="bg-[#EAE8F0] border-[1.5px] border-[#A898FF] rounded-[20px] md:rounded-2xl p-5 md:p-8 flex flex-col justify-end min-h-25 md:min-h-35 shadow-sm hover:shadow-md transition-shadow sm:col-span-2 md:col-span-1">
+            <h3 className="text-lg md:text-2xl font-bold text-black mb-0.5 md:mb-1 leading-tight">
+              {t("pa_current_streak")}
+            </h3>
+            <p className="text-[11px] md:text-sm text-gray-600 font-medium">
+              {stats?.current_streak || 0} {t("pa_active_days")}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h2 className="text-xl md:text-2xl font-extrabold text-gray-900 mb-4 md:mb-6 text-left">
+          {t("pa_title_awards")}
+        </h2>
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3 md:gap-6">
+          {badges.map((badge) => (
+            <div key={badge.id} className="aspect-square">
+              {badge.isUnlocked ? (
+                <div className="w-full h-full rounded-full overflow-hidden shadow-sm bg-white border-2 border-purple-100 p-1 md:p-1.5 hover:scale-105 transition-transform cursor-pointer">
+                  <img
+                    src={badge.image}
+                    alt={badge.name}
+                    className="w-full h-full object-contain"
+                    onError={(e) =>
+                      (e.target.src = "https://placehold.co/100?text=Badge")
+                    }
+                  />
+                </div>
+              ) : (
+                <div className="w-full h-full rounded-full bg-[#D1D1D6] overflow-hidden flex items-center justify-center shadow-inner opacity-80 p-1 md:p-1.5 border border-gray-300">
+                  <img
+                    src={badge.image}
+                    alt={badge.name}
+                    className="w-full h-full object-contain grayscale opacity-40"
+                    onError={(e) => (e.target.style.display = "none")}
+                  />
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ProfileAchievement;
