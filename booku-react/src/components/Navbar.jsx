@@ -98,10 +98,10 @@ const NavItem = ({ to, children }) => (
     to={to}
     end={to === "/"}
     className={({ isActive }) =>
-      `block xl:text-[18px] lg:text-[16px] md:text-[14px] text-base py-3 px-4 md:px-0 md:py-6 border-l-4 md:border-l-0 md:border-b-[3px] transition-all whitespace-nowrap font-bold ${
+      `block xl:text-[18px] lg:text-[16px] md:text-[14px] text-base px-5 py-2.5 rounded-full transition-all whitespace-nowrap font-bold ${
         isActive
-          ? "border-booku-coral text-booku-coral bg-booku-cream/50 md:bg-transparent"
-          : "border-transparent text-gray-600 hover:text-booku-cyan hover:bg-gray-50 md:hover:bg-transparent"
+          ? "bg-booku-cyan text-gray-800 shadow-sm"
+          : "text-gray-600 hover:text-gray-900 hover:bg-booku-cream/50"
       }`
     }
   >
@@ -115,10 +115,11 @@ export default function Navigation() {
   const [isLangOpen, setIsLangOpen] = useState(false);
   const dropdownRef = useRef(null);
 
+  // Mengubah daftar navigasi: Hapus Categories, Tambah About Us
   const navLinks = [
     { to: "/", label: t("nav_home") },
-    { to: "/categories", label: t("nav_categories") },
     { to: "/corner", label: t("nav_corner") },
+    { to: "/about", label: t("nav_about") },
   ];
 
   useEffect(() => {
@@ -216,7 +217,7 @@ export default function Navigation() {
           </div>
 
           <NavbarCollapse className="md:flex md:items-center bg-white/95 backdrop-blur-md md:bg-transparent px-2 md:p-0 rounded-xl shadow-sm md:shadow-none border md:border-none border-gray-100 pb-4 md:pb-0">
-            <div className="flex flex-col md:flex-row md:items-center md:h-full gap-1 md:gap-4 lg:gap-6 pt-2 md:pt-0">
+            <div className="flex flex-col md:flex-row md:items-center md:h-full gap-2 md:gap-4 lg:gap-6 pt-2 md:pt-0">
               {navLinks.map(({ to, label }) => (
                 <NavItem key={to} to={to}>
                   {label}

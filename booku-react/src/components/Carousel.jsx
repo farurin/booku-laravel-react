@@ -6,78 +6,45 @@ import "swiper/css/navigation";
 import Card from "./Card";
 import { useLanguage } from "../context/LanguageContext";
 
-// Icon SVG
+// Icon SVG disesuaikan agar adaptif menggunakan currentColor dan bg-black/10
 const IconLike = () => (
-  <div className="bg-white/30 p-1.5 rounded-full flex items-center justify-center shrink-0">
+  <div className="bg-black/10 p-1.5 rounded-full flex items-center justify-center shrink-0">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="16"
       height="16"
       viewBox="0 0 24 24"
       fill="currentColor"
-      className="text-white"
     >
       <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" />
     </svg>
   </div>
 );
 const IconFire = () => (
-  <div className="bg-white/30 p-1.5 rounded-full flex items-center justify-center shrink-0">
+  <div className="bg-black/10 p-1.5 rounded-full flex items-center justify-center shrink-0">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="18"
       height="18"
       viewBox="0 0 24 24"
       fill="currentColor"
-      className="text-white"
     >
       <path d="M12 22C6.477 22 2 17.523 2 12c0-4.478 3.158-8.23 7.5-9.613.56-.178 1.096.34 1.01.916-.145.975-.125 2.15.534 3.057.48.567 1.22.905 2.015.892 1.458-.024 2.85-.79 3.513-2.072.28-.544 1.08-.432 1.25.158A9.972 9.972 0 0 1 22 12c0 5.523-4.477 10-10 10Zm-2-7a2 2 0 1 0 4 0c0-1.105-.895-2-2-2s-2 .895-2 2Z" />
     </svg>
   </div>
 );
 const IconStar = () => (
-  <div className="bg-white/30 p-1.5 rounded-full flex items-center justify-center shrink-0">
+  <div className="bg-black/10 p-1.5 rounded-full flex items-center justify-center shrink-0">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="18"
       height="18"
       viewBox="0 0 24 24"
       fill="currentColor"
-      className="text-white"
     >
       <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
     </svg>
   </div>
-);
-const IconArrowLeft = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="36"
-    height="36"
-    viewBox="0 0 24 24"
-    fill="#0D9488"
-    stroke="#0D9488"
-    strokeWidth="2.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M15 5 L7 12 L15 19 Z" />
-  </svg>
-);
-const IconArrowRight = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="36"
-    height="36"
-    viewBox="0 0 24 24"
-    fill="#0D9488"
-    stroke="#0D9488"
-    strokeWidth="2.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M9 5 L17 12 L9 19 Z" />
-  </svg>
 );
 
 const Carousel = ({ books = [] }) => {
@@ -103,24 +70,30 @@ const Carousel = ({ books = [] }) => {
         id: 0,
         label: t("car_tab_recom"),
         icon: <IconLike />,
-        activeClass: "bg-booku-cyan text-gray-800",
-        inactiveClass: "bg-booku-cream/60 text-gray-500 hover:bg-booku-cream",
+        activeClass:
+          "bg-booku-cyan border-booku-cyan text-gray-900 shadow-md cursor-default",
+        inactiveClass:
+          "bg-booku-cyan/15 border-booku-cyan/30 text-teal-700 hover:bg-booku-cyan/30 cursor-pointer",
         items: recomBooks.slice(0, LIMIT),
       },
       {
         id: 1,
         label: t("car_tab_popular"),
         icon: <IconFire />,
-        activeClass: "bg-booku-coral text-white",
-        inactiveClass: "bg-booku-cream/60 text-gray-500 hover:bg-booku-cream",
+        activeClass:
+          "bg-booku-coral border-booku-coral text-white shadow-md cursor-default",
+        inactiveClass:
+          "bg-booku-coral/10 border-booku-coral/30 text-orange-600 hover:bg-booku-coral/20 cursor-pointer",
         items: popBooks.slice(0, LIMIT),
       },
       {
         id: 2,
         label: t("car_tab_new"),
         icon: <IconStar />,
-        activeClass: "bg-booku-yellow text-gray-800",
-        inactiveClass: "bg-booku-cream/60 text-gray-500 hover:bg-booku-cream",
+        activeClass:
+          "bg-booku-yellow border-booku-yellow text-gray-900 shadow-md cursor-default",
+        inactiveClass:
+          "bg-booku-yellow/20 border-booku-yellow/40 text-yellow-700 hover:bg-booku-yellow/40 cursor-pointer",
         items: latestBooks.slice(0, LIMIT),
       },
     ];
@@ -140,26 +113,27 @@ const Carousel = ({ books = [] }) => {
   }, [searchQuery, books, activeTab, categoriesData, language]);
 
   return (
-    <section className="pt-16 pb-12 w-full bg-white">
+    <section className="pt-12 pb-16 w-full bg-linear-to-b from-gray-50 to-booku-cyan/15 overflow-hidden">
       <div className="w-full max-w-7xl mx-auto px-4 md:px-8">
-        {/* JUDUL & SEARCH */}
-        <div className="flex flex-col items-center justify-center mb-10">
-          <h2 className="text-3xl md:text-4xl font-black text-gray-800 mb-6 text-center">
-            {t("car_search_res")}
+        {/* HEADER: Judul & Search */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10">
+          <h2 className="text-3xl md:text-4xl font-black text-gray-800 text-center lg:text-left">
+            {searchQuery ? t("car_search_res") : "Jelajahi Cerita"}
           </h2>
-          <div className="relative w-full max-w-2xl group">
+
+          <div className="relative w-full lg:w-96 group">
             <input
               type="text"
               placeholder={t("car_search_ph")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-6 pr-14 py-4 rounded-full border-2 border-booku-cream focus:outline-none focus:border-booku-cyan text-base text-gray-700 shadow-sm bg-gray-50 focus:bg-white transition-colors"
+              className="w-full pl-6 pr-14 py-3.5 rounded-full border-2 border-white focus:outline-none focus:border-booku-cyan text-base text-gray-700 shadow-sm bg-white transition-colors"
             />
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-booku-coral rounded-full flex items-center justify-center text-white shadow-sm">
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-booku-coral rounded-full flex items-center justify-center text-white shadow-sm">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
+                width="18"
+                height="18"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -174,102 +148,104 @@ const Carousel = ({ books = [] }) => {
           </div>
         </div>
 
-        {/* DUA KOLOM: SIDEBAR & SLIDER */}
-        <div className="flex flex-col lg:flex-row gap-6 lg:gap-10">
-          {/* SIDEBAR TAB VERTICAL */}
-          {!searchQuery && (
-            <div className="w-full lg:w-64 shrink-0 flex flex-row lg:flex-col gap-3 overflow-x-auto lg:overflow-visible pb-4 lg:pb-0 scrollbar-hide">
-              {categoriesData.map((cat) => {
-                const isActive = activeTab === cat.id;
-                return (
-                  <button
-                    key={cat.id}
-                    onClick={() => setActiveTab(cat.id)}
-                    className={`flex items-center gap-4 px-6 py-4 rounded-2xl font-bold transition-all whitespace-nowrap min-w-max lg:min-w-0 ${isActive ? `${cat.activeClass} shadow-lg scale-100 lg:scale-105` : cat.inactiveClass}`}
-                  >
-                    <div className={`${!isActive && "text-gray-400"}`}>
-                      {cat.icon}
-                    </div>
-                    <span className="text-sm md:text-base tracking-wide">
-                      {cat.label}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          )}
-
-          {/* SLIDER BUKU */}
-          <div className="flex-1 min-w-0 relative bg-booku-cream p-6 md:p-8 rounded-[32px] border border-booku-yellow/50 shadow-sm">
-            {listToDisplay.length > 0 ? (
-              <>
-                <div className="absolute top-4 right-6 z-20 flex gap-2">
-                  <button className="carousel-prev w-10 h-10 bg-white rounded-full shadow-sm flex items-center justify-center text-booku-coral hover:bg-booku-yellow transition disabled:opacity-30 border border-white">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="3"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
+        {/* CONTAINER KONTEN - Dibungkus ke dalam div dengan background putih semi-transparan */}
+        <div className="relative w-full bg-white/80 backdrop-blur-sm rounded-4xl md:rounded-[40px] px-6 md:px-10 pt-8 pb-4 shadow-sm border border-white">
+          {/* KONTROL: Tabs Horizontal & Tombol Panah */}
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-4">
+            {!searchQuery && (
+              <div className="flex gap-3 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 scrollbar-hide px-1">
+                {categoriesData.map((cat) => {
+                  const isActive = activeTab === cat.id;
+                  return (
+                    <button
+                      key={cat.id}
+                      onClick={() => setActiveTab(cat.id)}
+                      className={`flex items-center gap-3 px-5 py-2.5 rounded-full font-bold transition-all whitespace-nowrap min-w-max border-2 ${
+                        isActive ? cat.activeClass : cat.inactiveClass
+                      }`}
                     >
-                      <path d="M15 18l-6-6 6-6" />
-                    </svg>
-                  </button>
-                  <button className="carousel-next w-10 h-10 bg-white rounded-full shadow-sm flex items-center justify-center text-booku-coral hover:bg-booku-yellow transition disabled:opacity-30 border border-white">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="3"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M9 18l6-6-6-6" />
-                    </svg>
-                  </button>
-                </div>
+                      <div className={`${!isActive && "opacity-70"}`}>
+                        {cat.icon}
+                      </div>
+                      <span className="text-sm md:text-base tracking-wide">
+                        {cat.label}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
 
-                <div className="mt-8">
-                  <Swiper
-                    key={searchQuery ? "search" : `tab-${activeTab}`}
-                    modules={[Autoplay, Navigation]}
-                    navigation={{
-                      prevEl: ".carousel-prev",
-                      nextEl: ".carousel-next",
-                    }}
-                    slidesPerView="auto"
-                    spaceBetween={24}
-                    autoplay={
-                      searchQuery
-                        ? false
-                        : { delay: 3500, disableOnInteraction: false }
-                    }
-                    className="w-full pb-8 pt-4 px-2"
+            {listToDisplay.length > 0 && (
+              <div className="flex gap-2 ml-auto shrink-0 px-1">
+                <button className="carousel-prev w-10 h-10 bg-white rounded-full shadow-sm flex items-center justify-center text-booku-coral hover:bg-booku-cyan transition disabled:opacity-30 border border-gray-100 cursor-pointer">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   >
-                    {listToDisplay.map((book) => (
-                      <SwiperSlide key={book.id} style={{ width: "160px" }}>
-                        <div className="h-full hover:-translate-y-2 transition-transform duration-300">
-                          <Card book={book} />
-                        </div>
-                      </SwiperSlide>
-                    ))}
-                  </Swiper>
-                </div>
-              </>
-            ) : (
-              <div className="w-full h-64 flex flex-col items-center justify-center text-gray-500 font-bold bg-white rounded-2xl border-2 border-dashed border-booku-yellow">
-                <span className="text-4xl mb-4">🔍</span>
-                {searchQuery ? t("car_empty_search") : t("car_empty_cat")}
+                    <path d="M15 18l-6-6 6-6" />
+                  </svg>
+                </button>
+                <button className="carousel-next w-10 h-10 bg-white rounded-full shadow-sm flex items-center justify-center text-booku-coral hover:bg-booku-cyan transition disabled:opacity-30 border border-gray-100 cursor-pointer">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M9 18l6-6-6-6" />
+                  </svg>
+                </button>
               </div>
             )}
           </div>
+
+          {/* SLIDER BUKU */}
+          {listToDisplay.length > 0 ? (
+            <div className="-mx-4 px-4">
+              <Swiper
+                key={searchQuery ? "search" : `tab-${activeTab}`}
+                modules={[Autoplay, Navigation]}
+                navigation={{
+                  prevEl: ".carousel-prev",
+                  nextEl: ".carousel-next",
+                }}
+                slidesPerView="auto"
+                spaceBetween={24}
+                autoplay={
+                  searchQuery
+                    ? false
+                    : { delay: 3500, disableOnInteraction: false }
+                }
+                className="w-full pt-4! pb-8!"
+              >
+                {listToDisplay.map((book) => (
+                  <SwiperSlide key={book.id} style={{ width: "160px" }}>
+                    <div className="h-full hover:-translate-y-3 transition-transform duration-300">
+                      <Card book={book} />
+                    </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </div>
+          ) : (
+            <div className="w-full h-64 flex flex-col items-center justify-center text-gray-500 font-bold bg-white/50 rounded-3xl border-2 border-dashed border-gray-300 my-6">
+              <span className="text-4xl mb-4">🔍</span>
+              {searchQuery ? t("car_empty_search") : t("car_empty_cat")}
+            </div>
+          )}
         </div>
       </div>
     </section>

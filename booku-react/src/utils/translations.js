@@ -10,7 +10,7 @@ export const translations = {
 
     // Navbar
     nav_home: "Beranda",
-    nav_categories: "Kategori",
+    nav_about: "Tentang Kami", // Tambahkan baris ini
     nav_corner: "Pojok Baca",
     nav_panel: "Dashboard",
     nav_profile: "Profil",
@@ -232,10 +232,17 @@ export const translations = {
     foot_category: "Kategori Cerita",
     foot_corner: "Pojok Baca",
     foot_donate: "Donasi",
+    foot_platform: "Platform",
+    foot_desc:
+      "Membangun imajinasi anak bangsa melalui cerita interaktif yang edukatif dan menyenangkan.",
+    foot_loading: "Memuat...",
+    foot_copyright: "© 2026 BookU.",
+    foot_made_with: "Dibuat dengan luv oleh",
 
     // HeroSection.jsx
-    hero_btn: "Baca Cerita Sekarang",
-    hero_or: "atau",
+    hero_title: "Buka Buku, Temukan Dunia Baru!",
+    hero_subtitle:
+      "Jelajahi koleksi cerita interaktif yang dirancang khusus untuk memantik imajinasi dan kreativitas anak-anak tanpa batas.",
 
     // ProfileAchievement.jsx
     pa_loading: "Memuat Rekor Pribadi...",
@@ -347,7 +354,7 @@ export const translations = {
 
     // Navbar
     nav_home: "Home",
-    nav_categories: "Categories",
+    nav_about: "About Us", // Tambahkan baris ini
     nav_corner: "Corner",
     nav_panel: "Dashboard",
     nav_profile: "Profile",
@@ -565,10 +572,17 @@ export const translations = {
     foot_category: "Story Categories",
     foot_corner: "Corner",
     foot_donate: "Donate",
+    foot_platform: "Platform",
+    foot_desc:
+      "Building the imagination of the nation's children through educational and fun interactive stories.",
+    foot_loading: "Loading...",
+    foot_copyright: "© 2026 BookU.",
+    foot_made_with: "Made with luv by",
 
     // HeroSection.jsx
-    hero_btn: "Start Reading Stories",
-    hero_or: "or",
+    hero_title: "Open a Book, Discover a New World!",
+    hero_subtitle:
+      "Explore a collection of interactive stories designed specifically to spark children's boundless imagination and creativity.",
 
     // ProfileAchievement.jsx
     pa_loading: "Loading Personal Records...",

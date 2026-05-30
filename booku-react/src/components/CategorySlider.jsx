@@ -11,7 +11,8 @@ const CategorySlider = ({ categories, activeCategoryId }) => {
   const isDetailPage = activeCategoryId !== undefined;
 
   return (
-    <div className="w-full bg-white border-y border-booku-cream py-6 my-10 shadow-sm">
+    // my-10 dihapus, border dipertebal (border-y-2) dan warnanya disesuaikan
+    <div className="w-full bg-white border-y-2 border-booku-yellow py-6 shadow-sm relative z-10">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         {!isDetailPage && (
           <p className="text-sm font-black text-booku-coral uppercase tracking-widest mb-4">
@@ -26,15 +27,6 @@ const CategorySlider = ({ categories, activeCategoryId }) => {
           spaceBetween={12}
           className="w-full"
         >
-          {/* Tombol Top Picks */}
-          {!isDetailPage && (
-            <SwiperSlide style={{ width: "auto" }}>
-              <div className="px-6 py-3 rounded-full bg-gray-900 text-white font-bold text-sm shadow-md cursor-pointer border-2 border-gray-900">
-                ⭐ Top Picks
-              </div>
-            </SwiperSlide>
-          )}
-
           {filtered.map((category) => {
             const isActive =
               isDetailPage && category.id === parseInt(activeCategoryId);
@@ -50,7 +42,7 @@ const CategorySlider = ({ categories, activeCategoryId }) => {
                   className={`block px-6 py-3 rounded-full text-sm font-bold transition-all border-2 shadow-sm ${
                     isActive
                       ? "bg-booku-coral text-white border-booku-coral shadow-md scale-105"
-                      : "bg-white text-gray-700 border-booku-cream hover:border-booku-cyan hover:bg-booku-cyan/10 hover:text-teal-800"
+                      : "bg-white text-gray-700 border-gray-200 hover:border-booku-cyan hover:bg-booku-cyan/10 hover:text-teal-800"
                   }`}
                 >
                   <span className="opacity-60 mr-1">#</span> {categoryName}
