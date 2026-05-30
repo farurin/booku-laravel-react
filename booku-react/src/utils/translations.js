@@ -109,9 +109,9 @@ export const translations = {
     cor_guest_save_desc: "Yuk, buat akunmu sekarang.",
 
     // Home.jsx
-    home_err_title: "Oops! Gagal Memuat Dunia Funtasya",
+    home_err_title: "Oops! Gagal Memuat BookU",
     home_btn_reload: "Muat Ulang Halaman",
-    home_loading: "Memuat Dunia Funtasya...",
+    home_loading: "Memuat Booku...",
 
     // Login.jsx & Register.jsx
     auth_login_title: "Selamat Datang !",
@@ -444,9 +444,9 @@ export const translations = {
     cor_guest_save_desc: "Let's create your account now.",
 
     // Home.jsx
-    home_err_title: "Oops! Failed to Load Funtasya World",
+    home_err_title: "Oops! Failed to Load BookU",
     home_btn_reload: "Reload Page",
-    home_loading: "Loading Funtasya World...",
+    home_loading: "Loading BookU...",
 
     // Login.jsx & Register.jsx
     auth_login_title: "Welcome Back!",
