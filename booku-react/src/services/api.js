@@ -2,7 +2,11 @@ const BASE_URL = import.meta.env.VITE_API_URL;
 
 // helper global
 const fetchAPI = async (endpoint, options = {}, token = null) => {
-  const headers = { ...options.headers };
+  // TAMBAHKAN 'Accept' DI SINI
+  const headers = {
+    Accept: "application/json",
+    ...options.headers,
+  };
 
   // OTOMATIS: Jika body adalah string JSON, set header jadi application/json.
   if (options.body && typeof options.body === "string") {
@@ -10,6 +14,8 @@ const fetchAPI = async (endpoint, options = {}, token = null) => {
   }
 
   if (token) headers.Authorization = `Bearer ${token}`;
+
+  // ... (sisa kode di bawahnya biarkan sama) ...
 
   const response = await fetch(`${BASE_URL}${endpoint}`, {
     ...options,
@@ -96,6 +102,12 @@ export const toggleFavorite = (id, token) =>
   fetchAPI(`/books/${id}/favorite`, { method: "POST" }, token);
 export const toggleSaved = (id, token) =>
   fetchAPI(`/books/${id}/saved`, { method: "POST" }, token);
+export const submitRating = (id, rating, token) =>
+  fetchAPI(
+    `/books/${id}/rate`,
+    { method: "POST", body: JSON.stringify({ rating }) },
+    token,
+  );
 
 // CORNER
 export const getCornerData = (endpoint, token) =>

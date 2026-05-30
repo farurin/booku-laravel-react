@@ -3,6 +3,23 @@ import { Link, useLocation } from "react-router-dom";
 import { getImageUrl } from "../utils/getImageUrl";
 import { useLanguage } from "../context/LanguageContext";
 
+// Ikon bintang solid kecil untuk Card
+const IconStarSmall = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+  </svg>
+);
+
 const Card = ({ book }) => {
   const location = useLocation();
   const { language } = useLanguage();
@@ -18,12 +35,26 @@ const Card = ({ book }) => {
       ? book.title_en || book.title_id || "Book Cover"
       : book.title_id || book.title_en || "Cover Buku";
 
+  // Tangkap data dari backend
+  const ratingAvg = book.rating_avg || 0;
+
   return (
     <Link
       to={`${location.pathname}?preview=${book.id}`}
       className="block w-full aspect-[294/419] rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-booku-cyan/30 transition-all duration-300 cursor-pointer bg-white group border-2 border-transparent hover:border-booku-cyan relative"
     >
+      {/* BADGE RATING MELAYANG */}
+      <div className="absolute top-2 right-2 z-20 bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm border border-booku-yellow/50">
+        <span className="text-booku-yellow">
+          <IconStarSmall />
+        </span>
+        <span className="text-[10px] font-black text-gray-800">
+          {ratingAvg > 0 ? Number(ratingAvg).toFixed(1) : "Baru"}
+        </span>
+      </div>
+
       <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+
       <img
         src={getImageUrl(coverUrl)}
         alt={bookTitle}

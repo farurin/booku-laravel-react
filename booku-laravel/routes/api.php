@@ -62,6 +62,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/books/{id}/status', [BookController::class, 'getBookStatus']);
     Route::post('/books/{id}/favorite', [BookController::class, 'toggleFavorite']);
     Route::post('/books/{id}/saved', [BookController::class, 'toggleSaved']);
+    Route::post('/books/{id}/rate', [BookController::class, 'rateBook']);
 
 
     // =========================================================================

@@ -33,6 +33,8 @@ class BookResource extends JsonResource
             'views_count' => $this->views_count,
             'favorites_count' => $this->favorites_count ?? 0,
             'saved_count' => $this->saved_count ?? 0,
+            'rating_avg' => (float) ($this->rating_avg ?? 0),
+            'rating_count' => (int) ($this->rating_count ?? 0),
             'created_at' => $this->created_at,
             'category_name_id' => $this->whenLoaded('category', function () {
                 return $this->category->name_id;

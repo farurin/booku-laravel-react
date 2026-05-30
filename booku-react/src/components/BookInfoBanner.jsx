@@ -1,6 +1,7 @@
 import React from "react";
 import { getImageUrl } from "../utils/getImageUrl";
 import { useLanguage } from "../context/LanguageContext";
+import StarRating from "./StarRating";
 
 // icon svg
 const IconPages = () => (
@@ -89,7 +90,7 @@ const IconBookmark = () => (
   </svg>
 );
 
-const BookInfoBanner = ({ book, totalPages = 11 }) => {
+const BookInfoBanner = ({ book, userRating = 0, totalPages = 0 }) => {
   const { t, language } = useLanguage();
 
   if (!book) {
@@ -143,15 +144,20 @@ const BookInfoBanner = ({ book, totalPages = 11 }) => {
           {t("bib_reading")}
         </span>
 
-        <h1 className="text-2xl md:text-4xl font-bold text-gray-900 tracking-tight mb-4 leading-tight">
+        <h1 className="text-2xl md:text-4xl font-bold text-gray-900 tracking-tight mb-2 leading-tight">
           {bookTitle}
         </h1>
+
+        <div className="mb-5">
+          <StarRating bookId={book.id} initialRating={userRating} />
+        </div>
 
         <div className="flex flex-wrap items-center gap-4 text-xs md:text-sm font-medium text-gray-600 mb-4 pb-4 border-b border-gray-100">
           <div className="flex items-center gap-1.5 bg-gray-50 px-2 py-1 rounded-md border border-gray-100">
             <IconPages />
             <span>
-              {totalPages} {t("bib_pages")}
+              {/* Tampilkan angka dinamis totalPages */}
+              {totalPages > 0 ? totalPages : "..."} {t("bib_pages")}
             </span>
           </div>
 
@@ -175,7 +181,7 @@ const BookInfoBanner = ({ book, totalPages = 11 }) => {
             <span>{book.favorites_count || 0}</span>
           </div>
           <div className="flex items-center gap-2" title="Saved">
-            <span className="p-1.5 bg-orange-50 text-orange-600 rounded-full">
+            <span className="p-1.5 bg-booku-coral/20 text-booku-coral rounded-full">
               <IconBookmark />
             </span>
             <span>{book.saved_count || 0}</span>

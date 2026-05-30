@@ -121,16 +121,34 @@ const IconViews = () => (
   </svg>
 );
 
+// Tambahkan Icon Bintang Kecil
+const IconStarSmall = ({ filled = true }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    fill={filled ? "currentColor" : "none"}
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+  </svg>
+);
+
 const BookPreviewModal = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const previewId = searchParams.get("preview");
   const navigate = useNavigate();
-  const location = useLocation(); // PERBAIKAN: Gunakan useLocation untuk mendeteksi perubahan halaman
+  const location = useLocation();
   const { token, isLoggedIn, triggerRefresh } = useAuth();
   const { t, language } = useLanguage();
 
   const [book, setBook] = useState(null);
   const [firstPageImage, setFirstPageImage] = useState(null);
+  const [totalPages, setTotalPages] = useState(0);
 
   const [isFavorite, setIsFavorite] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
@@ -138,7 +156,6 @@ const BookPreviewModal = () => {
 
   const audioInstanceRef = useRef(null);
 
-  // PERBAIKAN: Fungsi Cleanup Global
   const cleanupAndClose = () => {
     if (audioInstanceRef.current) {
       audioInstanceRef.current.pause();
@@ -153,12 +170,10 @@ const BookPreviewModal = () => {
     setSearchParams(searchParams);
   };
 
-  // PERBAIKAN: Matikan audio jika rute/halaman berubah (Misal navigasi Back)
   useEffect(() => {
     if (!previewId) {
       cleanupAndClose();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname, previewId]);
 
   useEffect(() => {
@@ -173,6 +188,7 @@ const BookPreviewModal = () => {
           setBook(foundBook);
 
           const pagesData = await getBookPages(foundBook.id);
+          setTotalPages(pagesData ? pagesData.length : 0);
           setFirstPageImage(
             pagesData && pagesData.length > 0 ? pagesData[0].image : null,
           );
@@ -199,7 +215,6 @@ const BookPreviewModal = () => {
 
     if (!introAudioUrl) return;
 
-    // Bersihkan audio sebelumnya jika masih nyangkut
     if (audioInstanceRef.current) {
       audioInstanceRef.current.pause();
       audioInstanceRef.current.src = "";
@@ -270,7 +285,7 @@ const BookPreviewModal = () => {
         title: t("bpm_fav_guest_title"),
         description: t("bpm_fav_guest_desc"),
         primaryBtnText: t("bpm_btn_register"),
-        primaryBtnColor: "bg-[#8B5CF6] hover:bg-purple-700",
+        primaryBtnColor: "bg-booku-coral hover:bg-orange-500 text-white",
         secondaryBtnText: t("bpm_btn_later"),
         onPrimaryClick: () => {
           if (audioInstanceRef.current) {
@@ -279,7 +294,6 @@ const BookPreviewModal = () => {
           }
           setPopupConfig(null);
           setBook(null);
-
           navigate("/register", { replace: true });
         },
         onSecondaryClick: () => setPopupConfig(null),
@@ -293,7 +307,7 @@ const BookPreviewModal = () => {
         title: t("bpm_rm_fav_title"),
         description: t("bpm_rm_fav_desc"),
         primaryBtnText: t("bpm_btn_remove"),
-        primaryBtnColor: "bg-[#8B5CF6] hover:bg-purple-700",
+        primaryBtnColor: "bg-red-500 hover:bg-red-600 text-white",
         secondaryBtnText: t("bpm_btn_cancel"),
         onPrimaryClick: () => {
           executeToggleFavAPI();
@@ -308,20 +322,17 @@ const BookPreviewModal = () => {
         title: t("bpm_add_fav_title"),
         description: t("bpm_add_fav_desc"),
         primaryBtnText: t("bpm_btn_view"),
-        primaryBtnColor: "bg-[#8B5CF6] hover:bg-purple-700",
+        primaryBtnColor: "bg-booku-coral hover:bg-orange-500 text-white",
         secondaryBtnText: t("bpm_btn_close"),
         onPrimaryClick: () => {
           localStorage.setItem("cornerActiveTab", "favorit");
           triggerRefresh();
-
-          // Matikan audio manual & tutup popup, jangan panggil setSearchParams
           if (audioInstanceRef.current) {
             audioInstanceRef.current.pause();
             audioInstanceRef.current.src = "";
           }
           setPopupConfig(null);
           setBook(null);
-
           navigate("/corner");
         },
         onSecondaryClick: () => setPopupConfig(null),
@@ -336,7 +347,7 @@ const BookPreviewModal = () => {
         title: t("bpm_save_guest_title"),
         description: t("bpm_save_guest_desc"),
         primaryBtnText: t("bpm_btn_register"),
-        primaryBtnColor: "bg-[#8B5CF6] hover:bg-purple-700",
+        primaryBtnColor: "bg-booku-coral hover:bg-orange-500 text-white",
         secondaryBtnText: t("bpm_btn_later"),
         onPrimaryClick: () => {
           if (audioInstanceRef.current) {
@@ -345,7 +356,6 @@ const BookPreviewModal = () => {
           }
           setPopupConfig(null);
           setBook(null);
-
           navigate("/register", { replace: true });
         },
         onSecondaryClick: () => setPopupConfig(null),
@@ -362,20 +372,17 @@ const BookPreviewModal = () => {
         title: t("bpm_add_save_title"),
         description: t("bpm_add_save_desc"),
         primaryBtnText: t("bpm_btn_view"),
-        primaryBtnColor: "bg-[#8B5CF6] hover:bg-purple-700",
+        primaryBtnColor: "bg-booku-coral hover:bg-orange-500 text-white",
         secondaryBtnText: t("bpm_btn_close"),
         onPrimaryClick: () => {
           localStorage.setItem("cornerActiveTab", "disimpan");
           triggerRefresh();
-
-          // Matikan audio manual & tutup popup, jangan panggil setSearchParams
           if (audioInstanceRef.current) {
             audioInstanceRef.current.pause();
             audioInstanceRef.current.src = "";
           }
           setPopupConfig(null);
           setBook(null);
-
           navigate("/corner");
         },
         onSecondaryClick: () => setPopupConfig(null),
@@ -387,19 +394,15 @@ const BookPreviewModal = () => {
     language === "en"
       ? book.image_en || book.image_id || book.image
       : book.image_id || book.image_en || book.image;
-
   const bgImageToUse = firstPageImage ? firstPageImage : coverUrl;
-
   const catName =
     language === "en" && book.category_name_en
       ? book.category_name_en
       : book.category_name_id;
-
   const activeYoutubeUrl =
     language === "en"
       ? book.youtube_url_en || book.youtube_url_id
       : book.youtube_url_id || book.youtube_url_en;
-
   const bookTitle =
     language === "en" && book.title_en ? book.title_en : book.title_id;
   const bookDesc =
@@ -407,11 +410,14 @@ const BookPreviewModal = () => {
       ? book.description_en
       : book.description_id;
 
+  // Tangkap data dari backend
+  const ratingAvg = book.rating_avg || 0;
+  const ratingCount = book.rating_count || 0;
+
   return (
     <>
       <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-10 bg-slate-900/80 backdrop-blur-sm">
         <div className="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl flex overflow-visible border border-slate-200">
-          {/* TOMBOL CLOSE */}
           <button
             onClick={cleanupAndClose}
             className="absolute -top-4 -right-4 md:-top-5 md:-right-5 z-50 w-11 h-11 md:w-14 md:h-14 bg-booku-yellow text-gray-900 rounded-full flex items-center justify-center shadow-lg hover:bg-booku-coral hover:text-white hover:rotate-90 hover:scale-110 transition-all duration-300 border-4 border-white cursor-pointer"
@@ -432,7 +438,6 @@ const BookPreviewModal = () => {
 
             <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/90 to-transparent overflow-y-auto">
               <div className="flex flex-col lg:flex-row items-center w-full min-h-full">
-                {/* KOLOM KIRI */}
                 <div className="flex flex-col justify-center px-6 md:px-12 w-full lg:w-2/3 py-10 z-10">
                   <span className="text-booku-cyan font-bold text-xs tracking-wider uppercase mb-2">
                     Preview Cerita
@@ -443,10 +448,21 @@ const BookPreviewModal = () => {
 
                   <div className="flex flex-wrap items-center gap-4 text-slate-300 text-xs md:text-sm mt-4 font-medium border-b border-slate-700 pb-4">
                     <span className="flex items-center gap-1.5 bg-slate-800 px-2 py-1 rounded-md">
-                      <IconPages /> 11 {t("bpm_pages")}
+                      <IconPages /> {totalPages > 0 ? totalPages : "..."}{" "}
+                      {t("bpm_pages")}
                     </span>
                     <span className="flex items-center gap-1.5 bg-booku-cyan/20 text-booku-cyan px-2 py-1 rounded-md">
                       <IconCategory /> {catName || t("bpm_default_category")}
+                    </span>
+                    {/* INFO AVERAGE RATING */}
+                    <span className="flex items-center gap-1 bg-booku-yellow/20 text-booku-yellow px-2 py-1 rounded-md font-bold">
+                      <IconStarSmall filled={true} />
+                      {ratingAvg > 0 ? Number(ratingAvg).toFixed(1) : "Baru"}
+                      {ratingCount > 0 && (
+                        <span className="text-[10px] opacity-70 ml-0.5">
+                          ({ratingCount})
+                        </span>
+                      )}
                     </span>
                   </div>
 
@@ -475,9 +491,7 @@ const BookPreviewModal = () => {
                     </p>
                   </div>
 
-                  {/* Tombol bersusun */}
                   <div className="mt-8 flex flex-col gap-3 shrink-0">
-                    {/* Baris 1: Bookmark + Baca */}
                     <div className="flex gap-3 h-11 md:h-12">
                       <button
                         onClick={handleToggleSave}
@@ -493,7 +507,6 @@ const BookPreviewModal = () => {
                       </button>
                     </div>
 
-                    {/* Baris 2: Favorit + Tonton */}
                     <div className="flex gap-3 h-11 md:h-12">
                       <button
                         onClick={handleToggleFavorite}
@@ -513,7 +526,6 @@ const BookPreviewModal = () => {
                   </div>
                 </div>
 
-                {/* KOLOM KANAN */}
                 <div className="hidden lg:flex flex-1 items-center justify-center pr-12 z-10">
                   <div className="w-52 xl:w-60 aspect-[2/3] rounded-xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-2 border-slate-700 transform hover:-translate-y-2 transition-transform duration-500 bg-booku-cream">
                     <img

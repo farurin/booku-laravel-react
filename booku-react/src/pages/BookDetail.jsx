@@ -12,6 +12,7 @@ import {
   getBooks,
   getCategories,
   getBookStatus,
+  getBookPages, // <-- KUNCI PERBAIKAN 1: Import getBookPages
   toggleFavorite,
   toggleSaved,
 } from "../services/api";
@@ -32,15 +33,22 @@ const BookDetail = () => {
 
   const [isFavorite, setIsFavorite] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [userRating, setUserRating] = useState(0);
   const [popupConfig, setPopupConfig] = useState(null);
+
+  // KUNCI PERBAIKAN 2: State untuk menyimpan total halaman
+  const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
     const fetchBookData = async () => {
       try {
-        const [books, categories] = await Promise.all([
+        // Ambil data buku, kategori, dan HALAMAN BUKU secara bersamaan
+        const [books, categories, pages] = await Promise.all([
           getBooks(),
           getCategories(),
+          getBookPages(id), // Ambil halaman berdasarkan id buku di URL
         ]);
+
         const currentBook = books.find((b) => b.id === parseInt(id));
 
         if (currentBook) {
@@ -56,14 +64,18 @@ const BookDetail = () => {
           }
           setBook(currentBook);
 
+          // KUNCI PERBAIKAN 3: Simpan panjang array halaman
+          setTotalPages(pages ? pages.length : 0);
+
           if (isLoggedIn && token) {
             const statusData = await getBookStatus(currentBook.id, token);
             setIsFavorite(statusData.isFavorite);
             setIsSaved(statusData.isSaved);
+            setUserRating(statusData.userRating || 0);
           }
         }
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching book details:", error);
       } finally {
         setIsLoading(false);
       }
@@ -79,7 +91,7 @@ const BookDetail = () => {
       setIsFavorite(data.isFavorite);
       triggerRefresh();
     } catch (error) {
-      console.error(error);
+      console.error("Gagal toggle favorit:", error);
     }
   };
 
@@ -89,11 +101,12 @@ const BookDetail = () => {
       setIsSaved(data.isSaved);
       triggerRefresh();
     } catch (error) {
-      console.error(error);
+      console.error("Gagal toggle simpan:", error);
     }
   };
 
   const handleToggleFavorite = async () => {
+    // ... (Logic handleToggleFavorite sama persis)
     if (!isLoggedIn) {
       setPopupConfig({
         image: popupFavImg,
@@ -138,6 +151,7 @@ const BookDetail = () => {
   };
 
   const handleToggleSave = async () => {
+    // ... (Logic handleToggleSave sama persis)
     if (!isLoggedIn) {
       setPopupConfig({
         image: popupBookmarkImg,
@@ -172,15 +186,18 @@ const BookDetail = () => {
   const handleFullscreen = () => {
     const elem = document.getElementById("story-reader-container");
     if (!elem) return;
-    if (!document.fullscreenElement)
-      elem.requestFullscreen().catch((err) => console.error(err));
-    else document.exitFullscreen();
+    if (!document.fullscreenElement) {
+      elem.requestFullscreen().catch((err) => {
+        console.error(err.message);
+      });
+    } else {
+      document.exitFullscreen();
+    }
   };
 
   if (isLoading)
     return (
-      <div className="w-full h-screen flex flex-col items-center justify-center font-bold text-gray-400 bg-booku-cream">
-        <div className="w-12 h-12 border-4 border-booku-cyan border-t-transparent rounded-full animate-spin mb-4"></div>
+      <div className="w-full h-screen flex items-center justify-center font-bold text-teal-600 text-xl bg-booku-cream">
         {t("bd_loading")}
       </div>
     );
@@ -221,11 +238,16 @@ const BookDetail = () => {
         />
 
         <div className="mt-16">
-          <BookInfoBanner book={book} />
+          {/* KUNCI PERBAIKAN 4: Oper state totalPages ke banner */}
+          <BookInfoBanner
+            book={book}
+            userRating={userRating}
+            totalPages={totalPages}
+          />
         </div>
 
         {categoryData && (
-          <div className="mt-20">
+          <div className="mt-20 bg-white p-6 md:p-10 rounded-3xl border border-gray-100 shadow-sm">
             <CategorySection
               category={categoryData}
               customTitle={`${language === "en" && categoryData.name_en ? categoryData.name_en : categoryData.name_id} ${t("bd_others")}`}

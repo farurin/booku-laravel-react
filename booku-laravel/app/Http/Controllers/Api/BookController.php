@@ -34,6 +34,11 @@ class BookController extends Controller
             ->select('books.*')
             ->selectRaw('(SELECT COUNT(*) FROM user_favorites WHERE user_favorites.id_book = books.id) as favorites_count')
             ->selectRaw('(SELECT COUNT(*) FROM user_saved WHERE user_saved.id_book = books.id) as saved_count')
+
+            // TAMBAHAN BARU: Ambil rata-rata rating dan jumlah orang yang nge-rate
+            ->selectRaw('(SELECT ROUND(AVG(rating), 1) FROM user_ratings WHERE user_ratings.id_book = books.id) as rating_avg')
+            ->selectRaw('(SELECT COUNT(*) FROM user_ratings WHERE user_ratings.id_book = books.id) as rating_count')
+
             ->where('status', 'terbit')
             ->orderBy('created_at', 'desc')
             ->get();
@@ -160,11 +165,15 @@ class BookController extends Controller
         // AMBIL DATA PROGRESS BACAAN
         $progressRecord = DB::table('user_progress')->where('id_user', $userId)->where('id_book', $bookId)->first();
 
+        // TAMBAHAN BARU: Ambil nilai rating user jika ada
+        $userRating = DB::table('user_ratings')->where('id_user', $userId)->where('id_book', $bookId)->value('rating');
+
         return response()->json([
             'isFavorite' => $isFavorite,
             'isSaved' => $isSaved,
-            // Jika ada riwayat, kirim angkanya. Jika belum pernah baca, kirim 0.
-            'progress' => $progressRecord ? (int)$progressRecord->reading_progress : 0
+            'progress' => $progressRecord ? (int)$progressRecord->reading_progress : 0,
+            // Kembalikan nilai rating, jika belum rate kembalikan 0
+            'userRating' => $userRating ? (int)$userRating : 0
         ]);
     }
 
@@ -197,6 +206,43 @@ class BookController extends Controller
         } else {
             DB::table('user_saved')->insert(['id_user' => $userId, 'id_book' => $bookId, 'saved_at' => now()]);
             return response()->json(['isSaved' => true, 'message' => 'Disimpan untuk nanti']);
+        }
+    }
+
+    public function rateBook(Request $request, $id)
+    {
+        // Validasi agar rating wajib diisi dan hanya berupa angka 1 sampai 5
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+        ]);
+
+        $userId = $request->user()->id;
+        $bookId = $id;
+        $rating = $request->rating;
+
+        // Cek apakah user sudah pernah memberi rating pada buku ini
+        $existing = DB::table('user_ratings')
+            ->where('id_user', $userId)
+            ->where('id_book', $bookId)
+            ->first();
+
+        if ($existing) {
+            // Jika sudah ada, update nilainya (Mencegah double rating)
+            DB::table('user_ratings')
+                ->where('id', $existing->id)
+                ->update(['rating' => $rating]);
+
+            return response()->json(['message' => 'Rating berhasil diperbarui!', 'rating' => $rating]);
+        } else {
+            // Jika belum ada, buat data baru
+            DB::table('user_ratings')->insert([
+                'id_user' => $userId,
+                'id_book' => $bookId,
+                'rating' => $rating,
+                'created_at' => now()
+            ]);
+
+            return response()->json(['message' => 'Rating berhasil ditambahkan!', 'rating' => $rating]);
         }
     }
 }
