@@ -10,8 +10,6 @@ class BookResource extends JsonResource
     public function toArray($request)
     {
         return [
-            // PERBAIKAN: Di-cast menjadi integer (int) dan ditambahkan fallback properti 
-            // agar filter 'parseInt(id)' di React selalu sukses terbaca.
             'id' => (int) $this->id,
             'id_categories' => (int) ($this->id_categories ?? $this->category_id),
 
@@ -19,7 +17,7 @@ class BookResource extends JsonResource
             'title_en' => $this->title_en,
             'description_id' => $this->description_id,
             'description_en' => $this->description_en,
-            // dua image
+
             'image_id' => $this->image_id && str_starts_with($this->image_id, 'uploads/') ? asset($this->image_id) : $this->image_id,
             'image_en' => $this->image_en && str_starts_with($this->image_en, 'uploads/') ? asset($this->image_en) : $this->image_en,
             'bg_music_url' => $this->bg_music_url && str_starts_with($this->bg_music_url, 'uploads/') ? asset($this->bg_music_url) : $this->bg_music_url,
@@ -35,6 +33,13 @@ class BookResource extends JsonResource
             'saved_count' => $this->saved_count ?? 0,
             'rating_avg' => (float) ($this->rating_avg ?? 0),
             'rating_count' => (int) ($this->rating_count ?? 0),
+
+            // TAMBAHAN ATRIBUSI STORYWEAVER
+            'author' => $this->author ?? 'StoryWeaver Community',
+            'illustrator' => $this->illustrator ?? 'StoryWeaver Illustrator',
+            'license' => $this->license ?? 'CC BY 4.0',
+            'source_url' => $this->source_url,
+
             'created_at' => $this->created_at,
             'category_name_id' => $this->whenLoaded('category', function () {
                 return $this->category->name_id;

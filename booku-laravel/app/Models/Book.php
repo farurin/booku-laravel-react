@@ -10,7 +10,7 @@ class Book extends Model
 {
     protected $table = 'books';
     const CREATED_AT = 'created_at';
-    const UPDATED_AT = null; // Matikan updated_at jika tidak ada di tabel
+    const UPDATED_AT = null;
 
     protected $fillable = [
         'id_categories',
@@ -18,15 +18,20 @@ class Book extends Model
         'title_en',
         'description_id',
         'description_en',
-        'image_id', // TAMBAHAN BARU
-        'image_en', // TAMBAHAN BARU
+        'image_id',
+        'image_en',
         'bg_music_url',
         'title_audio_id_url',
         'title_audio_en_url',
         'youtube_url_id',
         'youtube_url_en',
         'status',
-        'views_count'
+        'views_count',
+        // TAMBAHAN ATRIBUSI STORYWEAVER
+        'author',
+        'illustrator',
+        'license',
+        'source_url'
     ];
 
     // Relasi: Buku dimiliki oleh satu kategori
