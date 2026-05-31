@@ -146,9 +146,9 @@ const AdminPerpustakaan = () => {
     );
 
   return (
-    <div className="p-6 md:p-10 w-full min-h-screen flex flex-col items-center">
-      <div className="w-full max-w-350">
-        <div className="w-full bg-gray-300 rounded-4xl h-32 md:h-40 mb-8 overflow-hidden relative shadow-sm flex items-center justify-center">
+    <div className="p-6 md:p-10 w-full min-h-screen flex flex-col items-center bg-slate-50">
+      <div className="w-full max-w-7xl mx-auto">
+        <div className="w-full bg-gray-300 rounded-[32px] h-32 md:h-40 mb-8 overflow-hidden relative shadow-sm flex items-center justify-center">
           <img
             src={bannerImg}
             alt="Banner"
@@ -168,13 +168,13 @@ const AdminPerpustakaan = () => {
             <HiOutlineSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
             <input
               type="text"
-              placeholder="Cari Judul, Autor, Kategori..."
+              placeholder="Cari Judul, Kategori..."
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
                 setCurrentPage(1);
               }}
-              className="w-full bg-white border border-gray-100 rounded-full pl-12 pr-4 py-3.5 text-sm font-medium shadow-sm outline-none focus:border-[#F8AF2F] transition-all"
+              className="w-full bg-white border border-gray-200 rounded-full pl-12 pr-4 py-3.5 text-sm font-bold shadow-sm outline-none focus:border-teal-400 transition-all"
             />
           </div>
         </div>
@@ -207,7 +207,7 @@ const AdminPerpustakaan = () => {
                       setActiveCategoryId("all");
                       setCurrentPage(1);
                     }}
-                    className={`w-full aspect-5/2 flex items-center justify-center rounded-2xl font-bold text-sm transition-all border-2 cursor-pointer ${
+                    className={`w-full aspect-[5/2] flex items-center justify-center rounded-2xl font-bold text-sm transition-all border-2 cursor-pointer ${
                       activeCategoryId === "all"
                         ? "bg-[#eaf9e9] text-green-900 border-[#84E280] shadow-md scale-105 ring-4 ring-[#84E280]/40 ring-offset-1"
                         : "bg-white text-gray-500 border-gray-100 hover:border-gray-300 hover:scale-105"
@@ -235,7 +235,7 @@ const AdminPerpustakaan = () => {
                       <img
                         src={getImageUrl(cat.image_icon)}
                         alt={cat.name_id}
-                        className="w-full aspect-5/2 object-cover rounded-2xl select-none"
+                        className="w-full aspect-[5/2] object-cover rounded-2xl select-none"
                         onError={(e) => {
                           e.target.style.display = "none";
                         }}
@@ -300,7 +300,7 @@ const AdminPerpustakaan = () => {
                     onClick={() => setSelectedBook(book)}
                     className={`bg-white rounded-3xl p-3 shadow-sm border-2 cursor-pointer transition-all hover:-translate-y-1 hover:shadow-md ${selectedBook?.id === book.id ? "border-[#84E280] bg-[#f0fcf0] ring-2 ring-[#eaf9e9]" : "border-gray-50 hover:border-gray-200"}`}
                   >
-                    <div className="w-full aspect-2/3 bg-gray-100 rounded-2xl overflow-hidden mb-4">
+                    <div className="w-full aspect-[2/3] bg-gray-100 rounded-2xl overflow-hidden mb-4">
                       <img
                         src={getImageUrl(
                           book.image_id || book.image_en || book.image,
@@ -322,14 +322,17 @@ const AdminPerpustakaan = () => {
                         {new Date(book.created_at).toLocaleDateString("id-ID")}
                       </p>
                       <p className="text-[11px] font-semibold text-gray-600 truncate">
-                        {book.author || "Funtasya Team"}
+                        {/* PENYESUAIAN ATRIBUSI DI SINI */}
+                        {book.attribution_text
+                          ? "Domain Publik"
+                          : "Original Funtasya"}
                       </p>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="w-full py-20 flex flex-col items-center justify-center bg-white rounded-3xl border border-gray-100">
+              <div className="w-full py-20 flex flex-col items-center justify-center bg-white rounded-[32px] border border-gray-100 shadow-sm">
                 <p className="text-gray-400 font-bold text-lg">
                   Tidak ada cerita di kategori ini.
                 </p>
@@ -338,7 +341,7 @@ const AdminPerpustakaan = () => {
           </div>
 
           {selectedBook && (
-            <div className="w-full xl:w-95 shrink-0 bg-white rounded-4xl p-6 shadow-xl border border-gray-100 xl:sticky xl:top-8 transition-all animate-fade-in z-10 flex flex-col">
+            <div className="w-full xl:w-96 shrink-0 bg-white rounded-[40px] p-6 shadow-xl border border-gray-100 xl:sticky xl:top-8 transition-all animate-fade-in z-10 flex flex-col">
               <div className="flex justify-between items-start mb-6">
                 <h3 className="text-xl font-black text-gray-900">
                   Detail Cerita
@@ -396,8 +399,11 @@ const AdminPerpustakaan = () => {
               </div>
 
               <div className="mb-8">
-                <h5 className="font-black text-gray-900 mb-2">
-                  {selectedBook.author || "Funtasya Team"}
+                {/* PENYESUAIAN ATRIBUSI DI SINI */}
+                <h5 className="font-black text-gray-900 mb-2 text-sm">
+                  {selectedBook.attribution_text
+                    ? "Domain Publik / CC BY 4.0"
+                    : "Original Funtasya"}
                 </h5>
                 <p className="text-sm font-medium text-gray-500 leading-relaxed text-justify line-clamp-6">
                   {selectedBook.description_id ||
@@ -414,14 +420,14 @@ const AdminPerpustakaan = () => {
                       bookId: selectedBook.id,
                     })
                   }
-                  className="w-full bg-[#F8AF2F] hover:bg-yellow-500 text-white font-bold py-3.5 rounded-xl shadow-sm transition-colors cursor-pointer"
+                  className="w-full bg-[#F8AF2F] hover:bg-yellow-500 text-white font-black py-4 rounded-xl shadow-sm transition-colors cursor-pointer"
                 >
                   Arsipkan Buku
                 </button>
 
                 <Link
                   to={`/admin/books/${selectedBook.id}`}
-                  className="w-full bg-[#E6F3FF] hover:bg-blue-100 text-blue-600 font-bold py-3.5 rounded-xl transition-colors cursor-pointer flex items-center justify-center gap-2"
+                  className="w-full bg-teal-50 hover:bg-teal-100 text-teal-600 font-black py-4 rounded-xl transition-colors cursor-pointer flex items-center justify-center gap-2"
                 >
                   Lihat Selengkapnya <HiArrowRight />
                 </Link>

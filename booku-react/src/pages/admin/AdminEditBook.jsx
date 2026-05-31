@@ -28,7 +28,7 @@ const AdminEditBook = () => {
   const navigate = useNavigate();
   const { showSuccess, showError, showLoading } = useAdminToast();
 
-  const [activeTab, setActiveTab] = useState("info"); // 'info' atau 'scenes'
+  const [activeTab, setActiveTab] = useState("info");
   const [categoryList, setCategoryList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -41,6 +41,10 @@ const AdminEditBook = () => {
   const [titleEn, setTitleEn] = useState("");
   const [descriptionId, setDescriptionId] = useState("");
   const [descriptionEn, setDescriptionEn] = useState("");
+
+  // STATE ATRIBUSI
+  const [attributionText, setAttributionText] = useState("");
+
   const [youtubeUrlId, setYoutubeUrlId] = useState("");
   const [youtubeUrlEn, setYoutubeUrlEn] = useState("");
   const [categoryId, setCategoryId] = useState("");
@@ -50,7 +54,6 @@ const AdminEditBook = () => {
   const [titleAudioId, setTitleAudioId] = useState(null);
   const [titleAudioEn, setTitleAudioEn] = useState(null);
 
-  // cover baru
   const [coverImageId, setCoverImageId] = useState(null);
   const [coverPreviewId, setCoverPreviewId] = useState(null);
   const [coverImageEn, setCoverImageEn] = useState(null);
@@ -58,19 +61,14 @@ const AdminEditBook = () => {
 
   // STATE TAB 2: KELOLA SCENE
   const [scenes, setScenes] = useState([]);
-
-  // State untuk Modal Form Scene
   const [isSceneModalOpen, setIsSceneModalOpen] = useState(false);
-  const [currentEditScene, setCurrentEditScene] = useState(null); // null = mode tambah
-
+  const [currentEditScene, setCurrentEditScene] = useState(null);
   const [sceneImagePreview, setSceneImagePreview] = useState(null);
   const [sceneImageFile, setSceneImageFile] = useState(null);
   const [sceneSubId, setSceneSubId] = useState("");
   const [sceneSubEn, setSceneSubEn] = useState("");
   const [sceneDubIdFile, setSceneDubIdFile] = useState(null);
   const [sceneDubEnFile, setSceneDubEnFile] = useState(null);
-
-  // State untuk Modal Hapus Scene
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [sceneToDelete, setSceneToDelete] = useState(null);
 
@@ -85,6 +83,10 @@ const AdminEditBook = () => {
       setTitleEn(bookData.title_en || "");
       setDescriptionId(bookData.description_id || "");
       setDescriptionEn(bookData.description_en || "");
+
+      // Mengambil data atribusi
+      setAttributionText(bookData.attribution_text || "");
+
       setYoutubeUrlId(bookData.youtube_url_id || "");
       setYoutubeUrlEn(bookData.youtube_url_en || "");
       setStatusBook(bookData.status);
@@ -116,7 +118,6 @@ const AdminEditBook = () => {
     if (token) fetchBookData();
   }, [fetchBookData, token]);
 
-  // fungsi handle 2 cover
   const handleCoverIdChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -130,7 +131,6 @@ const AdminEditBook = () => {
     setCoverPreviewEn(URL.createObjectURL(file));
   };
 
-  // SUBMIT TAB 1: INFORMASI BUKU
   const handleUpdateBookInfo = async (e) => {
     e.preventDefault();
     if (!titleId || !descriptionId || !categoryId) {
@@ -139,11 +139,15 @@ const AdminEditBook = () => {
 
     showLoading(true);
     const formData = new FormData();
-    formData.append("_method", "PUT"); // Method Spoofing untuk update buku
+    formData.append("_method", "PUT");
     formData.append("title_id", titleId);
     formData.append("title_en", titleEn || "");
     formData.append("description_id", descriptionId);
     formData.append("description_en", descriptionEn || "");
+
+    // Memasukkan atribusi ke Payload
+    formData.append("attribution_text", attributionText || "");
+
     formData.append("youtube_url_id", youtubeUrlId || "");
     formData.append("youtube_url_en", youtubeUrlEn || "");
     formData.append("id_categories", categoryId);
@@ -170,16 +174,13 @@ const AdminEditBook = () => {
     }
   };
 
-  // LOGIKA MODAL SCENE
   const handleOpenSceneModal = (scene = null) => {
     setCurrentEditScene(scene);
     if (scene) {
-      // Mode Edit
       setSceneImagePreview(getImageUrl(scene.image));
       setSceneSubId(scene.text_id || "");
       setSceneSubEn(scene.text_en || "");
     } else {
-      // Mode Tambah Baru
       setSceneImagePreview(null);
       setSceneSubId("");
       setSceneSubEn("");
@@ -206,18 +207,16 @@ const AdminEditBook = () => {
 
     try {
       if (currentEditScene) {
-        // Mode Edit Scene
         await updateAdminBookPage(currentEditScene.id, formData, token);
         showSuccess(
           `Scene ${currentEditScene.page_number} berhasil diperbarui!`,
         );
       } else {
-        // Mode Tambah Scene Baru
         await addAdminBookPage(id, formData, token);
         showSuccess("Halaman baru berhasil ditambahkan!");
       }
       handleCloseSceneModal();
-      fetchBookData(); // Reload daftar scene dari server
+      fetchBookData();
     } catch (err) {
       showError("Terjadi kesalahan: " + err.message);
     } finally {
@@ -248,80 +247,78 @@ const AdminEditBook = () => {
     );
 
   return (
-    <div className="p-8 md:p-12 w-full flex justify-center items-start min-h-screen">
-      <div className="bg-white w-full max-w-6xl rounded-4xl shadow-sm border border-gray-100 p-8 md:p-10 relative">
+    <div className="p-8 md:p-12 w-full flex justify-center items-start min-h-screen bg-slate-50">
+      <div className="bg-white w-full max-w-6xl rounded-[40px] shadow-sm border border-gray-200 p-8 md:p-10 relative">
         <button
           onClick={() => navigate("/admin/books")}
-          className="absolute top-8 left-8 text-gray-400 hover:text-gray-800 font-semibold text-sm cursor-pointer"
+          className="absolute top-8 left-8 text-gray-400 hover:text-gray-800 font-bold text-sm cursor-pointer transition-colors"
         >
           ← Kembali
         </button>
 
         <div className="text-center mb-8 mt-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            Update Buku: {titleId}
+          <h2 className="text-3xl font-black text-gray-900 mb-2">
+            Update Buku: <span className="text-teal-600">{titleId}</span>
           </h2>
           <p className="text-sm font-medium text-gray-500">
-            Kelola informasi utama dan halaman-halaman cerita di bawah ini.
+            Kelola informasi utama dan susunan halaman cerita di bawah ini.
           </p>
         </div>
 
-        {/* TABS NAVIGATION */}
-        <div className="flex border-b border-gray-200 mb-8 justify-center">
+        <div className="flex border-b border-gray-200 mb-10 justify-center gap-4">
           <button
             onClick={() => setActiveTab("info")}
-            className={`py-3 px-8 font-bold text-sm border-b-4 transition-colors cursor-pointer ${
+            className={`py-3 px-8 font-black text-sm border-b-4 transition-all cursor-pointer ${
               activeTab === "info"
                 ? "border-yellow-400 text-yellow-600"
-                : "border-transparent text-gray-400 hover:text-gray-600"
+                : "border-transparent text-gray-400 hover:text-gray-700"
             }`}
           >
             Informasi Buku
           </button>
           <button
             onClick={() => setActiveTab("scenes")}
-            className={`py-3 px-8 font-bold text-sm border-b-4 transition-colors cursor-pointer ${
+            className={`py-3 px-8 font-black text-sm border-b-4 transition-all cursor-pointer ${
               activeTab === "scenes"
                 ? "border-yellow-400 text-yellow-600"
-                : "border-transparent text-gray-400 hover:text-gray-600"
+                : "border-transparent text-gray-400 hover:text-gray-700"
             }`}
           >
             Kelola Halaman ({scenes.length})
           </button>
         </div>
 
-        {/* TAB 1: INFORMASI BUKU */}
         {activeTab === "info" && (
           <form
             onSubmit={handleUpdateBookInfo}
             className="max-w-4xl mx-auto space-y-8"
           >
             <div className="flex flex-col md:flex-row gap-8 items-start">
-              {/* Kolom Kiri: Cover Image */}
-              <div className="w-full md:w-1/3 flex flex-col gap-6 items-center">
-                {/* Cover ID */}
+              {/* KOLOM UPLOAD SAMPUL */}
+              <div className="w-full md:w-1/3 flex flex-col gap-6 items-center bg-gray-50 p-6 rounded-3xl border border-gray-100">
                 <div className="w-full flex flex-col items-center">
-                  <span className="text-xs font-bold text-gray-900 mb-2">
+                  <span className="text-xs font-black text-gray-700 mb-3 uppercase tracking-wider">
                     Sampul Indonesia
                   </span>
-                  <label className="w-48 aspect-5/8 border-[3px] border-dashed border-gray-300 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-orange-400 transition-colors relative overflow-hidden group">
+                  <label className="w-48 aspect-[5/8] border-4 border-dashed border-gray-300 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-orange-400 transition-colors relative overflow-hidden group bg-white shadow-sm">
                     {coverPreviewId ? (
                       <>
                         <img
                           src={coverPreviewId}
                           alt="Cover ID"
-                          className="w-full h-full object-cover bg-gray-50"
+                          className="w-full h-full object-cover"
                         />
-                        <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                           <HiOutlineUpload className="text-3xl text-white mb-2" />
                           <span className="text-white font-bold text-sm">
-                            Ganti Sampul ID
+                            Ganti Sampul
                           </span>
                         </div>
                       </>
                     ) : (
-                      <div className="text-gray-400 text-center p-4">
-                        Upload ID
+                      <div className="text-gray-400 text-center flex flex-col items-center gap-2">
+                        <HiOutlineUpload className="text-3xl" />
+                        <span className="font-bold text-sm">Upload ID</span>
                       </div>
                     )}
                     <input
@@ -333,29 +330,29 @@ const AdminEditBook = () => {
                   </label>
                 </div>
 
-                {/* Cover EN */}
-                <div className="w-full flex flex-col items-center">
-                  <span className="text-xs font-bold text-gray-900 mb-2">
+                <div className="w-full flex flex-col items-center pt-6 border-t border-gray-200">
+                  <span className="text-xs font-black text-gray-700 mb-3 uppercase tracking-wider">
                     Sampul English
                   </span>
-                  <label className="w-48 aspect-5/8 border-[3px] border-dashed border-gray-300 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-blue-400 transition-colors relative overflow-hidden group">
+                  <label className="w-48 aspect-[5/8] border-4 border-dashed border-gray-300 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-blue-400 transition-colors relative overflow-hidden group bg-white shadow-sm">
                     {coverPreviewEn ? (
                       <>
                         <img
                           src={coverPreviewEn}
                           alt="Cover EN"
-                          className="w-full h-full object-cover bg-gray-50"
+                          className="w-full h-full object-cover"
                         />
-                        <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                           <HiOutlineUpload className="text-3xl text-white mb-2" />
                           <span className="text-white font-bold text-sm">
-                            Ganti Sampul EN
+                            Ganti Sampul
                           </span>
                         </div>
                       </>
                     ) : (
-                      <div className="text-gray-400 text-center p-4">
-                        Upload EN
+                      <div className="text-gray-400 text-center flex flex-col items-center gap-2">
+                        <HiOutlineUpload className="text-3xl" />
+                        <span className="font-bold text-sm">Upload EN</span>
                       </div>
                     )}
                     <input
@@ -368,23 +365,23 @@ const AdminEditBook = () => {
                 </div>
               </div>
 
-              {/* Kolom Kanan: Form Data */}
-              <div className="w-full md:w-2/3 space-y-5">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* KOLOM FORM TEKS */}
+              <div className="w-full md:w-2/3 space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-sm font-bold text-gray-900 mb-2">
+                    <label className="block text-sm font-black text-gray-800 mb-2">
                       Judul Cerita (ID)
                     </label>
                     <input
                       type="text"
                       value={titleId}
                       onChange={(e) => setTitleId(e.target.value)}
-                      className="w-full bg-[#F3F4F6] rounded-xl px-4 py-3 text-sm outline-none"
+                      className="w-full bg-gray-50 border border-gray-200 focus:border-teal-400 focus:bg-white rounded-xl px-4 py-3.5 text-sm font-bold outline-none transition-colors"
                       required
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-gray-900 mb-2">
+                    <label className="block text-sm font-black text-gray-800 mb-2">
                       Judul Cerita (EN){" "}
                       <span className="text-gray-400 font-normal ml-1">
                         (Opsional)
@@ -394,27 +391,27 @@ const AdminEditBook = () => {
                       type="text"
                       value={titleEn}
                       onChange={(e) => setTitleEn(e.target.value)}
-                      className="w-full bg-[#F3F4F6] rounded-xl px-4 py-3 text-sm outline-none"
+                      className="w-full bg-gray-50 border border-gray-200 focus:border-teal-400 focus:bg-white rounded-xl px-4 py-3.5 text-sm font-bold outline-none transition-colors"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-sm font-bold text-gray-900 mb-2">
-                      Deskripsi Cerita (ID)
+                    <label className="block text-sm font-black text-gray-800 mb-2">
+                      Deskripsi / Sinopsis (ID)
                     </label>
                     <textarea
                       value={descriptionId}
                       onChange={(e) => setDescriptionId(e.target.value)}
                       rows="4"
-                      className="w-full bg-[#F3F4F6] rounded-xl px-4 py-3 text-sm outline-none resize-none"
+                      className="w-full bg-gray-50 border border-gray-200 focus:border-teal-400 focus:bg-white rounded-xl px-4 py-3.5 text-sm font-medium outline-none resize-none transition-colors"
                       required
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-gray-900 mb-2">
-                      Deskripsi Cerita (EN){" "}
+                    <label className="block text-sm font-black text-gray-800 mb-2">
+                      Deskripsi / Sinopsis (EN){" "}
                       <span className="text-gray-400 font-normal ml-1">
                         (Opsional)
                       </span>
@@ -423,20 +420,43 @@ const AdminEditBook = () => {
                       value={descriptionEn}
                       onChange={(e) => setDescriptionEn(e.target.value)}
                       rows="4"
-                      className="w-full bg-[#F3F4F6] rounded-xl px-4 py-3 text-sm outline-none resize-none"
+                      className="w-full bg-gray-50 border border-gray-200 focus:border-teal-400 focus:bg-white rounded-xl px-4 py-3.5 text-sm font-medium outline-none resize-none transition-colors"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* FORM ATRIBUSI STORYWEAVER */}
+                <div className="w-full bg-teal-50/50 p-5 border border-teal-100 rounded-2xl">
+                  <label className="block text-sm font-black text-teal-800 mb-2">
+                    Kredit & Atribusi Lisensi{" "}
+                    <span className="text-teal-600/60 font-normal ml-1">
+                      (Opsional)
+                    </span>
+                  </label>
+                  <textarea
+                    value={attributionText}
+                    onChange={(e) => setAttributionText(e.target.value)}
+                    rows="2"
+                    placeholder="Contoh: Original story by Pratham Books. Licensed under CC BY 4.0."
+                    className="w-full bg-white border border-teal-200 focus:border-teal-500 rounded-xl px-4 py-3 text-sm font-medium outline-none resize-y transition-colors"
+                  />
+                  <p className="text-[11px] font-bold text-teal-600/70 mt-2 leading-relaxed">
+                    Jika cerita ini berasal dari platform domain publik (seperti
+                    StoryWeaver), cantumkan informasi penulis, ilustrator, jenis
+                    lisensi, dan link sumber di sini untuk mematuhi aturan hak
+                    cipta.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-sm font-bold text-gray-900 mb-2">
-                      Kategori
+                    <label className="block text-sm font-black text-gray-800 mb-2">
+                      Kategori Cerita
                     </label>
                     <select
                       value={categoryId}
                       onChange={(e) => setCategoryId(e.target.value)}
-                      className="w-full bg-[#F3F4F6] rounded-xl px-4 py-3 text-sm outline-none"
+                      className="w-full bg-gray-50 border border-gray-200 focus:border-teal-400 focus:bg-white rounded-xl px-4 py-3.5 text-sm font-bold outline-none cursor-pointer transition-colors"
                     >
                       <option value="" disabled>
                         Pilih Kategori
@@ -449,13 +469,13 @@ const AdminEditBook = () => {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-gray-900 mb-2">
+                    <label className="block text-sm font-black text-gray-800 mb-2">
                       Status Penayangan
                     </label>
                     <select
                       value={statusBook}
                       onChange={(e) => setStatusBook(e.target.value)}
-                      className="w-full bg-[#F3F4F6] rounded-xl px-4 py-3 text-sm font-bold outline-none"
+                      className="w-full bg-gray-50 border border-gray-200 focus:border-teal-400 focus:bg-white rounded-xl px-4 py-3.5 text-sm font-bold outline-none cursor-pointer transition-colors"
                     >
                       <option value="review">Review</option>
                       <option value="terbit">Terbit</option>
@@ -465,45 +485,50 @@ const AdminEditBook = () => {
                   </div>
                 </div>
 
-                {/* Media Global */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-sm font-bold text-gray-900 mb-2">
-                      Link YouTube (ID)
+                    <label className="block text-sm font-black text-gray-800 mb-2">
+                      Link YouTube (ID){" "}
+                      <span className="text-gray-400 font-normal ml-1">
+                        (Opsional)
+                      </span>
                     </label>
                     <input
                       type="url"
                       value={youtubeUrlId}
                       onChange={(e) => setYoutubeUrlId(e.target.value)}
                       placeholder="https://youtu.be/..."
-                      className="w-full bg-[#F3F4F6] rounded-xl px-4 py-3 text-sm outline-none"
+                      className="w-full bg-gray-50 border border-gray-200 focus:border-teal-400 focus:bg-white rounded-xl px-4 py-3 text-sm font-medium outline-none transition-colors"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-gray-900 mb-2">
-                      Link YouTube (EN)
+                    <label className="block text-sm font-black text-gray-800 mb-2">
+                      Link YouTube (EN){" "}
+                      <span className="text-gray-400 font-normal ml-1">
+                        (Opsional)
+                      </span>
                     </label>
                     <input
                       type="url"
                       value={youtubeUrlEn}
                       onChange={(e) => setYoutubeUrlEn(e.target.value)}
                       placeholder="https://youtu.be/..."
-                      className="w-full bg-[#F3F4F6] rounded-xl px-4 py-3 text-sm outline-none"
+                      className="w-full bg-gray-50 border border-gray-200 focus:border-teal-400 focus:bg-white rounded-xl px-4 py-3 text-sm font-medium outline-none transition-colors"
                     />
                   </div>
                 </div>
 
-                <div className="bg-purple-50 p-4 rounded-2xl border border-purple-100 space-y-4">
+                <div className="bg-purple-50/80 p-5 rounded-2xl border border-purple-100 space-y-5">
                   <div>
-                    <label className="block text-xs font-bold text-gray-900 mb-2">
+                    <label className="block text-xs font-black text-purple-900 mb-2">
                       Ubah Musik Latar (BGM)
                     </label>
-                    <label className="w-full inline-flex items-center justify-center gap-2 bg-[#F64C4C] hover:bg-red-600 text-white font-semibold text-xs px-4 py-3 rounded-xl cursor-pointer">
-                      <HiMusicNote className="text-sm" />{" "}
+                    <label className="w-full inline-flex items-center justify-center gap-2 bg-purple-500 hover:bg-purple-600 text-white font-bold text-xs px-4 py-3.5 rounded-xl cursor-pointer shadow-sm transition-colors">
+                      <HiMusicNote className="text-base" />{" "}
                       {bgMusic
                         ? bgMusic.name
                         : existingBgMusic
-                          ? "Audio Tersimpan. Klik untuk ganti."
+                          ? "Audio BGM Tersimpan. Klik untuk Ganti."
                           : "Upload BGM"}
                       <input
                         type="file"
@@ -513,19 +538,19 @@ const AdminEditBook = () => {
                       />
                     </label>
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-4 border-t border-purple-200 pt-5">
                     <div>
-                      <label className="block text-xs font-bold text-gray-900 mb-2">
+                      <label className="block text-xs font-black text-purple-900 mb-2">
                         Voiceover Judul (ID)
                       </label>
-                      <label className="w-full inline-flex items-center justify-center gap-2 bg-purple-500 hover:bg-purple-600 text-white font-semibold text-xs px-2 py-3 rounded-xl cursor-pointer">
-                        <HiMicrophone className="text-sm shrink-0" />{" "}
+                      <label className="w-full inline-flex items-center justify-center gap-2 bg-white border-2 border-purple-300 text-purple-700 hover:bg-purple-100 font-bold text-xs px-2 py-3 rounded-xl cursor-pointer transition-colors">
+                        <HiMicrophone className="text-base shrink-0" />{" "}
                         <span className="truncate">
                           {titleAudioId
                             ? titleAudioId.name
                             : existingTitleAudioId
                               ? "Tersimpan (Ganti)"
-                              : "Upload"}
+                              : "Upload Audio"}
                         </span>
                         <input
                           type="file"
@@ -536,17 +561,17 @@ const AdminEditBook = () => {
                       </label>
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-gray-900 mb-2">
+                      <label className="block text-xs font-black text-purple-900 mb-2">
                         Voiceover Judul (EN)
                       </label>
-                      <label className="w-full inline-flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold text-xs px-2 py-3 rounded-xl cursor-pointer">
-                        <HiMicrophone className="text-sm shrink-0" />{" "}
+                      <label className="w-full inline-flex items-center justify-center gap-2 bg-white border-2 border-purple-300 text-purple-700 hover:bg-purple-100 font-bold text-xs px-2 py-3 rounded-xl cursor-pointer transition-colors">
+                        <HiMicrophone className="text-base shrink-0" />{" "}
                         <span className="truncate">
                           {titleAudioEn
                             ? titleAudioEn.name
                             : existingTitleAudioEn
                               ? "Tersimpan (Ganti)"
-                              : "Upload"}
+                              : "Upload Audio"}
                         </span>
                         <input
                           type="file"
@@ -561,12 +586,12 @@ const AdminEditBook = () => {
               </div>
             </div>
 
-            <div className="flex justify-end pt-4 border-t border-gray-100">
+            <div className="flex justify-end pt-6 border-t border-gray-200">
               <button
                 type="submit"
-                className="bg-[#F8AF2F] hover:bg-yellow-500 text-white font-bold py-3.5 px-10 rounded-xl shadow-sm transition-colors cursor-pointer"
+                className="bg-orange-400 hover:bg-orange-500 text-white font-black py-4 px-12 rounded-2xl shadow-md transition-all cursor-pointer hover:-translate-y-1"
               >
-                Simpan Perubahan Informasi
+                Simpan Perubahan
               </button>
             </div>
           </form>
@@ -576,24 +601,25 @@ const AdminEditBook = () => {
         {activeTab === "scenes" && (
           <div className="max-w-5xl mx-auto">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-lg font-bold text-gray-800">
-                Daftar Halaman Cerita
+              <h3 className="text-xl font-black text-gray-900">
+                Susunan Halaman
               </h3>
               <button
                 onClick={() => handleOpenSceneModal()}
-                className="bg-[#F8AF2F] hover:bg-yellow-500 text-white font-bold py-2.5 px-6 rounded-xl flex items-center gap-2 shadow-sm transition-colors cursor-pointer"
+                className="bg-teal-500 hover:bg-teal-600 text-white font-black py-3 px-6 rounded-xl flex items-center gap-2 shadow-sm transition-colors cursor-pointer"
               >
                 <HiPlus className="text-lg" /> Tambah Halaman
               </button>
             </div>
 
             {scenes.length === 0 ? (
-              <div className="text-center py-16 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
-                <p className="text-gray-400 font-bold mb-2">
-                  Buku ini belum memiliki halaman.
+              <div className="text-center py-20 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
+                <p className="text-gray-500 font-black mb-2 text-lg">
+                  Buku ini belum memiliki isi cerita.
                 </p>
-                <p className="text-sm text-gray-400">
-                  Klik "Tambah Halaman" untuk memulai menyusun cerita.
+                <p className="text-sm text-gray-400 font-medium">
+                  Klik "Tambah Halaman" untuk memulai menyusun gambar dan teks
+                  cerita.
                 </p>
               </div>
             ) : (
@@ -601,13 +627,13 @@ const AdminEditBook = () => {
                 {scenes.map((scene) => (
                   <div
                     key={scene.id}
-                    className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow relative group flex flex-col"
+                    className="bg-white border-2 border-gray-100 rounded-2xl p-4 shadow-sm hover:shadow-md hover:border-gray-300 transition-all relative group flex flex-col"
                   >
-                    <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-gray-800 text-xs font-black px-3 py-1.5 rounded-lg shadow-sm z-10">
+                    <div className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-gray-900 text-xs font-black px-3 py-1.5 rounded-lg shadow-sm z-10 border border-gray-100">
                       Hal {scene.page_number}
                     </div>
 
-                    <div className="w-full aspect-4/3 rounded-xl overflow-hidden bg-gray-100 mb-4 relative">
+                    <div className="w-full aspect-[4/3] rounded-xl overflow-hidden bg-gray-100 mb-4 relative">
                       <img
                         src={getImageUrl(scene.image)}
                         alt={`Page ${scene.page_number}`}
@@ -617,28 +643,29 @@ const AdminEditBook = () => {
 
                     <div className="flex-1 flex flex-col justify-between">
                       <div className="mb-4">
-                        <p className="text-xs font-bold text-gray-500 mb-1">
-                          Teks (ID):
+                        <p className="text-xs font-black text-gray-500 mb-1">
+                          Teks Tampil (ID):
                         </p>
-                        <p className="text-sm font-medium text-gray-800 line-clamp-2 bg-gray-50 p-2 rounded-lg">
+                        <p className="text-sm font-medium text-gray-800 line-clamp-2 bg-gray-50 border border-gray-100 p-2.5 rounded-xl">
                           {scene.text_id || (
-                            <span className="italic text-gray-400">Kosong</span>
+                            <span className="italic text-gray-400 font-normal">
+                              Kosong
+                            </span>
                           )}
                         </p>
                       </div>
 
                       <div className="flex justify-between items-end border-t border-gray-100 pt-4 mt-auto">
                         <div className="flex gap-2">
-                          {/* Badges Audio */}
                           <div
                             title={
                               scene.has_dubbing_id
                                 ? "Audio ID Tersedia"
                                 : "Audio ID Kosong"
                             }
-                            className={`w-7 h-7 rounded-full flex items-center justify-center ${scene.has_dubbing_id ? "bg-purple-100 text-purple-600" : "bg-gray-100 text-gray-400"}`}
+                            className={`w-8 h-8 rounded-full border-2 flex items-center justify-center ${scene.has_dubbing_id ? "bg-purple-100 border-purple-200 text-purple-700" : "bg-gray-50 border-gray-100 text-gray-400"}`}
                           >
-                            <span className="text-[9px] font-black">ID</span>
+                            <span className="text-[10px] font-black">ID</span>
                           </div>
                           <div
                             title={
@@ -646,16 +673,16 @@ const AdminEditBook = () => {
                                 ? "Audio EN Tersedia"
                                 : "Audio EN Kosong"
                             }
-                            className={`w-7 h-7 rounded-full flex items-center justify-center ${scene.has_dubbing_en ? "bg-blue-100 text-blue-600" : "bg-gray-100 text-gray-400"}`}
+                            className={`w-8 h-8 rounded-full border-2 flex items-center justify-center ${scene.has_dubbing_en ? "bg-blue-100 border-blue-200 text-blue-700" : "bg-gray-50 border-gray-100 text-gray-400"}`}
                           >
-                            <span className="text-[9px] font-black">EN</span>
+                            <span className="text-[10px] font-black">EN</span>
                           </div>
                         </div>
 
-                        <div className="flex gap-1.5">
+                        <div className="flex gap-2">
                           <button
                             onClick={() => handleOpenSceneModal(scene)}
-                            className="w-9 h-9 bg-orange-50 text-orange-500 rounded-lg flex items-center justify-center hover:bg-orange-100 cursor-pointer transition"
+                            className="w-10 h-10 bg-orange-50 text-orange-500 rounded-xl flex items-center justify-center hover:bg-orange-500 hover:text-white cursor-pointer transition-colors"
                           >
                             <HiPencil />
                           </button>
@@ -664,7 +691,7 @@ const AdminEditBook = () => {
                               setSceneToDelete(scene);
                               setIsDeleteModalOpen(true);
                             }}
-                            className="w-9 h-9 bg-red-50 text-red-500 rounded-lg flex items-center justify-center hover:bg-red-100 cursor-pointer transition"
+                            className="w-10 h-10 bg-red-50 text-red-500 rounded-xl flex items-center justify-center hover:bg-red-500 hover:text-white cursor-pointer transition-colors"
                           >
                             <HiTrash />
                           </button>
@@ -679,32 +706,30 @@ const AdminEditBook = () => {
         )}
       </div>
 
-      {/* MODAL: FORM TAMBAH / EDIT SCENE*/}
       {isSceneModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="bg-white w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl shadow-xl p-6 md:p-8 custom-scrollbar">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl font-bold text-gray-900">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60 backdrop-blur-sm p-4">
+          <div className="bg-white w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-[32px] shadow-2xl p-6 md:p-10 custom-scrollbar border-4 border-gray-100">
+            <div className="flex justify-between items-center mb-8 pb-4 border-b border-gray-100">
+              <h3 className="text-2xl font-black text-gray-900">
                 {currentEditScene
                   ? `Edit Halaman ${currentEditScene.page_number}`
                   : "Tambah Halaman Baru"}
               </h3>
               <button
                 onClick={handleCloseSceneModal}
-                className="text-gray-400 hover:text-red-500 transition text-2xl"
+                className="w-10 h-10 bg-gray-100 text-gray-500 rounded-full flex items-center justify-center hover:bg-red-100 hover:text-red-500 transition-colors cursor-pointer"
               >
-                <HiX />
+                <HiX className="text-xl" />
               </button>
             </div>
 
             <form onSubmit={handleSaveScene} className="space-y-6">
-              <div className="flex flex-col md:flex-row gap-6">
-                {/* Gambar Scene */}
+              <div className="flex flex-col md:flex-row gap-8">
                 <div className="w-full md:w-1/3 flex flex-col">
-                  <label className="text-sm font-bold text-gray-900 mb-2">
+                  <label className="text-sm font-black text-gray-900 mb-3">
                     Ilustrasi Halaman
                   </label>
-                  <label className="w-full aspect-4/3 bg-gray-100 rounded-2xl overflow-hidden relative group border border-dashed border-gray-300 cursor-pointer hover:border-orange-400 transition-colors">
+                  <label className="w-full aspect-[4/3] bg-gray-50 rounded-2xl overflow-hidden relative group border-4 border-dashed border-gray-200 cursor-pointer hover:border-teal-400 transition-colors">
                     {sceneImagePreview ? (
                       <img
                         src={sceneImagePreview}
@@ -713,13 +738,13 @@ const AdminEditBook = () => {
                       />
                     ) : (
                       <div className="w-full h-full flex flex-col items-center justify-center text-gray-400">
-                        <HiOutlineUpload className="text-3xl mb-2" />
-                        <span className="text-sm font-bold">Upload Gambar</span>
+                        <HiOutlineUpload className="text-4xl mb-2 text-gray-300" />
+                        <span className="text-sm font-bold">Pilih Gambar</span>
                       </div>
                     )}
-                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                       <span className="text-white font-bold text-sm">
-                        Pilih Gambar
+                        Ganti Gambar
                       </span>
                     </div>
                     <input
@@ -736,27 +761,25 @@ const AdminEditBook = () => {
                     />
                   </label>
                   {!sceneImagePreview && !currentEditScene && (
-                    <p className="text-xs text-red-500 mt-2 font-medium">
-                      *Wajib diisi
+                    <p className="text-xs text-red-500 mt-2 font-bold text-center">
+                      *Gambar Wajib Diisi
                     </p>
                   )}
                 </div>
 
-                {/* Konten Teks & Audio */}
                 <div className="w-full md:w-2/3 space-y-6">
-                  {/* Blok Indonesia */}
-                  <div className="bg-orange-50/50 p-5 rounded-2xl border border-orange-100">
-                    <div className="flex justify-between items-center mb-3">
-                      <label className="text-sm font-bold text-orange-900">
+                  <div className="bg-purple-50/50 p-6 rounded-2xl border border-purple-100">
+                    <div className="flex justify-between items-center mb-4">
+                      <label className="text-sm font-black text-purple-900">
                         Konten Bahasa Indonesia
                       </label>
-                      <label className="flex items-center gap-2 bg-[#C97BFF] hover:bg-purple-500 text-white font-semibold text-xs px-4 py-2 rounded-lg cursor-pointer transition">
-                        <HiMicrophone />{" "}
+                      <label className="flex items-center gap-2 bg-purple-500 hover:bg-purple-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl cursor-pointer transition-colors shadow-sm">
+                        <HiMicrophone className="text-base" />{" "}
                         {sceneDubIdFile
                           ? sceneDubIdFile.name
                           : currentEditScene?.has_dubbing_id
-                            ? "Ganti Audio ID"
-                            : "Upload Audio ID"}
+                            ? "Ganti Audio"
+                            : "Upload Audio"}
                         <input
                           type="file"
                           accept="audio/*"
@@ -768,24 +791,23 @@ const AdminEditBook = () => {
                     <textarea
                       value={sceneSubId}
                       onChange={(e) => setSceneSubId(e.target.value)}
-                      placeholder="Masukkan teks narasi atau dialog..."
-                      className="w-full bg-white rounded-xl px-4 py-3 text-sm min-h-25 outline-none border border-gray-200 focus:border-orange-400 resize-y"
+                      placeholder="Ketik narasi teks di sini..."
+                      className="w-full bg-white rounded-xl px-5 py-4 text-sm font-medium min-h-[100px] outline-none border border-gray-200 focus:border-purple-400 resize-y"
                     />
                   </div>
 
-                  {/* Blok Inggris */}
-                  <div className="bg-blue-50/50 p-5 rounded-2xl border border-blue-100">
-                    <div className="flex justify-between items-center mb-3">
-                      <label className="text-sm font-bold text-blue-900">
+                  <div className="bg-blue-50/50 p-6 rounded-2xl border border-blue-100">
+                    <div className="flex justify-between items-center mb-4">
+                      <label className="text-sm font-black text-blue-900">
                         Konten Bahasa Inggris
                       </label>
-                      <label className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold text-xs px-4 py-2 rounded-lg cursor-pointer transition">
-                        <HiMicrophone />{" "}
+                      <label className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl cursor-pointer transition-colors shadow-sm">
+                        <HiMicrophone className="text-base" />{" "}
                         {sceneDubEnFile
                           ? sceneDubEnFile.name
                           : currentEditScene?.has_dubbing_en
-                            ? "Ganti Audio EN"
-                            : "Upload Audio EN"}
+                            ? "Ganti Audio"
+                            : "Upload Audio"}
                         <input
                           type="file"
                           accept="audio/*"
@@ -797,27 +819,27 @@ const AdminEditBook = () => {
                     <textarea
                       value={sceneSubEn}
                       onChange={(e) => setSceneSubEn(e.target.value)}
-                      placeholder="Enter english narrative or dialogue text..."
-                      className="w-full bg-white rounded-xl px-4 py-3 text-sm min-h-25 outline-none border border-gray-200 focus:border-blue-400 resize-y"
+                      placeholder="Type the narrative text here..."
+                      className="w-full bg-white rounded-xl px-5 py-4 text-sm font-medium min-h-[100px] outline-none border border-gray-200 focus:border-blue-400 resize-y"
                     />
                   </div>
                 </div>
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+              <div className="flex justify-end gap-4 pt-6 border-t border-gray-200">
                 <button
                   type="button"
                   onClick={handleCloseSceneModal}
-                  className="px-6 py-3 rounded-xl font-bold text-gray-500 hover:bg-gray-100 transition cursor-pointer"
+                  className="px-8 py-3.5 rounded-2xl font-bold text-gray-500 hover:bg-gray-100 transition-colors cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="bg-[#F8AF2F] hover:bg-yellow-500 text-white px-8 py-3 rounded-xl font-bold shadow-sm transition cursor-pointer"
+                  className="bg-teal-500 hover:bg-teal-600 text-white px-10 py-3.5 rounded-2xl font-black shadow-md transition-transform hover:-translate-y-1 cursor-pointer"
                 >
                   {currentEditScene
-                    ? "Simpan Perubahan"
+                    ? "Simpan Perubahan Halaman"
                     : "Simpan Halaman Baru"}
                 </button>
               </div>
@@ -826,20 +848,19 @@ const AdminEditBook = () => {
         </div>
       )}
 
-      {/* MODAL: KONFIRMASI HAPUS SCENE*/}
       <AdminConfirmModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={confirmDeleteScene}
         title="Hapus Halaman?"
-        description={`Halaman ${sceneToDelete?.page_number} akan dihapus secara permanen. Tindakan ini tidak dapat dibatalkan.`}
-        warningText="Data scene (gambar, teks, dan audio) yang dihapus tidak dapat dikembalikan lagi."
+        description={`Halaman ${sceneToDelete?.page_number} akan dihapus secara permanen dari buku ini.`}
+        warningText="Gambar, teks, dan audio pada halaman ini tidak dapat dikembalikan lagi."
         variant="danger"
-        confirmText="Ya, Hapus"
+        confirmText="Ya, Hapus Sekarang"
       />
 
       <style>{`
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar { width: 8px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 10px; }
         .custom-scrollbar:hover::-webkit-scrollbar-thumb { background: #9CA3AF; }

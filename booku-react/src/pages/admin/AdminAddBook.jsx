@@ -21,6 +21,9 @@ const AdminAddBook = () => {
   const [youtubeUrlId, setYoutubeUrlId] = useState("");
   const [youtubeUrlEn, setYoutubeUrlEn] = useState("");
 
+  // STATE ATRIBUSI BARU
+  const [attributionText, setAttributionText] = useState("");
+
   const [categoryId, setCategoryId] = useState("");
   const [bgMusic, setBgMusic] = useState(null);
   const [titleAudioId, setTitleAudioId] = useState(null);
@@ -74,7 +77,6 @@ const AdminAddBook = () => {
   };
 
   const handleSubmitFinal = async (statusBook) => {
-    // Validasi cover ID wajib ada, cover EN opsional (tapi disarankan)
     if (!coverImageId)
       return showError(
         "Harap unggah gambar sampul (thumbnail) versi Indonesia!",
@@ -86,6 +88,10 @@ const AdminAddBook = () => {
     formData.append("title_en", titleEn || "");
     formData.append("description_id", descriptionId);
     formData.append("description_en", descriptionEn || "");
+
+    // MEMASUKKAN ATRIBUSI KE PAYLOAD
+    formData.append("attribution_text", attributionText || "");
+
     formData.append("youtube_url_id", youtubeUrlId || "");
     formData.append("youtube_url_en", youtubeUrlEn || "");
     formData.append("id_categories", categoryId);
@@ -101,7 +107,6 @@ const AdminAddBook = () => {
       const data = await createAdminBook(formData, token);
       showSuccess(data.message || "Draft Buku berhasil dibuat!");
 
-      // REDIRECT OTOMATIS KE HALAMAN EDIT UNTUK KELOLA SCENE
       navigate(`/admin/books/${data.bookId}`);
     } catch (err) {
       showError("Terjadi kesalahan: " + err.message);
@@ -112,18 +117,18 @@ const AdminAddBook = () => {
 
   return (
     <div className="p-8 md:p-12 w-full flex justify-center items-start min-h-screen">
-      <div className="bg-white w-full max-w-5xl rounded-4xl shadow-sm border border-gray-100 p-8 md:p-12 mt-4 relative">
+      <div className="bg-white w-full max-w-5xl rounded-[40px] shadow-sm border border-gray-100 p-8 md:p-12 mt-4 relative">
         {currentStep > 1 && (
           <button
             onClick={handleBack}
-            className="absolute top-8 left-8 text-gray-400 hover:text-gray-800 font-semibold text-sm cursor-pointer"
+            className="absolute top-8 left-8 text-gray-400 hover:text-gray-800 font-bold text-sm cursor-pointer transition-colors"
           >
             ← Kembali
           </button>
         )}
 
         <div className="text-center mb-10 mt-4">
-          <h2 className="text-2xl font-bold text-gray-900 mb-3">
+          <h2 className="text-3xl font-black text-gray-900 mb-3">
             {currentStep === 3 ? "Tambahkan Sampul" : "Informasi Buku"}
           </h2>
           <p className="text-sm font-medium text-gray-400 max-w-lg mx-auto">
@@ -148,7 +153,7 @@ const AdminAddBook = () => {
                   value={titleId}
                   onChange={(e) => setTitleId(e.target.value)}
                   placeholder="Judul Konten..."
-                  className="w-full bg-[#F3F4F6] border-2 border-transparent focus:bg-white focus:border-yellow-400 rounded-xl px-5 py-4 text-sm font-medium outline-none"
+                  className="w-full bg-[#F3F4F6] border-2 border-transparent focus:bg-white focus:border-yellow-400 rounded-xl px-5 py-4 text-sm font-bold outline-none transition-colors"
                   required
                 />
               </div>
@@ -164,7 +169,7 @@ const AdminAddBook = () => {
                   value={titleEn}
                   onChange={(e) => setTitleEn(e.target.value)}
                   placeholder="Story Title..."
-                  className="w-full bg-[#F3F4F6] border-2 border-transparent focus:bg-white focus:border-yellow-400 rounded-xl px-5 py-4 text-sm font-medium outline-none"
+                  className="w-full bg-[#F3F4F6] border-2 border-transparent focus:bg-white focus:border-yellow-400 rounded-xl px-5 py-4 text-sm font-bold outline-none transition-colors"
                 />
               </div>
             </div>
@@ -178,8 +183,8 @@ const AdminAddBook = () => {
                   value={descriptionId}
                   onChange={(e) => setDescriptionId(e.target.value)}
                   placeholder="Deskripsi Konten..."
-                  rows="6"
-                  className="w-full bg-[#F3F4F6] border-2 border-transparent focus:bg-white focus:border-yellow-400 rounded-xl px-5 py-4 text-sm font-medium outline-none resize-none"
+                  rows="5"
+                  className="w-full bg-[#F3F4F6] border-2 border-transparent focus:bg-white focus:border-yellow-400 rounded-xl px-5 py-4 text-sm font-medium outline-none resize-none transition-colors"
                   required
                 />
               </div>
@@ -194,10 +199,33 @@ const AdminAddBook = () => {
                   value={descriptionEn}
                   onChange={(e) => setDescriptionEn(e.target.value)}
                   placeholder="Story Description..."
-                  rows="6"
-                  className="w-full bg-[#F3F4F6] border-2 border-transparent focus:bg-white focus:border-yellow-400 rounded-xl px-5 py-4 text-sm font-medium outline-none resize-none"
+                  rows="5"
+                  className="w-full bg-[#F3F4F6] border-2 border-transparent focus:bg-white focus:border-yellow-400 rounded-xl px-5 py-4 text-sm font-medium outline-none resize-none transition-colors"
                 />
               </div>
+            </div>
+
+            {/* FORM ATRIBUSI STORYWEAVER DITAMBAHKAN DI SINI */}
+            <div className="w-full bg-teal-50/50 p-5 border border-teal-100 rounded-2xl">
+              <label className="block text-sm font-black text-teal-800 mb-2">
+                Kredit & Atribusi Lisensi{" "}
+                <span className="text-teal-600/60 font-normal ml-1">
+                  (Opsional)
+                </span>
+              </label>
+              <textarea
+                value={attributionText}
+                onChange={(e) => setAttributionText(e.target.value)}
+                rows="2"
+                placeholder="Contoh: Original story by Pratham Books. Licensed under CC BY 4.0."
+                className="w-full bg-white border border-teal-200 focus:border-teal-500 rounded-xl px-4 py-3 text-sm font-medium outline-none resize-y transition-colors"
+              />
+              <p className="text-[11px] font-bold text-teal-600/70 mt-2 leading-relaxed">
+                Jika cerita ini berasal dari platform domain publik (seperti
+                StoryWeaver), cantumkan informasi penulis, ilustrator, jenis
+                lisensi, dan link sumber di sini untuk mematuhi aturan hak
+                cipta.
+              </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -213,7 +241,7 @@ const AdminAddBook = () => {
                   value={youtubeUrlId}
                   onChange={(e) => setYoutubeUrlId(e.target.value)}
                   placeholder="https://youtu.be/..."
-                  className="w-full bg-[#F3F4F6] border-2 border-transparent focus:bg-white focus:border-yellow-400 rounded-xl px-5 py-4 text-sm font-medium outline-none"
+                  className="w-full bg-[#F3F4F6] border-2 border-transparent focus:bg-white focus:border-yellow-400 rounded-xl px-5 py-4 text-sm font-medium outline-none transition-colors"
                 />
               </div>
               <div>
@@ -228,14 +256,14 @@ const AdminAddBook = () => {
                   value={youtubeUrlEn}
                   onChange={(e) => setYoutubeUrlEn(e.target.value)}
                   placeholder="https://youtu.be/..."
-                  className="w-full bg-[#F3F4F6] border-2 border-transparent focus:bg-white focus:border-yellow-400 rounded-xl px-5 py-4 text-sm font-medium outline-none"
+                  className="w-full bg-[#F3F4F6] border-2 border-transparent focus:bg-white focus:border-yellow-400 rounded-xl px-5 py-4 text-sm font-medium outline-none transition-colors"
                 />
               </div>
             </div>
 
             <button
               type="submit"
-              className="w-full bg-[#F8AF2F] hover:bg-yellow-500 text-white font-bold py-4 rounded-xl shadow-sm mt-4 cursor-pointer transition-colors"
+              className="w-full bg-[#F8AF2F] hover:bg-yellow-500 text-white font-black py-4 rounded-xl shadow-sm mt-4 cursor-pointer transition-colors"
             >
               Selanjutnya
             </button>
@@ -252,7 +280,7 @@ const AdminAddBook = () => {
                 <select
                   value={categoryId}
                   onChange={(e) => setCategoryId(e.target.value)}
-                  className="w-full bg-[#F3F4F6] rounded-xl px-5 py-4 text-sm font-medium text-gray-500 outline-none"
+                  className="w-full bg-[#F3F4F6] rounded-xl px-5 py-4 text-sm font-bold text-gray-700 outline-none cursor-pointer"
                 >
                   <option value="" disabled>
                     Pilih Kategori
@@ -268,7 +296,7 @@ const AdminAddBook = () => {
                 <label className="block text-sm font-bold text-gray-900 mb-3">
                   Tambahkan Musik Latar
                 </label>
-                <label className="w-full inline-flex items-center justify-center gap-2 bg-[#F64C4C] hover:bg-red-600 text-white font-semibold text-sm px-6 py-4 rounded-xl cursor-pointer transition-colors">
+                <label className="w-full inline-flex items-center justify-center gap-2 bg-[#F64C4C] hover:bg-red-600 text-white font-bold text-sm px-6 py-4 rounded-xl cursor-pointer transition-colors">
                   <HiMusicNote className="text-lg" />{" "}
                   {bgMusic ? bgMusic.name : "Upload Musik (Opsional)"}
                   <input
@@ -281,12 +309,12 @@ const AdminAddBook = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-purple-50 p-4 rounded-2xl border border-purple-100">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-purple-50 p-5 rounded-2xl border border-purple-100">
               <div>
                 <label className="block text-sm font-bold text-gray-900 mb-3">
                   Suara Judul Cerita (ID)
                 </label>
-                <label className="w-full inline-flex items-center justify-center gap-2 bg-purple-500 hover:bg-purple-600 text-white font-semibold text-sm px-6 py-4 rounded-xl cursor-pointer transition-colors">
+                <label className="w-full inline-flex items-center justify-center gap-2 bg-purple-500 hover:bg-purple-600 text-white font-bold text-sm px-6 py-4 rounded-xl cursor-pointer transition-colors">
                   <HiMicrophone className="text-lg" />{" "}
                   {titleAudioId ? titleAudioId.name : "Upload Audio (Opsional)"}
                   <input
@@ -301,7 +329,7 @@ const AdminAddBook = () => {
                 <label className="block text-sm font-bold text-gray-900 mb-3">
                   Suara Judul Cerita (EN)
                 </label>
-                <label className="w-full inline-flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold text-sm px-6 py-4 rounded-xl cursor-pointer transition-colors">
+                <label className="w-full inline-flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-bold text-sm px-6 py-4 rounded-xl cursor-pointer transition-colors">
                   <HiMicrophone className="text-lg" />{" "}
                   {titleAudioEn ? titleAudioEn.name : "Upload Audio (Opsional)"}
                   <input
@@ -316,7 +344,7 @@ const AdminAddBook = () => {
 
             <button
               onClick={handleNextToStep3}
-              className="w-full bg-[#F8AF2F] hover:bg-yellow-500 text-white font-bold py-4 rounded-xl shadow-sm mt-8 cursor-pointer transition-colors"
+              className="w-full bg-[#F8AF2F] hover:bg-yellow-500 text-white font-black py-4 rounded-xl shadow-sm mt-8 cursor-pointer transition-colors"
             >
               Selanjutnya
             </button>
@@ -325,14 +353,12 @@ const AdminAddBook = () => {
 
         {currentStep === 3 && (
           <div className="flex flex-col items-center max-w-4xl mx-auto">
-            {/* Container 2 Cover */}
-            <div className="flex flex-col md:flex-row gap-8 mb-8 justify-center w-full">
-              {/* Box Cover Indonesia */}
+            <div className="flex flex-col md:flex-row gap-10 mb-10 justify-center w-full">
               <div className="flex flex-col items-center">
-                <span className="text-sm font-bold text-gray-900 mb-3">
+                <span className="text-sm font-black text-gray-900 mb-3">
                   Sampul Indonesia
                 </span>
-                <label className="w-48 md:w-56 aspect-5/8 border-[3px] border-dashed border-gray-300 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-orange-400 hover:bg-orange-50/30 transition-colors relative overflow-hidden group">
+                <label className="w-48 md:w-56 aspect-[5/8] border-4 border-dashed border-gray-300 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-orange-400 hover:bg-orange-50/30 transition-colors relative overflow-hidden group">
                   {coverPreviewId ? (
                     <>
                       <img
@@ -340,7 +366,7 @@ const AdminAddBook = () => {
                         alt="Cover ID"
                         className="w-full h-full object-cover bg-gray-50"
                       />
-                      <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                         <HiOutlineUpload className="text-3xl text-white mb-2" />
                         <span className="text-white font-bold text-sm">
                           Ganti Sampul ID
@@ -367,12 +393,11 @@ const AdminAddBook = () => {
                 </label>
               </div>
 
-              {/* Box Cover English */}
               <div className="flex flex-col items-center">
-                <span className="text-sm font-bold text-gray-900 mb-3">
+                <span className="text-sm font-black text-gray-900 mb-3">
                   Sampul English
                 </span>
-                <label className="w-48 md:w-56 aspect-5/8 border-[3px] border-dashed border-gray-300 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-blue-400 hover:bg-blue-50/30 transition-colors relative overflow-hidden group">
+                <label className="w-48 md:w-56 aspect-[5/8] border-4 border-dashed border-gray-300 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-blue-400 hover:bg-blue-50/30 transition-colors relative overflow-hidden group">
                   {coverPreviewEn ? (
                     <>
                       <img
@@ -380,7 +405,7 @@ const AdminAddBook = () => {
                         alt="Cover EN"
                         className="w-full h-full object-cover bg-gray-50"
                       />
-                      <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                         <HiOutlineUpload className="text-3xl text-white mb-2" />
                         <span className="text-white font-bold text-sm">
                           Ganti Sampul EN
@@ -406,17 +431,16 @@ const AdminAddBook = () => {
               </div>
             </div>
 
-            {/* Tombol Simpan (Tetap Sama) */}
             <div className="w-full max-w-lg flex flex-col gap-3">
               <button
                 onClick={() => handleSubmitFinal("review")}
-                className="w-full bg-[#F8AF2F] hover:bg-yellow-500 text-white font-bold py-4 rounded-xl shadow-sm cursor-pointer transition-colors"
+                className="w-full bg-[#F8AF2F] hover:bg-yellow-500 text-white font-black py-4 rounded-xl shadow-md cursor-pointer transition-colors"
               >
                 Simpan & Kelola Scene
               </button>
               <button
                 onClick={() => handleSubmitFinal("arsip")}
-                className="w-full bg-[#D1D5DB] hover:bg-gray-400 text-gray-700 font-bold py-4 rounded-xl shadow-sm cursor-pointer transition-colors"
+                className="w-full bg-[#D1D5DB] hover:bg-gray-400 text-gray-700 font-black py-4 rounded-xl shadow-sm cursor-pointer transition-colors"
               >
                 Simpan Draft ke Arsip
               </button>

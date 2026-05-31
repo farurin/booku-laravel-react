@@ -114,7 +114,6 @@ const AdminBooks = () => {
   const filteredBooks = books.filter((book) => {
     const matchStatus =
       (book.status || "review").toLowerCase() === currentStatusTarget;
-    // PERBAIKAN: Gunakan book.title_id agar tidak undefined
     const matchSearch = (book.title_id || "")
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
@@ -222,15 +221,15 @@ const AdminBooks = () => {
         </div>
       </div>
 
-      <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden overflow-x-auto min-h-100">
-        <table className="w-full text-left min-w-200">
+      <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden overflow-x-auto min-h-[100px]">
+        <table className="w-full text-left min-w-[800px]">
           <thead>
             <tr className="border-b border-gray-100 bg-gray-50/50">
               <th className="py-5 px-6 text-sm font-bold text-gray-900 w-[40%]">
                 Konten
               </th>
               <th className="py-5 px-6 text-sm font-bold text-gray-900">
-                Nama Autor
+                Sumber Cerita
               </th>
               <th className="py-5 px-6 text-sm font-bold text-gray-900">
                 Tanggal Terbit
@@ -292,7 +291,9 @@ const AdminBooks = () => {
                     </div>
                   </td>
                   <td className="py-4 px-6 text-xs font-semibold text-gray-600">
-                    {book.author || "Funtasya Team"}
+                    {book.attribution_text
+                      ? "Eksternal / CC BY 4.0"
+                      : "Original Funtasya"}
                   </td>
                   <td className="py-4 px-6 text-xs font-semibold text-gray-600">
                     {book.created_at

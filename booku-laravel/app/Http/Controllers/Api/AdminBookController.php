@@ -20,11 +20,11 @@ class AdminBookController extends Controller
                 'b.title_en',
                 'b.description_id',
                 'b.description_en',
-                // cover baru
-                'b.image_id',  // Perbaikan nama kolom DB
-                'b.image_en',  // Perbaikan nama kolom DB
+                'b.image_id',
+                'b.image_en',
                 'b.status',
                 'b.views_count',
+                'b.attribution_text', // <-- TAMBAHAN BARU
                 'b.created_at',
                 'c.name_id as category_name_id',
                 DB::raw('(SELECT COUNT(*) FROM user_favorites WHERE user_favorites.id_book = b.id) as favorites_count'),
@@ -33,7 +33,6 @@ class AdminBookController extends Controller
             ->orderByDesc('b.created_at')
             ->get()
             ->map(function ($book) {
-                // Baru
                 $book->image_id = $book->image_id && str_starts_with($book->image_id, 'uploads/')
                     ? asset($book->image_id)
                     : $book->image_id;
@@ -60,92 +59,46 @@ class AdminBookController extends Controller
             ], 400);
         }
 
-        // =========================================================
-        // DEFAULT VALUES
-        // =========================================================
-
         $coverImageIdUrl = 'default-cover.png';
         $coverImageEnUrl = 'default-cover.png';
-
         $bgMusicUrl = null;
         $titleAudioIdUrl = null;
         $titleAudioEnUrl = null;
 
-        // =========================================================
-        // COVER INDONESIA
-        // =========================================================
-
         if ($request->hasFile('cover_image_id')) {
-            $coverImageIdUrl = $request
-                ->file('cover_image_id')
-                ->store('uploads/books/covers', 'public');
+            $coverImageIdUrl = $request->file('cover_image_id')->store('uploads/books/covers', 'public');
         }
-
-        // =========================================================
-        // COVER ENGLISH
-        // =========================================================
-
         if ($request->hasFile('cover_image_en')) {
-            $coverImageEnUrl = $request
-                ->file('cover_image_en')
-                ->store('uploads/books/covers', 'public');
+            $coverImageEnUrl = $request->file('cover_image_en')->store('uploads/books/covers', 'public');
         }
-
-        // =========================================================
-        // AUDIO & MUSIC
-        // =========================================================
-
         if ($request->hasFile('bg_music')) {
-            $bgMusicUrl = $request
-                ->file('bg_music')
-                ->store('uploads/books/music', 'public');
+            $bgMusicUrl = $request->file('bg_music')->store('uploads/books/music', 'public');
         }
-
         if ($request->hasFile('title_audio_id')) {
-            $titleAudioIdUrl = $request
-                ->file('title_audio_id')
-                ->store('uploads/books/dubbing', 'public');
+            $titleAudioIdUrl = $request->file('title_audio_id')->store('uploads/books/dubbing', 'public');
         }
-
         if ($request->hasFile('title_audio_en')) {
-            $titleAudioEnUrl = $request
-                ->file('title_audio_en')
-                ->store('uploads/books/dubbing', 'public');
+            $titleAudioEnUrl = $request->file('title_audio_en')->store('uploads/books/dubbing', 'public');
         }
 
         try {
-
             $bookId = DB::table('books')->insertGetId([
-
                 'id_categories' => $request->id_categories,
-
                 'title_id' => $request->title_id,
                 'title_en' => $request->title_en,
-
                 'description_id' => $request->description_id,
                 'description_en' => $request->description_en,
 
-                // =====================================================
-                // TRANSITIONAL
-                // =====================================================
-
-                // =====================================================
-                // BARU
-                // =====================================================
+                'attribution_text' => $request->attribution_text, // <-- TAMBAHAN BARU
 
                 'image_id' => $coverImageIdUrl,
                 'image_en' => $coverImageEnUrl,
-
                 'bg_music_url' => $bgMusicUrl,
-
                 'title_audio_id_url' => $titleAudioIdUrl,
                 'title_audio_en_url' => $titleAudioEnUrl,
-
                 'youtube_url_id' => $request->youtube_url_id,
                 'youtube_url_en' => $request->youtube_url_en,
-
                 'status' => $request->status ?? 'review',
-
                 'views_count' => 0,
                 'created_at' => now()
             ]);
@@ -155,7 +108,6 @@ class AdminBookController extends Controller
                 'bookId' => $bookId
             ], 201);
         } catch (\Exception $e) {
-
             return response()->json([
                 'error' => 'Gagal menyimpan buku: ' . $e->getMessage()
             ], 500);
@@ -192,77 +144,46 @@ class AdminBookController extends Controller
 
         $responseData = [
             'id' => $book->id,
-
             'id_categories' => $book->id_categories,
-
             'title_id' => $book->title_id,
             'title_en' => $book->title_en,
-
             'description_id' => $book->description_id,
             'description_en' => $book->description_en,
-
             'author' => 'Funtasya Team',
-
-            'date' => Carbon::parse($book->created_at)
-                ->translatedFormat('d F Y'),
-
+            'date' => Carbon::parse($book->created_at)->translatedFormat('d F Y'),
             'category_name_id' => $book->category_name_id,
-
             'status' => $book->status,
             'views_count' => $book->views_count,
-
             'favorites_count' => $book->favorites_count,
             'saved_count' => $book->saved_count,
-
             'youtube_url_id' => $book->youtube_url_id,
             'youtube_url_en' => $book->youtube_url_en,
 
-            // =====================================================
-            // BARU
-            // =====================================================
+            'attribution_text' => $book->attribution_text, // <-- TAMBAHAN BARU
 
             'cover_image_id' => $book->image_id && str_starts_with($book->image_id, 'uploads/')
-                ? asset($book->image_id)
-                : $book->image_id,
-
+                ? asset($book->image_id) : $book->image_id,
             'cover_image_en' => $book->image_en && str_starts_with($book->image_en, 'uploads/')
-                ? asset($book->image_en)
-                : $book->image_en,
-
+                ? asset($book->image_en) : $book->image_en,
             'bg_music' => $book->bg_music_url && str_starts_with($book->bg_music_url, 'uploads/')
-                ? asset($book->bg_music_url)
-                : $book->bg_music_url,
-
+                ? asset($book->bg_music_url) : $book->bg_music_url,
             'title_audio_id_url' => $book->title_audio_id_url && str_starts_with($book->title_audio_id_url, 'uploads/')
-                ? asset($book->title_audio_id_url)
-                : $book->title_audio_id_url,
-
+                ? asset($book->title_audio_id_url) : $book->title_audio_id_url,
             'title_audio_en_url' => $book->title_audio_en_url && str_starts_with($book->title_audio_en_url, 'uploads/')
-                ? asset($book->title_audio_en_url)
-                : $book->title_audio_en_url,
+                ? asset($book->title_audio_en_url) : $book->title_audio_en_url,
 
             'scenes' => $pages->map(function ($page) {
-
                 return [
                     'id' => $page->id,
-
                     'page_number' => $page->page_number,
-
                     'image' => str_starts_with($page->image, 'uploads/')
-                        ? asset($page->image)
-                        : $page->image,
-
+                        ? asset($page->image) : $page->image,
                     'text_id' => $page->text_id,
                     'text_en' => $page->text_en,
-
                     'dubbing_id_url' => $page->dubbing_id_url && str_starts_with($page->dubbing_id_url, 'uploads/')
-                        ? asset($page->dubbing_id_url)
-                        : $page->dubbing_id_url,
-
+                        ? asset($page->dubbing_id_url) : $page->dubbing_id_url,
                     'dubbing_en_url' => $page->dubbing_en_url && str_starts_with($page->dubbing_en_url, 'uploads/')
-                        ? asset($page->dubbing_en_url)
-                        : $page->dubbing_en_url,
-
+                        ? asset($page->dubbing_en_url) : $page->dubbing_en_url,
                     'has_dubbing_id' => !empty($page->dubbing_id_url),
                     'has_dubbing_en' => !empty($page->dubbing_en_url),
                 ];
@@ -304,81 +225,42 @@ class AdminBookController extends Controller
     public function updateBook(Request $request, $id)
     {
         $updateData = [
-
             'id_categories' => $request->id_categories,
-
             'title_id' => $request->title_id,
             'title_en' => $request->title_en,
-
             'description_id' => $request->description_id,
             'description_en' => $request->description_en,
-
             'youtube_url_id' => $request->youtube_url_id,
             'youtube_url_en' => $request->youtube_url_en,
+
+            'attribution_text' => $request->attribution_text, // <-- TAMBAHAN BARU
 
             'status' => $request->status
         ];
 
-        // =========================================================
-        // COVER ID
-        // =========================================================
-
         if ($request->hasFile('cover_image_id')) {
-
-            $coverIdPath = $request
-                ->file('cover_image_id')
-                ->store('uploads/books/covers', 'public');
-
-            // baru
-            $updateData['image_id'] = $coverIdPath;
+            $updateData['image_id'] = $request->file('cover_image_id')->store('uploads/books/covers', 'public');
         }
-
-        // =========================================================
-        // COVER EN
-        // =========================================================
-
         if ($request->hasFile('cover_image_en')) {
-
-            $coverEnPath = $request
-                ->file('cover_image_en')
-                ->store('uploads/books/covers', 'public');
-
-            $updateData['image_en'] = $coverEnPath;
+            $updateData['image_en'] = $request->file('cover_image_en')->store('uploads/books/covers', 'public');
         }
-
-        // =========================================================
-        // AUDIO & MUSIC
-        // =========================================================
-
         if ($request->hasFile('bg_music')) {
-            $updateData['bg_music_url'] = $request
-                ->file('bg_music')
-                ->store('uploads/books/music', 'public');
+            $updateData['bg_music_url'] = $request->file('bg_music')->store('uploads/books/music', 'public');
         }
-
         if ($request->hasFile('title_audio_id')) {
-            $updateData['title_audio_id_url'] = $request
-                ->file('title_audio_id')
-                ->store('uploads/books/dubbing', 'public');
+            $updateData['title_audio_id_url'] = $request->file('title_audio_id')->store('uploads/books/dubbing', 'public');
         }
-
         if ($request->hasFile('title_audio_en')) {
-            $updateData['title_audio_en_url'] = $request
-                ->file('title_audio_en')
-                ->store('uploads/books/dubbing', 'public');
+            $updateData['title_audio_en_url'] = $request->file('title_audio_en')->store('uploads/books/dubbing', 'public');
         }
 
         try {
-
-            DB::table('books')
-                ->where('id', $id)
-                ->update($updateData);
+            DB::table('books')->where('id', $id)->update($updateData);
 
             return response()->json([
                 'message' => 'Informasi Buku berhasil diperbarui!'
             ]);
         } catch (\Exception $e) {
-
             return response()->json([
                 'error' => 'Gagal memperbarui buku: ' . $e->getMessage()
             ], 500);

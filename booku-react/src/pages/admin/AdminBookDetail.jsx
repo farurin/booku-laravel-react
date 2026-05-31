@@ -40,9 +40,6 @@ const AdminBookDetail = () => {
     targetStatus: "",
   });
 
-  // --- 1. FETCH DETAIL (Pencegahan Bug 404) ---
-  // Menambahkan fungsi pengecekan error 404 (Not Found) untuk menghindari
-  // flash error toast saat buku baru saja dihapus permanen.
   const fetchDetail = async () => {
     if (!id || id === "undefined") return;
     if (!token) return;
@@ -66,7 +63,6 @@ const AdminBookDetail = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, token]);
 
-  // CLEANUP: Matikan audio jika admin keluar dari halaman ini
   useEffect(() => {
     return () => {
       if (audioRef.current) {
@@ -75,22 +71,21 @@ const AdminBookDetail = () => {
     };
   }, []);
 
-  // --- 2. LOGIKA TOMBOL STATUS & HAPUS PERMANEN ---
   const confirmUpdateStatus = async () => {
     const newStatus = statusModal.targetStatus;
-    showLoading(true); // Mulai loading dan JANGAN matikan modal dulu
+    showLoading(true);
     try {
       if (newStatus === "hapus_permanen") {
         await deleteAdminBook(id, token);
         showSuccess("Buku beserta halamannya berhasil dihapus permanen!");
-        navigate("/admin/books", { replace: true }); // Arahkan keluar dan timpa history
+        navigate("/admin/books", { replace: true });
       } else {
         await updateAdminBookStatus(id, newStatus, token);
         showSuccess(
           `Status cerita berhasil diubah menjadi ${newStatus.toUpperCase()}!`,
         );
-        setStatusModal({ isOpen: false, targetStatus: "" }); // Tutup modal
-        fetchDetail(); // Tarik data ulang untuk update tampilan status
+        setStatusModal({ isOpen: false, targetStatus: "" });
+        fetchDetail();
       }
     } catch (err) {
       showError(`Gagal memproses aksi: ${err.message}`);
@@ -99,7 +94,6 @@ const AdminBookDetail = () => {
     }
   };
 
-  // FUNGSI TOGGLE AUDIO PINTAR
   const handleToggleAudio = (url) => {
     if (!url) return showError("Audio tidak tersedia");
     const fullUrl = getImageUrl(url);
@@ -189,7 +183,6 @@ const AdminBookDetail = () => {
 
   const currentModalConfig = getModalConfig();
 
-  // --- 3. GUARD CLAUSE (Mencegah render saat buku kosong) ---
   if (isLoading)
     return (
       <div className="flex h-screen items-center justify-center">
@@ -231,12 +224,9 @@ const AdminBookDetail = () => {
         <span className="text-orange-500">Detail Cerita ({book.status})</span>
       </div>
 
-      {/* --- KARTU UTAMA INFO BUKU --- */}
       <div className="bg-white w-full rounded-4xl shadow-sm border border-gray-100 p-8 md:p-10 mb-10">
-        {/* HEADER: Judul & Deskripsi + Status */}
         <div className="flex flex-col lg:flex-row justify-between items-start gap-8 mb-8">
           <div className="flex-1 space-y-6 w-full">
-            {/* ID Section */}
             <div>
               <span className="text-[10px] font-bold text-orange-600 uppercase tracking-wider mb-1.5 block">
                 Versi Indonesia
@@ -274,7 +264,6 @@ const AdminBookDetail = () => {
               </p>
             </div>
 
-            {/* EN Section */}
             <div>
               <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider mb-1.5 block">
                 Versi English
@@ -321,7 +310,6 @@ const AdminBookDetail = () => {
             </div>
           </div>
 
-          {/* Status Badge */}
           <div className="shrink-0">
             <span
               className={`px-4 py-2 rounded-xl text-sm font-bold uppercase tracking-wider inline-block ${
@@ -339,7 +327,7 @@ const AdminBookDetail = () => {
           </div>
         </div>
 
-        {/* METADATA GRID */}
+        {/* METADATA GRID (Disesuaikan untuk Atribusi) */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 text-sm font-semibold text-gray-600 bg-gray-50 p-5 rounded-2xl border border-gray-100 mb-8">
           <div>
             <span className="block text-xs text-gray-400 mb-1">
@@ -349,10 +337,15 @@ const AdminBookDetail = () => {
           </div>
           <div>
             <span className="block text-xs text-gray-400 mb-1">
-              Penulis/Editor
+              Sumber Cerita
             </span>
-            <span className="text-gray-900">
-              {book.author || "Funtasya Team"}
+            <span
+              className="text-gray-900 truncate block max-w-[150px]"
+              title={book.attribution_text || "Original Funtasya"}
+            >
+              {book.attribution_text
+                ? "Eksternal (Lisensi)"
+                : "Original Funtasya"}
             </span>
           </div>
           <div>
@@ -371,12 +364,10 @@ const AdminBookDetail = () => {
           </div>
         </div>
 
-        {/* BAGIAN COVER BUKU */}
         <div className="mb-8">
           <h3 className="text-sm font-bold text-gray-900 mb-4">Sampul Buku</h3>
           <div className="flex flex-wrap gap-5">
-            {/* Cover ID */}
-            <div className="w-36 md:w-44 shrink-0 aspect-5/8 rounded-2xl overflow-hidden shadow-sm bg-gray-100 relative group border border-gray-200">
+            <div className="w-36 md:w-44 shrink-0 aspect-[5/8] rounded-2xl overflow-hidden shadow-sm bg-gray-100 relative group border border-gray-200">
               <span className="absolute top-2 right-2 bg-orange-500/90 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm z-10">
                 ID
               </span>
@@ -391,8 +382,7 @@ const AdminBookDetail = () => {
               />
             </div>
 
-            {/* Cover EN */}
-            <div className="w-36 md:w-44 shrink-0 aspect-5/8 rounded-2xl overflow-hidden shadow-sm bg-gray-100 relative group border border-gray-200">
+            <div className="w-36 md:w-44 shrink-0 aspect-[5/8] rounded-2xl overflow-hidden shadow-sm bg-gray-100 relative group border border-gray-200">
               <span className="absolute top-2 right-2 bg-blue-500/90 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm z-10">
                 EN
               </span>
@@ -409,7 +399,6 @@ const AdminBookDetail = () => {
           </div>
         </div>
 
-        {/* TOMBOL AKSI METADATA */}
         <div className="pt-6 border-t border-gray-100 flex flex-wrap gap-3">
           <button
             onClick={() => handleToggleAudio(book.bg_music)}
@@ -436,7 +425,6 @@ const AdminBookDetail = () => {
         </div>
       </div>
 
-      {/* --- KARTU SCENE --- */}
       <div className="space-y-8">
         {book.scenes.map((scene) => {
           const dubIdFullUrl = scene.dubbing_id_url
@@ -461,7 +449,7 @@ const AdminBookDetail = () => {
                   <img
                     src={getImageUrl(scene.image)}
                     alt={`Scene ${scene.page_number}`}
-                    className="w-full aspect-4/3 object-cover"
+                    className="w-full aspect-[4/3] object-cover"
                     onError={(e) => {
                       e.target.src =
                         "https://placehold.co/600x450?text=No+Image";
@@ -474,7 +462,6 @@ const AdminBookDetail = () => {
                   Scene {scene.page_number}
                 </h3>
 
-                {/* Blok Indonesia */}
                 <div className="bg-orange-50/30 p-5 rounded-2xl border border-orange-100">
                   <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
                     <div className="flex-1 min-w-0">
@@ -511,7 +498,6 @@ const AdminBookDetail = () => {
                   </div>
                 </div>
 
-                {/* Blok English */}
                 <div className="bg-blue-50/30 p-5 rounded-2xl border border-blue-100">
                   <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
                     <div className="flex-1 min-w-0">
@@ -555,10 +541,8 @@ const AdminBookDetail = () => {
         })}
       </div>
 
-      {/* --- TOMBOL AKSI BAWAH (STATUS) --- */}
       <div className="mt-12 pt-8 border-t border-gray-200 flex flex-col sm:flex-row justify-end gap-4">
         {book.status === "dihapus" ? (
-          // JIKA STATUS BUKU "DIHAPUS"
           <>
             <button
               onClick={() =>
@@ -578,7 +562,6 @@ const AdminBookDetail = () => {
             </button>
           </>
         ) : (
-          // JIKA STATUS BUKU SELAIN "DIHAPUS"
           <>
             {book.status !== "terbit" && (
               <button
