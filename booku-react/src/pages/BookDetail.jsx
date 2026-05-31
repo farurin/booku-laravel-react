@@ -212,7 +212,8 @@ const BookDetail = () => {
     language === "en" && book.title_en ? book.title_en : book.title_id;
 
   return (
-    <div className="w-full bg-booku-cream min-h-screen pb-12">
+    // DIUBAH: Kelas pb-12 dihapus agar menempel rapat dengan Footer
+    <div className="w-full bg-booku-cream min-h-screen">
       <div className="w-full max-w-7xl mx-auto px-4 md:px-8 pt-10">
         <div className="text-center mb-10">
           <div className="inline-block px-5 py-2 bg-booku-yellow text-gray-900 font-black tracking-widest uppercase rounded-full text-xs md:text-sm mb-4 shadow-sm border border-white">
@@ -238,7 +239,6 @@ const BookDetail = () => {
         />
 
         <div className="mt-16">
-          {/* KUNCI PERBAIKAN 4: Oper state totalPages ke banner */}
           <BookInfoBanner
             book={book}
             userRating={userRating}
@@ -246,8 +246,9 @@ const BookDetail = () => {
           />
         </div>
 
+        {/* Jarak bottom margin untuk kategori terakhir (mb-16) agar ada ruang lega SEBELUM CTADownload, BUKAN sesudahnya */}
         {categoryData && (
-          <div className="mt-20 bg-white p-6 md:p-10 rounded-3xl border border-gray-100 shadow-sm">
+          <div className="mt-16 mb-16 bg-white p-6 md:p-10 rounded-[40px] border border-gray-100 shadow-sm">
             <CategorySection
               category={categoryData}
               customTitle={`${language === "en" && categoryData.name_en ? categoryData.name_en : categoryData.name_id} ${t("bd_others")}`}
@@ -255,6 +256,8 @@ const BookDetail = () => {
           </div>
         )}
       </div>
+
+      {/* CtaDownload sekarang bebas dan akan menempel langsung dengan Footer yang ada di MainLayout */}
       <CtaDownload />
       <ActionPopupModal isOpen={popupConfig !== null} {...popupConfig} />
     </div>

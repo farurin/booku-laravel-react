@@ -46,14 +46,14 @@ const Home = () => {
 
   if (error) {
     return (
-      <div className="w-full h-screen flex flex-col items-center justify-center text-center px-6 bg-slate-50">
-        <h2 className="text-2xl md:text-3xl font-bold text-red-500 mb-2">
+      <div className="w-full h-screen flex flex-col items-center justify-center text-center px-6 bg-booku-cream">
+        <h2 className="text-2xl md:text-3xl font-black text-red-500 mb-4">
           {t("home_err_title")}
         </h2>
-        <p className="text-gray-500 mb-6 max-w-md">{error}</p>
+        <p className="text-gray-700 font-medium mb-8 max-w-md">{error}</p>
         <button
           onClick={() => window.location.reload()}
-          className="px-8 py-3 bg-teal-600 text-white rounded-full font-bold shadow-md hover:bg-teal-700 transition cursor-pointer"
+          className="px-8 py-3.5 bg-booku-coral text-white rounded-full font-bold shadow-md hover:bg-orange-500 transition cursor-pointer"
         >
           {t("home_btn_reload")}
         </button>
@@ -63,15 +63,18 @@ const Home = () => {
 
   if (isLoading) {
     return (
-      <div className="w-full h-screen flex flex-col items-center justify-center text-teal-600 font-bold text-xl bg-slate-50">
-        <div className="w-12 h-12 border-4 border-teal-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-        {t("home_loading")}
+      <div className="w-full h-screen flex flex-col items-center justify-center bg-booku-cream">
+        <div className="w-12 h-12 border-4 border-booku-cyan border-t-transparent rounded-full animate-spin mb-4"></div>
+        <span className="text-gray-500 font-bold text-lg">
+          {t("home_loading")}
+        </span>
       </div>
     );
   }
 
   return (
-    <div className="bg-slate-50">
+    // DIUBAH: Menggunakan bg-booku-cream agar selaras hingga bawah
+    <div className="bg-booku-cream">
       <HeroSection />
       <div id="jelajahi-cerita" className="scroll-mt-24 md:scroll-mt-28">
         <Carousel
