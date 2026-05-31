@@ -19,22 +19,12 @@ export const translations = {
 
     // About.jsx
     about_heading: "Tentang Kami",
+    about_desc:
+      "Mengenal lebih dekat perjalanan, visi, dan misi kami di BookU.",
     about_p1:
-      "Funtasya Storyland adalah sub-brand dari Funtasya World, hadir khusus untuk menghadirkan cerita-cerita anak berkualitas dalam format digital. Kami percaya setiap anak di mana pun mereka berada, berhak tumbuh bersama cerita yang menyenangkan, bermakna, dan penuh imajinasi.",
-    about_p2:
-      "Tersedia di Android, iOS (soon), dan versi web, Funtasya Storyland memastikan cerita favorit si kecil selalu bisa diakses kapan saja dan di mana saja, cukup dari genggaman tangan.",
-    about_p3:
-      "Di Funtasya World, kami selalu percaya bahwa dunia anak adalah dunia yang penuh kemungkinan. Dari situlah Funtasya Storyland lahir—sebuah ruang digital yang aman, menyenangkan, dan penuh cerita untuk menemani tumbuh kembang anak.",
-    about_p4:
-      "Membaca bukan sekadar keterampilan. Membaca adalah pintu menuju empati, imajinasi, dan rasa ingin tahu yang tak terbatas. Tapi kenyataannya, akses terhadap bacaan berkualitas masih jadi tantangan bagi banyak keluarga.",
-    about_fact1:
-      "1 dari 3 anak di dunia tidak memiliki akses ke bahan bacaan yang sesuai usianya (UNESCO, 2023)",
-    about_fact2:
-      "Lebih dari 617 juta anak belum mencapai kemampuan membaca minimum (Bank Dunia, 2023)",
-    about_fact3:
-      "Sekitar 50% anak di negara berkembang tidak memiliki satu pun buku di rumah (GPE, 2022)",
+      "BookU hadir khusus untuk menghadirkan cerita-cerita anak berkualitas dalam format digital yang interaktif. Kami percaya setiap anak berhak tumbuh bersama kisah yang menyenangkan, bermakna, dan penuh imajinasi. Lebih dari sekadar aplikasi, BookU adalah ruang digital yang aman dan dirancang khusus untuk menemani tumbuh kembang anak-anak melalui keajaiban cerita.",
     about_closing:
-      "Funtasya Storyland hadir sebagai jawaban membawa cerita langsung ke tangan anak-anak, tanpa batas.",
+      "BookU hadir sebagai jawaban: membawa keajaiban cerita langsung ke tangan anak-anak, tanpa batas.",
 
     // BookDetail.jsx
     bd_loading: "Menyiapkan Cerita...",
@@ -61,7 +51,7 @@ export const translations = {
       "Kamu bisa melihat cerita yang sudah kamu simpan di halaman Corner",
     bd_others: "lainnya",
 
-    // Categories.jsx & CategoryDetail.jsx
+    // CategoryDetail.jsx
     cat_err_title: "Gagal Memuat Kategori",
     cat_err_col: "Koleksi Tidak Ditemukan",
     btn_retry: "Coba Lagi",
@@ -71,7 +61,7 @@ export const translations = {
     cat_desc:
       "Temukan berbagai macam cerita menarik berdasarkan kategori pilihan.",
     cat_count: "cerita",
-    cd_fallback_desc: "Jelajahi kisah dari berbagai kategori.",
+    cd_fallback_desc: "Jelajahi kisah dari berbagai kategori pilihan kami.",
     cd_search: "Cari judul buku...",
     cd_empty: "Tidak ada buku yang sesuai dengan pencarian di kategori ini.",
 
@@ -152,7 +142,7 @@ export const translations = {
     // BannerCorner.jsx
     bc_title: "Pojok Baca",
     bc_desc:
-      "Ayo lihat riwayat bacaanmu, buku favorit dan yang sudah kamu simpan disini",
+      "Jelajahi kembali petualanganmu! Pantau riwayat bacaan, temukan buku favorit, dan buka cerita yang sudah kamu simpan di satu tempat.",
 
     // BookInfoBanner.jsx
     bib_reading: "Sedang Membaca..",
@@ -177,12 +167,12 @@ export const translations = {
     // BookPreviewModal.jsx
     bpm_fav_guest_title: "Suka Cerita Ini?",
     bpm_fav_guest_desc:
-      "Yuk, buat akunmu sekarang supaya semua cerita yang kamu beri tanda hati ini tersimpan rapi",
+      "Yuk, buat akunmu sekarang supaya semua cerita yang kamu beri tanda hati ini tersimpan rapi.",
     bpm_btn_register: "Buat Akun",
     bpm_btn_later: "Nanti Saja",
     bpm_rm_fav_title: "Hapus dari Favorit",
     bpm_rm_fav_desc:
-      "Setelah dihapus, cerita ini tidak akan ada di daftar favoritmu",
+      "Setelah dihapus, cerita ini tidak akan ada di daftar favoritmu.",
     bpm_btn_remove: "Hapus",
     bpm_btn_cancel: "Batalkan",
     bpm_add_fav_title: "Difavoritkan",
@@ -194,7 +184,7 @@ export const translations = {
       "Yuk, buat akunmu sekarang supaya semua cerita yang kamu simpan punya tempat yang rapi di rak pribadimu.",
     bpm_add_save_title: "Berhasil Menyimpan",
     bpm_add_save_desc:
-      "Kamu bisa melihat cerita yang sudah kamu simpan di halaman Corner",
+      "Kamu bisa melihat cerita yang sudah kamu simpan di halaman Corner.",
     bpm_pages: "Halaman",
     bpm_default_category: "Cerita Nusantara",
     bpm_synopsis: "Sinopsis",
@@ -215,9 +205,9 @@ export const translations = {
     cat_slider_title: "Kategori Cerita",
 
     // CtaDownload.jsx
-    cta_title: "Dunia Cerita Seru Menunggumu!",
+    cta_title: "Petualangan Cerita Seru Menunggumu!",
     cta_desc:
-      "Jelajahi petualangan, dongeng, dan kisah seru lainnya langsung dari aplikasi Funtasya StoryLand.",
+      "Jelajahi petualangan, dongeng, dan kisah seru lainnya langsung dari aplikasi BookU.",
     cta_soon: "Segera",
 
     // FilterCorner.jsx
@@ -363,22 +353,12 @@ export const translations = {
 
     // About.jsx
     about_heading: "About Us",
+    about_desc:
+      "Get to know more about our journey, vision, and mission at BookU.",
     about_p1:
-      "Funtasya Storyland is a sub-brand of Funtasya World, created specifically to deliver high-quality children's stories in a digital format. We believe every child, wherever they are, deserves to grow up with stories that are fun, meaningful, and full of imagination.",
-    about_p2:
-      "Available on Android, iOS (soon), and web, Funtasya Storyland ensures your little one's favorite stories can always be accessed anytime and anywhere, right from the palm of your hand.",
-    about_p3:
-      "At Funtasya World, we always believe that a child's world is full of possibilities. That is where Funtasya Storyland was born—a safe, fun, and story-filled digital space to accompany children's growth and development.",
-    about_p4:
-      "Reading is not just a skill. Reading is a door to empathy, imagination, and limitless curiosity. But the reality is, access to quality reading materials is still a challenge for many families.",
-    about_fact1:
-      "1 in 3 children worldwide do not have access to age-appropriate reading materials (UNESCO, 2023)",
-    about_fact2:
-      "More than 617 million children have not reached minimum reading proficiency (World Bank, 2023)",
-    about_fact3:
-      "Around 50% of children in developing countries do not have a single book at home (GPE, 2022)",
+      "BookU is dedicated to delivering high-quality, interactive children's stories. We believe every child deserves to grow up with stories that are fun, meaningful, and full of imagination. More than just an app, BookU is a safe digital space specifically designed to accompany children's growth and development through the magic of storytelling.",
     about_closing:
-      "Funtasya Storyland is here as the answer bringing stories directly to children's hands, without limits.",
+      "BookU is here as the answer: bringing the magic of stories directly to children's hands, without limits.",
 
     // BookDetail.jsx
     bd_loading: "Preparing Story...",
@@ -404,7 +384,7 @@ export const translations = {
     bd_add_save_desc: "You can view your saved stories on the Corner page.",
     bd_others: "more",
 
-    // Categories.jsx & CategoryDetail.jsx
+    // CategoryDetail.jsx
     cat_err_title: "Failed to Load Categories",
     cat_err_col: "Collection Not Found",
     btn_retry: "Try Again",
@@ -491,9 +471,9 @@ export const translations = {
     prof_btn_exit: "Log out",
 
     // BannerCorner.jsx
-    bc_title: "Corner",
+    bc_title: "Reading Corner",
     bc_desc:
-      "Let's check your reading history, favorite books, and saved stories here",
+      "Resume your adventures! Track your reading history, find your favorite books, and open saved stories all in one place.",
 
     // BookInfoBanner.jsx
     bib_reading: "Currently Reading..",
@@ -518,7 +498,7 @@ export const translations = {
     // BookPreviewModal.jsx
     bpm_fav_guest_title: "Like This Story?",
     bpm_fav_guest_desc:
-      "Create your account now so all the stories you loved are kept safe.",
+      "Create your account now so all the stories you love are kept safe.",
     bpm_btn_register: "Create Account",
     bpm_btn_later: "Maybe Later",
     bpm_rm_fav_title: "Remove from Favorites",
@@ -534,7 +514,7 @@ export const translations = {
     bpm_save_guest_desc:
       "Create an account now so all the stories you save have a neat place on your personal shelf.",
     bpm_add_save_title: "Successfully Saved",
-    bpm_add_save_desc: "You can view your saved stories on the Corner page",
+    bpm_add_save_desc: "You can view your saved stories on the Corner page.",
     bpm_pages: "Pages",
     bpm_default_category: "Archipelago Story",
     bpm_synopsis: "Synopsis",
@@ -555,9 +535,9 @@ export const translations = {
     cat_slider_title: "Story Categories",
 
     // CtaDownload.jsx
-    cta_title: "An Exciting World of Stories Awaits You!",
+    cta_title: "An Exciting Adventure of Stories Awaits You!",
     cta_desc:
-      "Explore adventures, fairy tales, and other exciting stories directly from the Funtasya StoryLand app.",
+      "Explore adventures, fairy tales, and other exciting stories directly from the BookU app.",
     cta_soon: "Soon",
 
     // FilterCorner.jsx

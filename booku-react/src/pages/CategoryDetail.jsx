@@ -1,47 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useLocation, Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import BannerCorner from "../components/BannerCorner";
 import CtaDownload from "../components/CtaDownload";
 import Card from "../components/Card";
 import CategorySlider from "../components/CategorySlider";
 import { getCategories, getBooks } from "../services/api";
-import { getImageUrl } from "../utils/getImageUrl";
 import { useLanguage } from "../context/LanguageContext";
 
-import bannerBg from "../assets/kategori_banner.png";
-import bannerIcon from "../assets/kategori_icon.png";
-
-const IconGrid = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="22"
-    height="22"
-    viewBox="0 0 24 24"
-    fill="currentColor"
-  >
-    <path d="M3 3h7v7H3V3zm11 0h7v7h-7V3zm0 11h7v7h-7v-7zM3 14h7v7H3v-7z" />
-  </svg>
-);
-const IconList = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="currentColor"
-  >
-    <path d="M4 14h2v-2H4v2zm0 5h2v-2H4v2zm0-10h2V7H4v2zm4 5h12v-2H8v2zm0 5h12v-2H8v2zM8 7v2h12V7H8z" />
-  </svg>
-);
+// Icon Search disesuaikan untuk tombol bulat warna coral
 const IconSearch = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="18"
-    height="18"
+    width="20"
+    height="20"
     viewBox="0 0 24 24"
     fill="none"
-    stroke="#9ca3af"
-    strokeWidth="2"
+    stroke="currentColor"
+    strokeWidth="2.5"
     strokeLinecap="round"
     strokeLinejoin="round"
   >
@@ -52,10 +27,8 @@ const IconSearch = () => (
 
 const CategoryDetail = () => {
   const { id } = useParams();
-  const location = useLocation();
   const { t, language } = useLanguage();
   const [search, setSearch] = useState("");
-  const [viewMode, setViewMode] = useState("grid");
 
   const [categories, setCategories] = useState([]);
   const [books, setBooks] = useState([]);
@@ -82,11 +55,20 @@ const CategoryDetail = () => {
   }, []);
 
   const category = categories.find((c) => c.id === parseInt(id));
+
+  // Mengambil Nama Kategori
   const catName = category
     ? language === "en" && category.name_en
       ? category.name_en
       : category.name_id
     : t("cat_title");
+
+  // Mengambil Deskripsi Kategori
+  const catDesc = category
+    ? language === "en" && category.description_en
+      ? category.description_en
+      : category.description_id || t("cd_fallback_desc")
+    : t("cd_fallback_desc");
 
   const filteredBooks = books.filter((b) => {
     const matchCat = b.id_categories === parseInt(id);
@@ -100,14 +82,14 @@ const CategoryDetail = () => {
 
   if (error)
     return (
-      <div className="w-full h-screen flex flex-col items-center justify-center text-center px-6">
-        <h2 className="text-2xl font-bold text-red-500 mb-2">
+      <div className="w-full h-screen flex flex-col items-center justify-center text-center px-6 bg-booku-cream">
+        <h2 className="text-2xl md:text-3xl font-black text-red-500 mb-4">
           {t("cat_err_col")}
         </h2>
-        <p className="text-gray-500 mb-6 max-w-md">{error}</p>
+        <p className="text-gray-700 font-medium mb-8 max-w-md">{error}</p>
         <button
           onClick={() => window.location.reload()}
-          className="px-8 py-3 bg-teal-600 text-white rounded-full font-bold shadow-md hover:bg-teal-700 transition cursor-pointer"
+          className="px-8 py-3.5 bg-booku-coral text-white rounded-full font-bold shadow-md hover:bg-orange-500 transition cursor-pointer"
         >
           {t("btn_retry")}
         </button>
@@ -116,126 +98,64 @@ const CategoryDetail = () => {
 
   if (isLoading)
     return (
-      <div className="w-full h-screen flex items-center justify-center text-teal-600 font-bold text-xl">
-        {t("cd_loading")}
+      <div className="w-full h-screen flex flex-col items-center justify-center bg-booku-cream">
+        <div className="w-12 h-12 border-4 border-booku-cyan border-t-transparent rounded-full animate-spin mb-4"></div>
+        <span className="text-gray-500 font-bold text-lg">
+          {t("cd_loading")}
+        </span>
       </div>
     );
 
   return (
-    <div className="w-full bg-slate-50">
-      <BannerCorner title={catName} bgImage={bannerBg} icon={bannerIcon} />
+    <div className="w-full bg-booku-cream min-h-screen">
+      {/* Banner melempar title dan description sesuai kategori yang dipilih */}
+      <BannerCorner title={catName} description={catDesc} />
 
-      <div className="mt-8 bg-white py-6 border-b border-gray-100">
+      {/* Slider Kategori */}
+      <div className="mt-8 mb-4">
         <CategorySlider categories={categories} activeCategoryId={id} />
       </div>
 
-      <section className="w-full max-w-7xl mx-auto px-4 md:px-8 mt-10 mb-8">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="relative w-full sm:w-96">
+      <section className="w-full max-w-7xl mx-auto px-4 md:px-8 mt-12 mb-20">
+        {/* Search Bar - Chunky Style (Centered) */}
+        <div className="flex justify-center mb-12">
+          <div className="relative w-full max-w-2xl group">
             <input
               type="text"
               placeholder={t("cd_search")}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-5 pr-10 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-teal-400 focus:ring-0 text-sm shadow-sm bg-white"
+              className="w-full pl-6 pr-16 py-4 md:py-5 rounded-full border-4 border-white focus:outline-none focus:border-booku-cyan text-base md:text-lg text-gray-800 font-bold placeholder-gray-400 shadow-sm bg-white transition-colors"
             />
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 bg-booku-coral rounded-full flex items-center justify-center text-white shadow-sm cursor-pointer hover:bg-orange-500 transition-colors">
               <IconSearch />
             </div>
           </div>
+        </div>
 
-          <div className="flex items-center gap-2 bg-white p-1.5 rounded-xl border border-gray-200 shadow-sm">
-            <button
-              onClick={() => setViewMode("grid")}
-              className={`p-2 rounded-lg transition cursor-pointer ${viewMode === "grid" ? "bg-teal-50 text-teal-600" : "text-gray-400 hover:text-gray-600"}`}
-            >
-              <IconGrid />
-            </button>
-            <button
-              onClick={() => setViewMode("list")}
-              className={`p-2 rounded-lg transition cursor-pointer ${viewMode === "list" ? "bg-teal-50 text-teal-600" : "text-gray-400 hover:text-gray-600"}`}
-            >
-              <IconList />
-            </button>
-          </div>
+        {/* Kontainer Rak Buku (White Island) */}
+        <div className="w-full bg-white rounded-[40px] md:rounded-[48px] p-6 md:p-10 lg:p-12 shadow-sm border border-gray-100 min-h-[40vh]">
+          {filteredBooks.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 md:gap-8 justify-items-center">
+              {filteredBooks.map((book) => (
+                <div
+                  key={book.id}
+                  className="w-full max-w-45 transition-transform duration-300 hover:-translate-y-3 cursor-pointer"
+                >
+                  <Card book={book} />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center h-64 bg-booku-cream/40 rounded-3xl border-2 border-dashed border-booku-yellow">
+              <span className="text-5xl mb-4 block">🔍</span>
+              <p className="text-gray-500 font-bold text-lg text-center max-w-md">
+                {t("cd_empty")}
+              </p>
+            </div>
+          )}
         </div>
       </section>
 
-      <div className="w-full bg-teal-50/50 pt-8 pb-20 min-h-[50vh]">
-        <section className="w-full max-w-7xl mx-auto px-4 md:px-8">
-          {filteredBooks.length > 0 ? (
-            viewMode === "grid" ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-5 md:gap-6">
-                {filteredBooks.map((book) => (
-                  <div
-                    key={book.id}
-                    className="w-full transition-transform duration-300 hover:-translate-y-2 cursor-pointer"
-                  >
-                    <Card book={book} />
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="flex flex-col gap-6 max-w-4xl mx-auto">
-                {filteredBooks.map((book) => {
-                  const bookTitle =
-                    language === "en" && book.title_en
-                      ? book.title_en
-                      : book.title_id;
-                  const bookDesc =
-                    language === "en" && book.description_en
-                      ? book.description_en
-                      : book.description_id;
-                  const coverUrl =
-                    language === "en"
-                      ? book.image_en || book.image_id || book.image
-                      : book.image_id || book.image_en || book.image;
-
-                  return (
-                    <Link
-                      key={book.id}
-                      to={`${location.pathname}?preview=${book.id}`}
-                      className="flex bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden p-4 md:p-6 gap-6 hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer group"
-                    >
-                      <div className="w-28 md:w-36 shrink-0 relative">
-                        <div className="w-full aspect-[2/3] rounded-xl overflow-hidden bg-gray-100 shadow-sm relative">
-                          <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity z-10"></div>
-                          <img
-                            src={getImageUrl(coverUrl)}
-                            alt={bookTitle}
-                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                            onError={(e) => {
-                              e.target.src =
-                                "https://placehold.co/150x220?text=Cover";
-                            }}
-                          />
-                        </div>
-                      </div>
-                      <div className="flex flex-col justify-center flex-1 py-2">
-                        <h3 className="text-xl md:text-2xl font-extrabold text-gray-800 group-hover:text-teal-600 transition-colors">
-                          {bookTitle}
-                        </h3>
-                        <p className="text-sm md:text-base text-gray-500 mt-3 line-clamp-3 leading-relaxed">
-                          {bookDesc ||
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit."}
-                        </p>
-                        <div className="mt-4 mt-auto">
-                          <span className="text-sm font-bold text-orange-500 bg-orange-50 px-3 py-1 rounded-full">
-                            Baca Cerita →
-                          </span>
-                        </div>
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
-            )
-          ) : (
-            <div className="text-center py-24 text-gray-500 font-medium bg-white rounded-3xl border-2 border-dashed border-gray-200">
-              {t("cd_empty")}
-            </div>
-          )}
-        </section>
-      </div>
       <CtaDownload />
     </div>
   );

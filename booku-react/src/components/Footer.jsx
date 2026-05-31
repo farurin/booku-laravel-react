@@ -71,7 +71,10 @@ export default function FooterComponent() {
   }, []);
 
   return (
-    <footer className="w-full bg-booku-cyan text-gray-900 pt-10 pb-6 mt-12 rounded-t-[30px] md:rounded-t-[40px] shadow-[0_-4px_20px_rgba(0,0,0,0.03)] border-t border-white">
+    // margin-top diubah jadi negatif (-mt-10) agar masuk ke bawah lengkungan CtaDownload.
+    // pt (padding-top) ditambah agar kontennya tidak tertutup lengkungan tersebut.
+    // rounded-t dihapus karena sisi atasnya sudah tertutup oleh CtaDownload.
+    <footer className="w-full bg-booku-cyan text-gray-900 pt-20 pb-6 -mt-10 relative z-10">
       <div className="w-full max-w-7xl mx-auto px-6 md:px-12">
         <div className="flex flex-col lg:flex-row justify-between gap-10 border-b border-gray-900/10 pb-8">
           {/* KIRI: Logo & Deskripsi */}
@@ -163,10 +166,10 @@ export default function FooterComponent() {
           </div>
         </div>
 
-        {/* COPYRIGHT CENTERED */}
-        <div className="flex flex-col items-center justify-center pt-6 gap-2 text-[11px] md:text-xs font-black text-gray-800 uppercase tracking-wider text-center">
+        {/* COPYRIGHT CENTERED - Dijadikan 1 Baris */}
+        <div className="flex justify-center pt-6 text-[11px] md:text-xs font-black text-gray-800 uppercase tracking-wider text-center">
           <p>
-            {t("foot_made_with")}{" "}
+            {t("foot_copyright")} &nbsp;|&nbsp; {t("foot_made_with")}{" "}
             <a
               href="https://github.com/farurin"
               target="_blank"
@@ -176,7 +179,6 @@ export default function FooterComponent() {
               Farurin
             </a>
           </p>
-          <p>{t("foot_copyright")}</p>
         </div>
       </div>
     </footer>

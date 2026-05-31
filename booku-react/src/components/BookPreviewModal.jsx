@@ -13,37 +13,43 @@ import {
   incrementBookView,
 } from "../services/api";
 
-import popupFavImg from "../assets/popups/popup-fav.png";
-import popupDeleteFavImg from "../assets/popups/popup-delete-fav.png";
-import popupBookmarkImg from "../assets/popups/popup-bookmark.png";
+// Aset Popup diganti menjadi SVG Data URI
+const popupFavSvg = `data:image/svg+xml;utf8,${encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="#F48F68"/><path d="M50 75L27 52.8C20 45.8 24 33 35 33C41.6 33 46.8 38 50 42C53.2 38 58.4 33 65 33C76 33 80 45.8 73 52.8L50 75Z" fill="white"/></svg>`,
+)}`;
+const popupDeleteFavSvg = `data:image/svg+xml;utf8,${encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="#E5E7EB"/><path d="M50 75L27 52.8C20 45.8 24 33 35 33C41.6 33 46.8 38 50 42C53.2 38 58.4 33 65 33C76 33 80 45.8 73 52.8L50 75Z" fill="#9CA3AF"/><path d="M55 30 L45 50 L55 60 L45 80" stroke="#E5E7EB" stroke-width="4" fill="none"/></svg>`,
+)}`;
+const popupBookmarkSvg = `data:image/svg+xml;utf8,${encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="#FFE394"/><path d="M35 25 h30 v55 l-15-12 l-15 12 z" fill="white"/><path d="M50 40 l3 7 h7 l-5 4 2 7 -7-4 -7 4 2-7 -5-4 h7 z" fill="#F48F68"/></svg>`,
+)}`;
 
-// Ikon SVG
+// Ikon SVG Antarmuka
 const IconClose = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="22"
-    height="22"
+    width="24"
+    height="24"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth="4"
+    strokeWidth="3"
     strokeLinecap="round"
     strokeLinejoin="round"
   >
-    <line x1="17" y1="7" x2="7" y2="17"></line>
-    <line x1="7" y1="7" x2="17" y2="17"></line>
+    <line x1="18" y1="6" x2="6" y2="18"></line>
+    <line x1="6" y1="6" x2="18" y2="18"></line>
   </svg>
 );
-
 const IconBookmark = ({ filled }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
+    width="20"
+    height="20"
     viewBox="0 0 24 24"
     fill={filled ? "currentColor" : "none"}
     stroke="currentColor"
-    strokeWidth="2"
+    strokeWidth="2.5"
     strokeLinecap="round"
     strokeLinejoin="round"
   >
@@ -53,12 +59,12 @@ const IconBookmark = ({ filled }) => (
 const IconHeart = ({ filled }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
+    width="20"
+    height="20"
     viewBox="0 0 24 24"
     fill={filled ? "currentColor" : "none"}
     stroke="currentColor"
-    strokeWidth="2"
+    strokeWidth="2.5"
     strokeLinecap="round"
     strokeLinejoin="round"
   >
@@ -68,12 +74,12 @@ const IconHeart = ({ filled }) => (
 const IconPages = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="14"
-    height="14"
+    width="16"
+    height="16"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth="2"
+    strokeWidth="2.5"
     strokeLinecap="round"
     strokeLinejoin="round"
   >
@@ -87,12 +93,12 @@ const IconPages = () => (
 const IconCategory = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="14"
-    height="14"
+    width="16"
+    height="16"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth="2"
+    strokeWidth="2.5"
     strokeLinecap="round"
     strokeLinejoin="round"
   >
@@ -107,12 +113,12 @@ const IconCategory = () => (
 const IconViews = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="14"
-    height="14"
+    width="16"
+    height="16"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth="2"
+    strokeWidth="2.5"
     strokeLinecap="round"
     strokeLinejoin="round"
   >
@@ -120,17 +126,15 @@ const IconViews = () => (
     <circle cx="12" cy="12" r="3" />
   </svg>
 );
-
-// Tambahkan Icon Bintang Kecil
 const IconStarSmall = ({ filled = true }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="14"
-    height="14"
+    width="16"
+    height="16"
     viewBox="0 0 24 24"
     fill={filled ? "currentColor" : "none"}
     stroke="currentColor"
-    strokeWidth="2"
+    strokeWidth="2.5"
     strokeLinecap="round"
     strokeLinejoin="round"
   >
@@ -281,7 +285,7 @@ const BookPreviewModal = () => {
   const handleToggleFavorite = async () => {
     if (!isLoggedIn) {
       setPopupConfig({
-        image: popupFavImg,
+        image: popupFavSvg,
         title: t("bpm_fav_guest_title"),
         description: t("bpm_fav_guest_desc"),
         primaryBtnText: t("bpm_btn_register"),
@@ -303,7 +307,7 @@ const BookPreviewModal = () => {
 
     if (isFavorite) {
       setPopupConfig({
-        image: popupDeleteFavImg,
+        image: popupDeleteFavSvg,
         title: t("bpm_rm_fav_title"),
         description: t("bpm_rm_fav_desc"),
         primaryBtnText: t("bpm_btn_remove"),
@@ -318,7 +322,7 @@ const BookPreviewModal = () => {
     } else {
       await executeToggleFavAPI();
       setPopupConfig({
-        image: popupFavImg,
+        image: popupFavSvg,
         title: t("bpm_add_fav_title"),
         description: t("bpm_add_fav_desc"),
         primaryBtnText: t("bpm_btn_view"),
@@ -343,7 +347,7 @@ const BookPreviewModal = () => {
   const handleToggleSave = async () => {
     if (!isLoggedIn) {
       setPopupConfig({
-        image: popupBookmarkImg,
+        image: popupBookmarkSvg,
         title: t("bpm_save_guest_title"),
         description: t("bpm_save_guest_desc"),
         primaryBtnText: t("bpm_btn_register"),
@@ -368,7 +372,7 @@ const BookPreviewModal = () => {
     } else {
       await executeToggleSaveAPI();
       setPopupConfig({
-        image: popupBookmarkImg,
+        image: popupBookmarkSvg,
         title: t("bpm_add_save_title"),
         description: t("bpm_add_save_desc"),
         primaryBtnText: t("bpm_btn_view"),
@@ -394,7 +398,7 @@ const BookPreviewModal = () => {
     language === "en"
       ? book.image_en || book.image_id || book.image
       : book.image_id || book.image_en || book.image;
-  const bgImageToUse = firstPageImage ? firstPageImage : coverUrl;
+
   const catName =
     language === "en" && book.category_name_en
       ? book.category_name_en
@@ -410,136 +414,125 @@ const BookPreviewModal = () => {
       ? book.description_en
       : book.description_id;
 
-  // Tangkap data dari backend
   const ratingAvg = book.rating_avg || 0;
   const ratingCount = book.rating_count || 0;
 
   return (
     <>
-      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-10 bg-slate-900/80 backdrop-blur-sm">
-        <div className="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl flex overflow-visible border border-slate-200">
+      {/* Latar Belakang Modal (Terang & Blur) */}
+      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8 bg-gray-900/40 backdrop-blur-md">
+        {/* Kotak Modal Utama - Diubah menjadi max-w-2xl untuk layout Vertikal */}
+        <div className="relative w-full max-w-2xl bg-white rounded-[40px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] flex flex-col overflow-hidden border-8 border-booku-cream animate-fade-in max-h-[90vh]">
+          {/* Tombol Tutup */}
           <button
             onClick={cleanupAndClose}
-            className="absolute -top-4 -right-4 md:-top-5 md:-right-5 z-50 w-11 h-11 md:w-14 md:h-14 bg-booku-yellow text-gray-900 rounded-full flex items-center justify-center shadow-lg hover:bg-booku-coral hover:text-white hover:rotate-90 hover:scale-110 transition-all duration-300 border-4 border-white cursor-pointer"
+            className="absolute top-4 right-4 z-50 w-12 h-12 bg-white text-gray-500 rounded-full flex items-center justify-center shadow-md hover:bg-booku-coral hover:text-white transition-colors border border-gray-100 cursor-pointer"
           >
             <IconClose />
           </button>
 
-          <div className="w-full min-h-[28rem] md:min-h-[32rem] relative rounded-3xl overflow-hidden flex bg-slate-900">
-            <img
-              src={getImageUrl(bgImageToUse)}
-              alt={bookTitle}
-              className="absolute inset-0 w-full h-full object-cover opacity-50 mix-blend-overlay"
-              onError={(e) => {
-                e.target.src =
-                  "https://placehold.co/800x480?text=Preview+Cerita";
-              }}
-            />
+          {/* BAGIAN ATAS: Header Cyan & Gambar Cover */}
+          <div className="w-full h-64 md:h-80 bg-booku-cyan relative flex items-center justify-center shrink-0 overflow-hidden">
+            {/* Dekorasi Bentuk CSS */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-booku-yellow/40 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4"></div>
 
-            <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/90 to-transparent overflow-y-auto">
-              <div className="flex flex-col lg:flex-row items-center w-full min-h-full">
-                <div className="flex flex-col justify-center px-6 md:px-12 w-full lg:w-2/3 py-10 z-10">
-                  <span className="text-booku-cyan font-bold text-xs tracking-wider uppercase mb-2">
-                    Preview Cerita
-                  </span>
-                  <h1 className="text-3xl md:text-4xl font-extrabold text-white leading-tight pr-4">
-                    {bookTitle}
-                  </h1>
+            {/* Cover Buku */}
+            <div className="w-36 md:w-48 aspect-[2/3] rounded-2xl overflow-hidden shadow-xl border-4 border-white z-10 rotate-3 hover:rotate-0 transition-transform duration-500 bg-white">
+              <img
+                src={getImageUrl(coverUrl)}
+                alt={`Cover ${bookTitle}`}
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "https://placehold.co/300x450?text=Cover";
+                }}
+              />
+            </div>
+          </div>
 
-                  <div className="flex flex-wrap items-center gap-4 text-slate-300 text-xs md:text-sm mt-4 font-medium border-b border-slate-700 pb-4">
-                    <span className="flex items-center gap-1.5 bg-slate-800 px-2 py-1 rounded-md">
-                      <IconPages /> {totalPages > 0 ? totalPages : "..."}{" "}
-                      {t("bpm_pages")}
-                    </span>
-                    <span className="flex items-center gap-1.5 bg-booku-cyan/20 text-booku-cyan px-2 py-1 rounded-md">
-                      <IconCategory /> {catName || t("bpm_default_category")}
-                    </span>
-                    {/* INFO AVERAGE RATING */}
-                    <span className="flex items-center gap-1 bg-booku-yellow/20 text-booku-yellow px-2 py-1 rounded-md font-bold">
-                      <IconStarSmall filled={true} />
-                      {ratingAvg > 0 ? Number(ratingAvg).toFixed(1) : "Baru"}
-                      {ratingCount > 0 && (
-                        <span className="text-[10px] opacity-70 ml-0.5">
-                          ({ratingCount})
-                        </span>
-                      )}
-                    </span>
-                  </div>
+          {/* BAGIAN BAWAH: Konten Teks (Bisa di-scroll jika layar kecil) */}
+          <div className="flex-1 p-6 md:p-10 bg-white overflow-y-auto">
+            <span className="text-booku-coral font-black text-sm tracking-widest uppercase mb-2 block">
+              Preview Cerita
+            </span>
 
-                  <div className="flex items-center gap-6 text-slate-400 text-xs md:text-sm mt-4">
-                    <span className="flex items-center gap-1.5" title="Dilihat">
-                      <IconViews /> {book.views_count || 0}
-                    </span>
-                    <span
-                      className="flex items-center gap-1.5 text-booku-coral"
-                      title="Difavoritkan"
-                    >
-                      <IconHeart filled={isFavorite} />{" "}
-                      {book.favorites_count || 0}
-                    </span>
-                    <span
-                      className="flex items-center gap-1.5 text-booku-yellow"
-                      title="Disimpan"
-                    >
-                      <IconBookmark filled={isSaved} /> {book.saved_count || 0}
-                    </span>
-                  </div>
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-black text-gray-900 leading-tight mb-4 pr-8">
+              {bookTitle}
+            </h1>
 
-                  <div className="mt-6 md:mt-6">
-                    <p className="text-slate-300 mt-1 md:mt-2 text-sm max-w-xl leading-relaxed bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
-                      {bookDesc || t("bpm_no_synopsis")}
-                    </p>
-                  </div>
+            {/* Badges Informasi */}
+            <div className="flex flex-wrap items-center gap-2 md:gap-3 text-gray-700 text-xs md:text-sm font-bold">
+              <span className="flex items-center gap-1.5 bg-gray-100 px-3 py-1.5 rounded-full border border-gray-200">
+                <IconPages /> {totalPages > 0 ? totalPages : "..."}{" "}
+                {t("bpm_pages")}
+              </span>
+              <span className="flex items-center gap-1.5 bg-booku-cyan/20 text-teal-800 px-3 py-1.5 rounded-full border border-booku-cyan/30">
+                <IconCategory /> {catName || t("bpm_default_category")}
+              </span>
+              <span className="flex items-center gap-1 bg-booku-yellow/30 text-yellow-800 px-3 py-1.5 rounded-full border border-booku-yellow/50">
+                <IconStarSmall filled={true} />
+                {ratingAvg > 0 ? Number(ratingAvg).toFixed(1) : "Baru"}
+                {ratingCount > 0 && (
+                  <span className="opacity-70 ml-1">({ratingCount})</span>
+                )}
+              </span>
+            </div>
 
-                  <div className="mt-8 flex flex-col gap-3 shrink-0">
-                    <div className="flex gap-3 h-11 md:h-12">
-                      <button
-                        onClick={handleToggleSave}
-                        className={`w-11 md:w-12 h-full flex items-center justify-center rounded-xl hover:-translate-y-1 transition-all shadow-md cursor-pointer shrink-0 border ${isSaved ? "bg-booku-yellow text-gray-900 border-booku-yellow" : "bg-slate-800 text-booku-yellow border-slate-700 hover:bg-slate-700"}`}
-                      >
-                        <IconBookmark filled={isSaved} />
-                      </button>
-                      <button
-                        onClick={handleReadClick}
-                        className="flex-1 max-w-[200px] h-full bg-booku-coral text-white font-bold rounded-xl hover:brightness-110 hover:-translate-y-1 transition-all shadow-md text-sm cursor-pointer border-none"
-                      >
-                        {t("bpm_btn_read")}
-                      </button>
-                    </div>
+            {/* Statistik View, Fav, Save */}
+            <div className="flex items-center gap-5 md:gap-6 text-gray-500 text-xs md:text-sm font-bold mt-5 pb-5 border-b border-gray-100">
+              <span className="flex items-center gap-1.5">
+                <IconViews /> {book.views_count || 0}
+              </span>
+              <span className="flex items-center gap-1.5 text-booku-coral">
+                <IconHeart filled={isFavorite} /> {book.favorites_count || 0}
+              </span>
+              <span className="flex items-center gap-1.5 text-booku-yellow">
+                <IconBookmark filled={isSaved} /> {book.saved_count || 0}
+              </span>
+            </div>
 
-                    <div className="flex gap-3 h-11 md:h-12">
-                      <button
-                        onClick={handleToggleFavorite}
-                        className={`w-11 md:w-12 h-full flex items-center justify-center rounded-xl hover:-translate-y-1 transition-all shadow-md cursor-pointer shrink-0 border ${isFavorite ? "bg-booku-coral text-white border-booku-coral" : "bg-slate-800 text-booku-coral border-slate-700 hover:bg-slate-700"}`}
-                      >
-                        <IconHeart filled={isFavorite} />
-                      </button>
+            {/* Sinopsis */}
+            <div className="mt-5 bg-booku-cream/50 p-5 rounded-2xl border border-booku-yellow/30">
+              <h4 className="text-gray-900 font-black mb-2">
+                {t("bpm_synopsis")}
+              </h4>
+              <p className="text-gray-700 text-sm md:text-base leading-relaxed">
+                {bookDesc || t("bpm_no_synopsis")}
+              </p>
+            </div>
 
-                      <button
-                        onClick={() => window.open(activeYoutubeUrl, "_blank")}
-                        disabled={!activeYoutubeUrl}
-                        className={`flex-1 max-w-[200px] h-full font-bold rounded-xl transition-all shadow-md text-sm shrink-0 border ${activeYoutubeUrl ? "bg-booku-cyan text-gray-900 border-booku-cyan hover:brightness-110 hover:-translate-y-1 cursor-pointer" : "bg-slate-800 text-slate-500 border-slate-700 cursor-not-allowed"}`}
-                      >
-                        {t("bpm_btn_watch")}
-                      </button>
-                    </div>
-                  </div>
-                </div>
+            {/* Tombol Aksi */}
+            <div className="mt-6 flex flex-col sm:flex-row gap-3 shrink-0">
+              <div className="flex-1 flex gap-3 h-12 md:h-14">
+                <button
+                  onClick={handleReadClick}
+                  className="flex-1 bg-booku-coral text-white font-black rounded-xl md:rounded-2xl shadow-sm hover:-translate-y-1 hover:shadow-md transition-all text-base md:text-lg cursor-pointer border-none"
+                >
+                  {t("bpm_btn_read")}
+                </button>
+                <button
+                  onClick={() => window.open(activeYoutubeUrl, "_blank")}
+                  disabled={!activeYoutubeUrl}
+                  className={`flex-1 font-black rounded-xl md:rounded-2xl shadow-sm text-base md:text-lg transition-all border-none ${activeYoutubeUrl ? "bg-booku-cyan text-gray-900 hover:-translate-y-1 hover:shadow-md cursor-pointer" : "bg-gray-100 text-gray-400 cursor-not-allowed"}`}
+                >
+                  {t("bpm_btn_watch")}
+                </button>
+              </div>
 
-                <div className="hidden lg:flex flex-1 items-center justify-center pr-12 z-10">
-                  <div className="w-52 xl:w-60 aspect-[2/3] rounded-xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-2 border-slate-700 transform hover:-translate-y-2 transition-transform duration-500 bg-booku-cream">
-                    <img
-                      src={getImageUrl(coverUrl)}
-                      alt={`Cover ${bookTitle}`}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src =
-                          "https://placehold.co/150x220?text=Cover";
-                      }}
-                    />
-                  </div>
-                </div>
+              <div className="flex gap-3 h-12 md:h-14 justify-center">
+                <button
+                  onClick={handleToggleFavorite}
+                  className={`w-12 md:w-14 h-full flex items-center justify-center rounded-xl md:rounded-2xl shadow-sm hover:-translate-y-1 transition-all cursor-pointer border-2 ${isFavorite ? "bg-booku-coral text-white border-booku-coral" : "bg-white text-gray-400 border-gray-200 hover:border-booku-coral hover:text-booku-coral"}`}
+                >
+                  <IconHeart filled={isFavorite} />
+                </button>
+                <button
+                  onClick={handleToggleSave}
+                  className={`w-12 md:w-14 h-full flex items-center justify-center rounded-xl md:rounded-2xl shadow-sm hover:-translate-y-1 transition-all cursor-pointer border-2 ${isSaved ? "bg-booku-yellow text-gray-900 border-booku-yellow" : "bg-white text-gray-400 border-gray-200 hover:border-booku-yellow hover:text-booku-yellow"}`}
+                >
+                  <IconBookmark filled={isSaved} />
+                </button>
               </div>
             </div>
           </div>

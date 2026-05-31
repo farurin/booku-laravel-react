@@ -9,23 +9,22 @@ const CtaDownload = () => {
   const { t } = useLanguage();
 
   return (
-    <section className="w-full px-4 md:px-8 py-16 lg:py-24">
-      {/* Diubah jadi Floating Card Raksasa */}
-      <div className="w-full max-w-7xl mx-auto bg-booku-yellow rounded-[48px] lg:rounded-[64px] relative overflow-hidden flex flex-col lg:flex-row items-center justify-between p-8 lg:p-16 shadow-[0_20px_50px_rgba(255,227,148,0.5)] border-8 border-white">
-        {/* Dekorasi Blob Cyan di background */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-booku-cyan/40 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
-
+    // margin-top dihapus, border dihapus.
+    // Ditambahkan rounded-b-[40px] dan z-20 agar melengkung manis di atas Footer
+    <section className="w-full bg-booku-cream pt-16 md:pt-20 overflow-hidden relative rounded-b-[30px] md:rounded-b-[40px] z-20 shadow-sm">
+      {/* Kontainer Utama */}
+      <div className="w-full max-w-7xl mx-auto px-6 md:px-12 flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-8 relative z-10">
         {/* KONTEN KIRI */}
-        <div className="max-w-lg lg:max-w-xl text-center lg:text-left relative z-10">
-          <h1
-            className="text-4xl md:text-5xl lg:text-[54px] font-black leading-[1.1] text-gray-900 tracking-tight"
+        <div className="w-full lg:w-7/12 text-center lg:text-left mb-16 lg:mb-20 mt-4">
+          <h2
+            className="text-3xl md:text-4xl lg:text-5xl font-black leading-tight text-gray-900 tracking-tight mb-5"
             dangerouslySetInnerHTML={{ __html: t("cta_title") }}
           />
-          <p className="mt-6 text-gray-700 font-medium text-base md:text-lg max-w-md mx-auto lg:mx-0 bg-white/50 p-4 rounded-2xl backdrop-blur-sm">
+          <p className="text-gray-800 font-medium text-base md:text-lg max-w-lg mx-auto lg:mx-0 mb-8">
             {t("cta_desc")}
           </p>
 
-          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 mt-8 bg-white/40 p-3 rounded-3xl backdrop-blur-md w-max mx-auto lg:mx-0 border border-white/60">
+          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
             <a
               href="#"
               className="transition-transform hover:scale-105 hover:-translate-y-1"
@@ -36,14 +35,14 @@ const CtaDownload = () => {
                 className="h-10 lg:h-12 object-contain drop-shadow-sm"
               />
             </a>
-            <div className="flex flex-col items-center opacity-60 grayscale cursor-not-allowed">
+            <div className="flex flex-col items-center opacity-50 grayscale cursor-not-allowed">
               <img
                 src={badgeIos}
                 alt="App Store"
                 className="h-10 lg:h-12 object-contain"
               />
             </div>
-            <div className="flex flex-col items-center opacity-60 grayscale cursor-not-allowed">
+            <div className="flex flex-col items-center opacity-50 grayscale cursor-not-allowed">
               <img
                 src={badgeAppgallery}
                 alt="AppGallery"
@@ -53,12 +52,12 @@ const CtaDownload = () => {
           </div>
         </div>
 
-        {/* GAMBAR KANAN (Melayang ke luar batas) */}
-        <div className="w-full lg:w-1/2 flex justify-center lg:justify-end items-end h-full mt-12 lg:mt-0 relative z-10 lg:-mr-12 lg:-mb-24">
+        {/* GAMBAR KANAN */}
+        <div className="w-full lg:w-5/12 flex justify-center lg:justify-end items-end h-full mt-auto">
           <img
             src={badgePhone}
             alt="App Mockup"
-            className="w-[80%] md:w-[60%] lg:w-[110%] object-contain drop-shadow-2xl"
+            className="w-full max-w-55 md:max-w-65 lg:max-w-75 object-contain drop-shadow-2xl relative z-20 origin-bottom hover:scale-105 transition-transform duration-500"
           />
         </div>
       </div>

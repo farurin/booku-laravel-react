@@ -52,7 +52,7 @@ const IconSearch = () => (
     viewBox="0 0 24 24"
     fill="none"
     stroke="#9ca3af"
-    strokeWidth="2"
+    strokeWidth="2.5"
     strokeLinecap="round"
     strokeLinejoin="round"
   >
@@ -69,7 +69,7 @@ const FilterCorner = ({ activeFilter, onChangeFilter, onSearch }) => {
       key: "riwayat",
       label: t("fc_history"),
       icon: IconHistory,
-      color: "bg-booku-cyan text-gray-800",
+      color: "bg-booku-cyan text-gray-900",
     },
     {
       key: "favorit",
@@ -81,43 +81,44 @@ const FilterCorner = ({ activeFilter, onChangeFilter, onSearch }) => {
       key: "disimpan",
       label: t("fc_saved"),
       icon: IconSave,
-      color: "bg-booku-yellow text-gray-800",
+      color: "bg-booku-yellow text-gray-900",
     },
   ];
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 md:px-8 mt-12 mb-8 flex flex-col lg:flex-row items-center justify-between gap-8">
-      {/* Button Filter - Berubah jadi Kotak Besar (Tiles) */}
-      <div className="flex gap-3 md:gap-5 w-full lg:w-auto overflow-x-auto pb-4 lg:pb-0 scrollbar-hide snap-x">
+    <div className="w-full max-w-7xl mx-auto px-4 md:px-8 mt-8 mb-8 flex flex-col lg:flex-row items-center justify-between gap-6">
+      {/* Button Filter - Gaya DOCK (Terbungkus dalam satu pill putih) */}
+      <div className="bg-white p-2 rounded-full shadow-sm border border-gray-100 flex w-full lg:w-auto overflow-x-auto scrollbar-hide">
         {filters.map(({ key, label, icon: IconComponent, color }) => {
           const isActive = activeFilter === key;
           return (
             <button
               key={key}
               onClick={() => onChangeFilter(key)}
-              className={`snap-center shrink-0 flex flex-col items-center justify-center gap-3 w-28 h-28 md:w-32 md:h-32 rounded-3xl font-black transition-all duration-300 focus:outline-none border-4 
-                ${isActive ? `${color} border-white shadow-xl scale-105 -translate-y-2` : "bg-white text-gray-400 border-transparent shadow-sm hover:bg-booku-cream/50"}
-              `}
+              className={`flex items-center gap-2.5 px-6 py-3 md:py-3.5 rounded-full font-bold transition-all whitespace-nowrap ${
+                isActive
+                  ? `${color} shadow-md`
+                  : "text-gray-500 hover:bg-booku-cream/50"
+              }`}
             >
-              <div className="scale-125 md:scale-150 mb-1">
-                <IconComponent className={isActive ? "" : "text-gray-300"} />
-              </div>
-              <span className="text-sm tracking-wide">{label}</span>
+              <IconComponent className={isActive ? "" : "opacity-60"} />
+              <span className="text-sm md:text-base tracking-wide">
+                {label}
+              </span>
             </button>
           );
         })}
       </div>
 
-      {/* Search Bar - Dibuat melayang */}
-      <div className="relative w-full lg:w-[400px] shrink-0">
-        <div className="absolute -inset-1 bg-gradient-to-r from-booku-cyan to-booku-coral rounded-full blur opacity-20"></div>
+      {/* Search Bar */}
+      <div className="relative w-full lg:w-87.5 shrink-0">
         <input
           type="text"
           placeholder={t("fc_search")}
           onChange={(e) => onSearch(e.target.value)}
-          className="relative w-full pl-14 pr-6 py-4 rounded-full border-none focus:outline-none focus:ring-4 focus:ring-booku-yellow text-base text-gray-800 font-medium placeholder-gray-400 shadow-lg bg-white"
+          className="w-full pl-14 pr-6 py-4 md:py-4 rounded-full border-2 border-white focus:outline-none focus:border-booku-cyan text-base text-gray-800 font-medium placeholder-gray-400 shadow-sm bg-white transition-colors"
         />
-        <div className="absolute left-5 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400 scale-125">
+        <div className="absolute left-5 top-1/2 -translate-y-1/2 pointer-events-none">
           <IconSearch />
         </div>
       </div>

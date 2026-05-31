@@ -126,7 +126,7 @@ const Corner = () => {
 
       <div className="w-full min-h-[50vh]">
         {error && !isLoading && (
-          <div className="w-full max-w-7xl mx-auto px-4 md:px-8 py-20 text-center bg-white mt-12 mb-20 rounded-[40px] border-4 border-red-100 shadow-sm">
+          <div className="w-full max-w-7xl mx-auto px-4 md:px-8 py-20 text-center bg-white mb-20 rounded-[40px] border-4 border-red-100 shadow-sm">
             <h3 className="text-xl md:text-2xl font-black text-red-500 leading-tight">
               {t("cor_err")}
             </h3>
@@ -135,7 +135,7 @@ const Corner = () => {
             </p>
             <button
               onClick={fetchCornerData}
-              className="mt-8 px-10 py-3.5 bg-booku-coral text-white font-black rounded-2xl hover:bg-orange-600 hover:-translate-y-1 transition-all shadow-md"
+              className="mt-8 px-10 py-3.5 bg-booku-coral text-white font-black rounded-full hover:bg-orange-600 hover:-translate-y-1 transition-all shadow-md"
             >
               {t("btn_retry")}
             </button>
@@ -152,23 +152,23 @@ const Corner = () => {
         )}
 
         {!isLoading && !error && hasNoBooksOriginal && !search && (
-          <div className="w-full max-w-7xl mx-auto px-4 md:px-8 py-32 text-center bg-white/50 mt-8 mb-24 rounded-[48px] border-2 border-dashed border-booku-cyan/50">
+          <div className="w-full max-w-7xl mx-auto px-4 md:px-8 py-32 text-center bg-white mb-24 rounded-[40px] shadow-sm border border-gray-100">
             <div className="w-24 h-24 bg-booku-yellow/30 rounded-full mx-auto mb-8 flex items-center justify-center">
               <span className="text-5xl">📚</span>
             </div>
             <h3 className="text-3xl font-black text-gray-800 leading-tight">
               {emptyContent[activeFilter].title}
             </h3>
-            <p className="text-gray-600 mt-4 text-lg font-medium max-w-md mx-auto">
+            <p className="text-gray-500 mt-4 text-lg font-medium max-w-md mx-auto">
               {emptyContent[activeFilter].desc}
             </p>
           </div>
         )}
 
         {!isLoading && !error && hasNoSearchResults && (
-          <div className="w-full max-w-7xl mx-auto px-4 md:px-8 py-24 text-center bg-white/50 mt-8 mb-20 rounded-[40px] border-2 border-dashed border-booku-yellow">
+          <div className="w-full max-w-7xl mx-auto px-4 md:px-8 py-24 text-center bg-white mb-20 rounded-[40px] shadow-sm border border-gray-100">
             <span className="text-5xl mb-6 block">🔍</span>
-            <h3 className="text-2xl font-black text-gray-500 leading-tight">
+            <h3 className="text-2xl font-black text-gray-800 leading-tight">
               {t("cor_empty_search")}
             </h3>
             <p className="text-gray-500 mt-3 text-lg font-medium">
@@ -182,39 +182,45 @@ const Corner = () => {
         {!isLoading && !error && !hasNoBooksOriginal && !hasNoSearchResults && (
           <>
             {activeFilter === "favorit" && !search && (
-              <div className="w-full max-w-7xl mx-auto px-4 md:px-8 mt-12 -mb-2">
-                <div className="flex items-center gap-3">
-                  <div className="w-2 h-8 bg-booku-coral rounded-full"></div>
-                  <h2 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">
-                    {t("cor_fav_title")}
-                  </h2>
+              <div className="w-full max-w-7xl mx-auto px-4 md:px-8 mb-6">
+                <div className="flex items-center gap-3 bg-white p-6 md:px-8 md:py-6 rounded-3xl shadow-sm border border-gray-100">
+                  <div className="w-3 h-10 bg-booku-coral rounded-full"></div>
+                  <div>
+                    <h2 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tight">
+                      {t("cor_fav_title")}
+                    </h2>
+                    <p className="text-gray-500 font-medium text-sm md:text-base mt-1">
+                      {t("cor_fav_desc")}
+                    </p>
+                  </div>
                 </div>
-                <p className="text-gray-600 font-medium mt-3 text-base md:text-lg">
-                  {t("cor_fav_desc")}
-                </p>
               </div>
             )}
             {activeFilter === "disimpan" && !search && (
-              <div className="w-full max-w-7xl mx-auto px-4 md:px-8 mt-12 -mb-2">
-                <div className="flex items-center gap-3">
-                  <div className="w-2 h-8 bg-booku-yellow rounded-full"></div>
-                  <h2 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">
-                    {t("cor_save_title")}
-                  </h2>
+              <div className="w-full max-w-7xl mx-auto px-4 md:px-8 mb-6">
+                <div className="flex items-center gap-3 bg-white p-6 md:px-8 md:py-6 rounded-3xl shadow-sm border border-gray-100">
+                  <div className="w-3 h-10 bg-booku-yellow rounded-full"></div>
+                  <div>
+                    <h2 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tight">
+                      {t("cor_save_title")}
+                    </h2>
+                    <p className="text-gray-500 font-medium text-sm md:text-base mt-1">
+                      <span className="font-black text-gray-800 bg-booku-yellow/40 px-2 py-0.5 rounded-md mr-1">
+                        {progressData[t("cor_saved")]?.length || 0}
+                      </span>
+                      {t("cor_save_desc")}
+                    </p>
+                  </div>
                 </div>
-                <p className="text-gray-600 font-medium mt-3 text-base md:text-lg">
-                  <span className="font-black text-gray-900 bg-booku-yellow/40 px-2 py-0.5 rounded-md">
-                    {progressData[t("cor_saved")]?.length || 0}
-                  </span>{" "}
-                  {t("cor_save_desc")}
-                </p>
               </div>
             )}
             {search && (
-              <div className="w-full max-w-7xl mx-auto px-4 md:px-8 mt-12 -mb-2">
-                <h2 className="text-2xl font-black text-gray-900">
-                  {t("cor_result")}
-                </h2>
+              <div className="w-full max-w-7xl mx-auto px-4 md:px-8 mb-6">
+                <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 text-center">
+                  <h2 className="text-2xl font-black text-gray-900">
+                    {t("cor_result")}
+                  </h2>
+                </div>
               </div>
             )}
 
