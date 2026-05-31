@@ -420,7 +420,7 @@ const BookPreviewModal = () => {
   return (
     <>
       {/* Latar Belakang Modal (Terang & Blur) */}
-      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8 bg-gray-900/40 backdrop-blur-md">
+      <div className="fixed inset-0 z-100 flex items-center justify-center p-4 md:p-8 bg-gray-900/40 backdrop-blur-md">
         {/* Kotak Modal Utama - Diubah menjadi max-w-2xl untuk layout Vertikal */}
         <div className="relative w-full max-w-2xl bg-white rounded-[40px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] flex flex-col overflow-hidden border-8 border-booku-cream animate-fade-in max-h-[90vh]">
           {/* Tombol Tutup */}
@@ -438,7 +438,7 @@ const BookPreviewModal = () => {
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-booku-yellow/40 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4"></div>
 
             {/* Cover Buku */}
-            <div className="w-36 md:w-48 aspect-[2/3] rounded-2xl overflow-hidden shadow-xl border-4 border-white z-10 rotate-3 hover:rotate-0 transition-transform duration-500 bg-white">
+            <div className="w-36 md:w-48 aspect-2/3 rounded-2xl overflow-hidden shadow-xl border-4 border-white z-10 rotate-3 hover:rotate-0 transition-transform duration-500 bg-white">
               <img
                 src={getImageUrl(coverUrl)}
                 alt={`Cover ${bookTitle}`}
@@ -501,6 +501,18 @@ const BookPreviewModal = () => {
                 {bookDesc || t("bpm_no_synopsis")}
               </p>
             </div>
+
+            {/* --- BLOK ATRIBUSI LEGAL (TUNGGAL) --- */}
+            {book.attribution_text && (
+              <div className="mt-4 p-4 bg-booku-cyan/10 border border-booku-cyan/20 rounded-2xl">
+                <h6 className="text-xs font-black text-teal-700 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
+                  <span>📜</span> Attribution
+                </h6>
+                <p className="text-xs md:text-sm text-gray-700 font-medium leading-relaxed italic">
+                  {book.attribution_text}
+                </p>
+              </div>
+            )}
 
             {/* Tombol Aksi */}
             <div className="mt-6 flex flex-col sm:flex-row gap-3 shrink-0">

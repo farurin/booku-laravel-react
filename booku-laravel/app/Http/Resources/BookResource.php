@@ -34,11 +34,8 @@ class BookResource extends JsonResource
             'rating_avg' => (float) ($this->rating_avg ?? 0),
             'rating_count' => (int) ($this->rating_count ?? 0),
 
-            // TAMBAHAN ATRIBUSI STORYWEAVER
-            'author' => $this->author ?? 'StoryWeaver Community',
-            'illustrator' => $this->illustrator ?? 'StoryWeaver Illustrator',
-            'license' => $this->license ?? 'CC BY 4.0',
-            'source_url' => $this->source_url,
+            // ATRIBUSI LEGAL (Tunggal)
+            'attribution_text' => $this->attribution_text,
 
             'created_at' => $this->created_at,
             'category_name_id' => $this->whenLoaded('category', function () {

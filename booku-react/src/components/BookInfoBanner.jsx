@@ -3,7 +3,6 @@ import { getImageUrl } from "../utils/getImageUrl";
 import { useLanguage } from "../context/LanguageContext";
 import StarRating from "./StarRating";
 
-// icon svg
 const IconPages = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -124,10 +123,10 @@ const BookInfoBanner = ({ book, userRating = 0, totalPages = 0 }) => {
 
   return (
     <div className="w-full bg-white rounded-3xl p-6 md:p-8 flex flex-col md:flex-row gap-6 md:gap-10 items-start mt-6 mb-12 shadow-md border border-booku-cyan/20 relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-32 h-32 bg-booku-yellow/30 rounded-bl-full -z-0"></div>
+      <div className="absolute top-0 right-0 w-32 h-32 bg-booku-yellow/30 rounded-bl-full z-0"></div>
 
       <div className="w-32 md:w-44 shrink-0 self-center md:self-start relative z-10">
-        <div className="w-full aspect-[2/3] rounded-xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.12)] border-2 border-white bg-booku-cream transform -rotate-2 hover:rotate-0 transition-transform duration-300">
+        <div className="w-full aspect-2/3 rounded-xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.12)] border-2 border-white bg-booku-cream transform -rotate-2 hover:rotate-0 transition-transform duration-300">
           <img
             src={getImageUrl(coverUrl)}
             alt={bookTitle}
@@ -140,11 +139,11 @@ const BookInfoBanner = ({ book, userRating = 0, totalPages = 0 }) => {
       </div>
 
       <div className="flex-1 py-2 flex flex-col justify-center relative z-10 w-full">
-        <span className="inline-block px-3 py-1 bg-booku-yellow/50 text-gray-800 font-bold text-xs rounded-full w-max mb-3 uppercase tracking-wider border border-booku-yellow">
+        <span className="inline-block px-3 py-1 bg-booku-yellow/50 text-gray-800 font-bold text-xs rounded-full w-max mb-3 uppercase tracking-wider border border-booku-yellow://">
           {t("bib_reading")}
         </span>
 
-        <h1 className="text-2xl md:text-4xl font-bold text-gray-900 tracking-tight mb-2 leading-tight">
+        <h1 className="text-2xl md:text-4xl font-black text-gray-900 tracking-tight mb-2 leading-tight">
           {bookTitle}
         </h1>
 
@@ -152,11 +151,10 @@ const BookInfoBanner = ({ book, userRating = 0, totalPages = 0 }) => {
           <StarRating bookId={book.id} initialRating={userRating} />
         </div>
 
-        <div className="flex flex-wrap items-center gap-4 text-xs md:text-sm font-medium text-gray-600 mb-4 pb-4 border-b border-gray-100">
+        <div className="flex flex-wrap items-center gap-4 text-xs md:text-sm font-bold text-gray-600 mb-4 pb-4 border-b border-gray-100">
           <div className="flex items-center gap-1.5 bg-gray-50 px-2 py-1 rounded-md border border-gray-100">
             <IconPages />
             <span>
-              {/* Tampilkan angka dinamis totalPages */}
               {totalPages > 0 ? totalPages : "..."} {t("bib_pages")}
             </span>
           </div>
@@ -167,7 +165,7 @@ const BookInfoBanner = ({ book, userRating = 0, totalPages = 0 }) => {
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-5 text-sm font-semibold text-gray-700 mb-6">
+        <div className="flex flex-wrap items-center gap-5 text-sm font-bold text-gray-700 mb-6">
           <div className="flex items-center gap-2" title="Views">
             <span className="p-1.5 bg-blue-50 text-blue-500 rounded-full">
               <IconViews />
@@ -188,14 +186,26 @@ const BookInfoBanner = ({ book, userRating = 0, totalPages = 0 }) => {
           </div>
         </div>
 
-        <div>
-          <h5 className="font-bold text-gray-900 text-base mb-2 flex items-center gap-2">
+        <div className="w-full">
+          <h5 className="font-black text-gray-900 text-base mb-2 flex items-center gap-2">
             <span className="w-1.5 h-4 bg-booku-coral rounded-full"></span>
             {t("bib_synopsis")}
           </h5>
-          <p className="text-gray-600 leading-relaxed text-sm md:text-base max-w-3xl bg-booku-cream/30 p-4 rounded-xl">
+          <p className="text-gray-600 leading-relaxed text-sm md:text-base max-w-3xl bg-booku-cream/30 p-4 rounded-xl font-medium">
             {bookDesc || t("bib_no_synopsis")}
           </p>
+
+          {/* --- BLOK ATRIBUSI LEGAL (TUNGGAL) --- */}
+          {book.attribution_text && (
+            <div className="mt-5 p-4 bg-booku-cyan/10 border border-booku-cyan/20 rounded-2xl max-w-3xl">
+              <h6 className="text-xs font-black text-teal-700 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                <span>📜</span> Attribution
+              </h6>
+              <p className="text-sm text-gray-700 font-medium leading-relaxed italic">
+                {book.attribution_text}
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>

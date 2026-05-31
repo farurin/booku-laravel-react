@@ -27,20 +27,14 @@ class Book extends Model
         'youtube_url_en',
         'status',
         'views_count',
-        // TAMBAHAN ATRIBUSI STORYWEAVER
-        'author',
-        'illustrator',
-        'license',
-        'source_url'
+        'attribution_text' // HANYA TINGGAL INI SAJA
     ];
 
-    // Relasi: Buku dimiliki oleh satu kategori
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'id_categories', 'id');
     }
 
-    // Relasi: Satu buku punya banyak halaman (scenes)
     public function pages(): HasMany
     {
         return $this->hasMany(BookPage::class, 'id_book', 'id')->orderBy('page_number', 'asc');

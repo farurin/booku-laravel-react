@@ -7,7 +7,8 @@ import Card from "./Card";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
 
-export const CategorySection = ({ category, index }) => {
+// Tambahkan "= 0" pada parameter index
+export const CategorySection = ({ category, index = 0 }) => {
   const { t, language } = useLanguage();
   const booksToShow = category.books ? category.books.slice(0, 10) : [];
 
@@ -39,6 +40,8 @@ export const CategorySection = ({ category, index }) => {
       btn: "text-booku-coral hover:text-white",
     },
   ];
+
+  // Sekarang aman karena index pasti berupa angka
   const theme = themes[index % themes.length];
 
   return (
