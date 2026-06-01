@@ -58,7 +58,7 @@ const IconAutoPlay = () => (
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth="2"
+    strokeWidth="2.5"
     strokeLinecap="round"
     strokeLinejoin="round"
   >
@@ -345,20 +345,20 @@ const StoryReader = ({ book }) => {
 
   if (!book || isLoading) {
     return (
-      <div className="w-full aspect-video bg-white md:rounded-[32px] animate-pulse shadow-sm border border-gray-100"></div>
+      <div className="w-full aspect-video bg-white md:rounded-[40px] animate-pulse shadow-sm border border-gray-100"></div>
     );
   }
 
   if (pages.length === 0) {
     return (
-      <div className="w-full aspect-video bg-white md:rounded-[32px] flex flex-col items-center justify-center shadow-sm border-2 border-dashed border-booku-cyan">
+      <div className="w-full aspect-video bg-white md:rounded-[40px] flex flex-col items-center justify-center shadow-sm border-2 border-dashed border-booku-cyan">
         <IconGlobe className="w-16 h-16 text-booku-cyan mb-4" />
-        <h2 className="text-xl md:text-2xl font-bold text-gray-500 mb-2">
+        <h2 className="text-xl md:text-2xl font-black text-gray-500 mb-2 tracking-tight">
           {t("sr_empty_title")}
         </h2>
         <button
           onClick={() => navigate(-1)}
-          className="mt-6 px-8 py-3 bg-booku-yellow text-gray-900 font-bold rounded-xl hover:brightness-95 transition cursor-pointer"
+          className="mt-6 px-8 py-3 bg-booku-yellow text-gray-900 font-bold rounded-2xl shadow-sm hover:-translate-y-1 transition cursor-pointer border border-white"
         >
           {t("sr_btn_back")}
         </button>
@@ -369,25 +369,25 @@ const StoryReader = ({ book }) => {
   return (
     <div
       id="story-reader-container"
-      className="relative w-full mx-auto overflow-hidden flex flex-col lg:block rounded-[24px] lg:rounded-[40px] group transition-all duration-500 shadow-xl lg:aspect-video bg-booku-cream border-4 border-white"
+      className="relative w-full mx-auto flex flex-col lg:block rounded-4xl lg:rounded-[40px] shadow-sm lg:aspect-video bg-white p-2 lg:p-4 border-4 border-gray-50"
     >
       <audio ref={audioRef} onEnded={handleAudioEnded} />
       <audio ref={bgmRef} loop />
 
-      {/* OVERLAY MULAI BACA */}
+      {/* OVERLAY MULAI BACA - Z-Index 50 (Menutupi kontrol, tapi di bawah navigasi atas) */}
       {!hasStarted && (
-        <div className="absolute inset-0 z-30 bg-booku-cyan/90 backdrop-blur-md flex flex-col items-center justify-center gap-5 rounded-[20px] lg:rounded-[36px]">
+        <div className="absolute inset-0 z-50 bg-booku-cyan/70 backdrop-blur-md flex flex-col items-center justify-center gap-5 rounded-[28px] lg:rounded-[36px] m-2 lg:m-4">
           {savedProgress > 0 && savedProgress < 100 ? (
             <>
               <button
                 onClick={() => handleStartReading(true)}
-                className="px-10 py-5 bg-booku-coral hover:brightness-110 text-white text-lg lg:text-2xl font-black rounded-3xl shadow-[0_10px_30px_rgba(244,143,104,0.4)] hover:-translate-y-1 transition-all cursor-pointer border-4 border-white/50"
+                className="px-10 py-5 bg-booku-coral hover:bg-orange-500 text-white text-lg lg:text-2xl font-black rounded-3xl shadow-lg hover:-translate-y-1 transition-all cursor-pointer border-4 border-white/50"
               >
                 {t("sr_btn_resume")} ({savedProgress}%)
               </button>
               <button
                 onClick={() => handleStartReading(false)}
-                className="px-6 py-2.5 bg-white/20 hover:bg-white/40 text-white text-sm lg:text-base font-bold rounded-xl transition cursor-pointer border border-white/30"
+                className="px-6 py-2.5 bg-white text-gray-700 text-sm lg:text-base font-black rounded-2xl shadow-sm transition-all hover:bg-gray-50 cursor-pointer"
               >
                 {t("sr_btn_restart")}
               </button>
@@ -395,7 +395,7 @@ const StoryReader = ({ book }) => {
           ) : (
             <button
               onClick={() => handleStartReading(false)}
-              className="px-12 py-6 bg-booku-coral hover:brightness-110 text-white text-2xl lg:text-4xl font-black rounded-3xl shadow-[0_10px_30px_rgba(244,143,104,0.4)] hover:-translate-y-1 hover:scale-105 transition-all cursor-pointer border-4 border-white/50"
+              className="px-12 py-6 bg-booku-coral hover:bg-orange-500 text-white text-2xl lg:text-4xl font-black rounded-4xl shadow-lg hover:-translate-y-2 hover:scale-105 transition-all cursor-pointer border-4 border-white"
             >
               {t("sr_btn_start")}
             </button>
@@ -403,49 +403,30 @@ const StoryReader = ({ book }) => {
         </div>
       )}
 
-      {/* GAMBAR BACKGROUND */}
-      <div className="relative w-full aspect-video lg:aspect-auto lg:absolute lg:inset-0 lg:h-full overflow-hidden shrink-0 rounded-t-[20px] lg:rounded-none bg-booku-cream">
-        <img
-          src={getImageUrl(pages[currentPage].image)}
-          alt={`Halaman ${currentPage + 1}`}
-          className="w-full h-full object-cover transition-opacity duration-700"
-          onError={(e) => {
-            e.target.src = "https://placehold.co/1280x720?text=Scene+Cerita";
-          }}
-        />
-      </div>
-
-      {/* HEADER NAVIGASI */}
-      <div className="absolute top-0 left-0 right-0 p-4 lg:p-8 flex items-center justify-between bg-gradient-to-b from-gray-900/60 to-transparent z-40 pointer-events-none rounded-t-[20px] lg:rounded-none">
+      {/* TOP NAVIGATION HEADER (Back & Lang) - Z-Index 60 (Selalu di atas segalanya) */}
+      <div className="absolute top-6 left-6 right-6 lg:top-8 lg:left-8 lg:right-8 flex justify-between z-60 pointer-events-none">
+        {/* Back Button */}
         <button
           onClick={() =>
             document.fullscreenElement
               ? document.exitFullscreen()
               : navigate(-1)
           }
-          className="w-12 h-12 bg-white/80 backdrop-blur-md rounded-2xl flex items-center justify-center hover:bg-white transition shadow-md text-gray-900 cursor-pointer pointer-events-auto border border-gray-100"
+          className="w-12 h-12 bg-white/95 backdrop-blur-md rounded-2xl flex items-center justify-center hover:bg-white shadow-md text-gray-900 cursor-pointer pointer-events-auto border border-gray-100 hover:-translate-x-1 transition-transform"
         >
           <IconBackCurved />
         </button>
 
-        <div className="flex-1 mx-5 lg:mx-10 flex gap-2 lg:gap-3">
-          {pages.map((_, index) => (
-            <div
-              key={index}
-              className={`h-2 lg:h-2.5 rounded-full flex-1 transition-all duration-300 ${index <= currentPage ? "bg-booku-coral shadow-sm" : "bg-white/40"}`}
-            />
-          ))}
-        </div>
-
+        {/* Language Menu */}
         <div className="relative pointer-events-auto">
           <button
             onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
-            className="w-12 h-12 bg-white/80 backdrop-blur-md rounded-2xl flex items-center justify-center hover:bg-white transition shadow-md text-gray-900 cursor-pointer border border-gray-100"
+            className="w-12 h-12 bg-white/95 backdrop-blur-md rounded-2xl flex items-center justify-center hover:bg-white shadow-md text-gray-900 cursor-pointer border border-gray-100 transition-all hover:scale-105"
           >
             <IconGlobe />
           </button>
           {isLangMenuOpen && (
-            <div className="absolute right-0 mt-3 w-40 bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 z-50">
+            <div className="absolute right-0 mt-3 w-40 bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 z-50 animate-fade-in">
               <button
                 onClick={() => {
                   changeLanguage("id");
@@ -469,44 +450,111 @@ const StoryReader = ({ book }) => {
         </div>
       </div>
 
-      {/* KONTROL PANEL AUDIO & TEXT */}
-      <div
-        className={`flex justify-center lg:justify-end gap-3 z-20 transition-all duration-500 pt-5 pb-3 lg:pt-0 lg:pb-0 px-4 lg:px-0 lg:absolute lg:right-10 ${showNarration ? "lg:bottom-[25%]" : "lg:bottom-10"}`}
-      >
+      {/* GAMBAR BACKGROUND - Dilindungi oleh Padding Putih (Frame Effect) */}
+      <div className="relative w-full aspect-video lg:aspect-auto lg:absolute lg:inset-4 lg:w-[calc(100%-32px)] lg:h-[calc(100%-32px)] overflow-hidden shrink-0 rounded-3xl lg:rounded-4xl bg-booku-cream shadow-inner border border-gray-100">
+        <img
+          src={getImageUrl(pages[currentPage].image)}
+          alt={`Halaman ${currentPage + 1}`}
+          className="w-full h-full object-cover transition-opacity duration-700"
+          onError={(e) => {
+            e.target.src = "https://placehold.co/1280x720?text=Scene+Cerita";
+          }}
+        />
+
+        {/* Shadow Gradasi untuk Keterbacaan Teks (Hanya muncul jika Narasi Tampil) */}
+        <div
+          className={`absolute bottom-0 w-full h-1/2 bg-linear-to-t from-gray-900/60 to-transparent transition-opacity duration-500 pointer-events-none ${showNarration ? "opacity-100" : "opacity-0"}`}
+        ></div>
+      </div>
+
+      {/* Progress Bar Vertikal (Desktop) - Z-Index 40 (Berada di bawah Overlay Z-50) */}
+      <div className="absolute top-22 left-6 lg:top-24 lg:left-8 hidden lg:flex flex-col gap-1 bg-white/50 backdrop-blur-sm p-2 rounded-full shadow-inner w-12 h-48 border border-white z-40 pointer-events-none">
+        {pages.map((_, index) => (
+          <div
+            key={index}
+            className={`w-full rounded-full flex-1 transition-all duration-300 ${index <= currentPage ? "bg-booku-coral shadow-sm" : "bg-white/40"}`}
+          />
+        ))}
+      </div>
+
+      {/* Progress Bar Horizontal (Mobile) - Z-Index 40 (Berada di bawah Overlay Z-50) */}
+      <div className="relative lg:hidden w-full flex gap-1 px-2 mt-4 z-40">
+        {pages.map((_, index) => (
+          <div
+            key={index}
+            className={`h-2 rounded-full flex-1 transition-all duration-300 ${index <= currentPage ? "bg-booku-coral" : "bg-gray-200"}`}
+          />
+        ))}
+      </div>
+
+      {/* Floating Control Island (Desktop) - Z-Index 40 (Berada di bawah Overlay Z-50) */}
+      <div className="absolute top-22 right-6 lg:top-24 lg:right-8 bg-white/90 backdrop-blur-md p-2 rounded-3xl shadow-lg border border-gray-100 hidden lg:flex flex-col gap-2 z-40 pointer-events-auto">
         <button
           onClick={() => setIsBgmDisabled(!isBgmDisabled)}
-          className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-md border-2 hover:-translate-y-1 transition cursor-pointer ${isBgmDisabled ? "bg-red-50 text-red-500 border-red-200" : "bg-white text-gray-700 border-gray-100"}`}
+          className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors cursor-pointer ${isBgmDisabled ? "bg-red-50 text-red-500" : "bg-gray-50 text-gray-700 hover:bg-booku-cream"}`}
           title="Toggle Music"
         >
           {isBgmDisabled ? <IconMusicOff /> : <IconMusicOn />}
         </button>
         <button
           onClick={() => setIsDubbingDisabled(!isDubbingDisabled)}
-          className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-md border-2 hover:-translate-y-1 transition cursor-pointer ${isDubbingDisabled ? "bg-red-50 text-red-500 border-red-200" : "bg-white text-gray-700 border-gray-100"}`}
+          className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors cursor-pointer ${isDubbingDisabled ? "bg-red-50 text-red-500" : "bg-gray-50 text-gray-700 hover:bg-booku-cream"}`}
           title="Toggle Voiceover"
         >
           {isDubbingDisabled ? <IconMicOff /> : <IconMicOn />}
         </button>
         <button
-          onClick={toggleAutoPlay}
-          className={`px-5 py-2.5 rounded-2xl text-xs font-black flex items-center gap-2 shadow-md transition hover:-translate-y-1 cursor-pointer border-2 ${isAutoPlay ? "bg-booku-cyan text-gray-900 border-booku-cyan" : "bg-white text-gray-700 border-gray-100"}`}
-        >
-          AUTO <IconAutoPlay />
-        </button>
-        <button
           onClick={() => setShowNarration(!showNarration)}
-          className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-md border-2 transition hover:-translate-y-1 cursor-pointer ${showNarration ? "bg-gray-900 text-white border-gray-800" : "bg-white text-gray-700 border-gray-100"}`}
+          className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors cursor-pointer ${showNarration ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-700 hover:bg-booku-cream"}`}
           title="Toggle Teks"
         >
           {showNarration ? <IconClose /> : <IconText />}
         </button>
       </div>
 
-      {/* TOMBOL NAVIGASI KIRI & KANAN */}
+      {/* KONTROL AUDIO & TEKS (Mobile Version Horizontal) - Z-Index 40 (Berada di bawah Overlay Z-50) */}
+      <div className="relative flex lg:hidden justify-center gap-3 w-full mt-4 z-40 px-2">
+        <button
+          onClick={() => setIsBgmDisabled(!isBgmDisabled)}
+          className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-sm border border-gray-100 transition cursor-pointer ${isBgmDisabled ? "bg-red-50 text-red-500" : "bg-white text-gray-700"}`}
+        >
+          {isBgmDisabled ? <IconMusicOff /> : <IconMusicOn />}
+        </button>
+        <button
+          onClick={() => setIsDubbingDisabled(!isDubbingDisabled)}
+          className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-sm border border-gray-100 transition cursor-pointer ${isDubbingDisabled ? "bg-red-50 text-red-500" : "bg-white text-gray-700"}`}
+        >
+          {isDubbingDisabled ? <IconMicOff /> : <IconMicOn />}
+        </button>
+        <button
+          onClick={toggleAutoPlay}
+          className={`px-4 py-2 rounded-2xl text-xs font-black flex items-center gap-2 shadow-sm transition border cursor-pointer flex-1 justify-center ${isAutoPlay ? "bg-booku-cyan text-gray-900 border-booku-cyan" : "bg-white text-gray-700 border-gray-100"}`}
+        >
+          AUTO <IconAutoPlay />
+        </button>
+        <button
+          onClick={() => setShowNarration(!showNarration)}
+          className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-sm border transition cursor-pointer ${showNarration ? "bg-gray-900 text-white border-gray-800" : "bg-white text-gray-700 border-gray-100"}`}
+        >
+          {showNarration ? <IconClose /> : <IconText />}
+        </button>
+      </div>
+
+      {/* Tombol AUTO Play untuk Desktop (Terpisah dari island) - Z-Index 40 */}
+      <div className="hidden lg:block absolute bottom-8 right-8 z-40">
+        <button
+          onClick={toggleAutoPlay}
+          className={`px-6 py-4 rounded-[20px] text-sm font-black flex items-center gap-3 shadow-lg transition hover:-translate-y-1 cursor-pointer border-2 ${isAutoPlay ? "bg-booku-cyan text-gray-900 border-white" : "bg-white text-gray-700 border-gray-100"}`}
+        >
+          AUTO PLAY <IconAutoPlay />
+        </button>
+      </div>
+
+      {/* TOMBOL NAVIGASI KIRI & KANAN - Z-Index 40 */}
       <button
         onClick={() => setCurrentPage((prev) => Math.max(0, prev - 1))}
         disabled={currentPage === 0}
-        className="absolute top-[35%] lg:top-1/2 -translate-y-1/2 left-3 lg:left-8 z-20 w-12 h-12 lg:w-16 lg:h-16 bg-white/90 backdrop-blur-md text-gray-900 rounded-full flex items-center justify-center disabled:opacity-0 hover:scale-110 transition shadow-lg cursor-pointer border-4 border-white"
+        className="absolute top-[40%] lg:top-1/2 -translate-y-1/2 left-2 lg:left-12 z-40 w-12 h-12 lg:w-16 lg:h-16 bg-white/95 backdrop-blur-md text-gray-900 rounded-full flex items-center justify-center disabled:opacity-0 hover:scale-110 hover:bg-white hover:text-booku-coral transition-all shadow-xl cursor-pointer border-4 border-gray-50"
       >
         <div className="rotate-180">
           <IconTriangle />
@@ -520,18 +568,18 @@ const StoryReader = ({ book }) => {
           )
         }
         disabled={currentPage === pages.length - 1}
-        className="absolute top-[35%] lg:top-1/2 -translate-y-1/2 right-3 lg:right-8 z-20 w-12 h-12 lg:w-16 lg:h-16 bg-white/90 backdrop-blur-md text-gray-900 rounded-full flex items-center justify-center disabled:opacity-0 hover:scale-110 transition shadow-lg cursor-pointer border-4 border-white"
+        className="absolute top-[40%] lg:top-1/2 -translate-y-1/2 right-2 lg:right-12 z-40 w-12 h-12 lg:w-16 lg:h-16 bg-white/95 backdrop-blur-md text-gray-900 rounded-full flex items-center justify-center disabled:opacity-0 hover:scale-110 hover:bg-white hover:text-booku-coral transition-all shadow-xl cursor-pointer border-4 border-gray-50"
       >
         <IconTriangle />
       </button>
 
-      {/* SUBTITLE BOKS */}
+      {/* SUBTITLE BOKS - Z-Index 30 */}
       <div
-        className={`w-full lg:absolute lg:bottom-10 lg:left-0 lg:right-0 px-4 pb-6 pt-2 lg:pt-0 lg:px-28 transition-all duration-500 z-10 ${showNarration ? "opacity-100 max-h-96 lg:translate-y-0" : "opacity-0 max-h-0 lg:max-h-none lg:translate-y-[150%] overflow-hidden lg:overflow-visible"}`}
+        className={`w-full mt-4 lg:mt-0 lg:absolute lg:bottom-12 lg:left-1/2 lg:-translate-x-1/2 px-2 lg:px-0 lg:w-[60%] transition-all duration-500 z-30 ${showNarration ? "opacity-100 max-h-96 lg:translate-y-0" : "opacity-0 max-h-0 lg:max-h-none lg:translate-y-[150%] overflow-hidden lg:overflow-visible pointer-events-none"}`}
       >
-        <div className="w-full max-w-4xl mx-auto bg-white/95 backdrop-blur-md rounded-3xl px-6 py-6 lg:px-12 lg:py-8 shadow-2xl border border-gray-100">
-          <div className="w-full max-h-48 lg:max-h-[22vh] overflow-y-auto flex items-center justify-center custom-scrollbar pr-3">
-            <p className="text-gray-800 font-bold text-base lg:text-xl text-center leading-relaxed">
+        <div className="w-full bg-white/95 backdrop-blur-xl rounded-3xl lg:rounded-4xl px-6 py-5 lg:px-10 lg:py-8 shadow-2xl border-4 border-gray-50 pointer-events-auto">
+          <div className="w-full max-h-32 lg:max-h-[15vh] overflow-y-auto flex items-center justify-center custom-scrollbar pr-3">
+            <p className="text-gray-900 font-bold text-base lg:text-2xl text-center leading-relaxed lg:leading-normal">
               {language === "id"
                 ? pages[currentPage]?.text_id
                 : pages[currentPage]?.text_en || t("sr_no_translation")}
