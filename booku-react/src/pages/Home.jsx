@@ -74,7 +74,7 @@ const Home = () => {
 
   return (
     // DIUBAH: Menggunakan bg-booku-cream agar selaras hingga bawah
-    <div className="bg-booku-cream">
+    <div className="bg-slate-50">
       <HeroSection />
       <div id="jelajahi-cerita" className="scroll-mt-24 md:scroll-mt-28">
         <Carousel

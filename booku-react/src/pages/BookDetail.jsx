@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import StoryReader from "../components/StoryReader";
 import StoryActions from "../components/StoryActions";
 import BookInfoBanner from "../components/BookInfoBanner";
-import { CategorySection } from "../components/BookListSection";
+// IMPORT DIHAPUS: CategorySection sudah tidak dipanggil
 import CtaDownload from "../components/CtaDownload";
 import { useAuth } from "../context/AuthContext";
 import { useLanguage } from "../context/LanguageContext";
@@ -12,7 +12,7 @@ import {
   getBooks,
   getCategories,
   getBookStatus,
-  getBookPages, // <-- KUNCI PERBAIKAN 1: Import getBookPages
+  getBookPages,
   toggleFavorite,
   toggleSaved,
 } from "../services/api";
@@ -36,17 +36,15 @@ const BookDetail = () => {
   const [userRating, setUserRating] = useState(0);
   const [popupConfig, setPopupConfig] = useState(null);
 
-  // KUNCI PERBAIKAN 2: State untuk menyimpan total halaman
   const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
     const fetchBookData = async () => {
       try {
-        // Ambil data buku, kategori, dan HALAMAN BUKU secara bersamaan
         const [books, categories, pages] = await Promise.all([
           getBooks(),
           getCategories(),
-          getBookPages(id), // Ambil halaman berdasarkan id buku di URL
+          getBookPages(id),
         ]);
 
         const currentBook = books.find((b) => b.id === parseInt(id));
@@ -64,7 +62,6 @@ const BookDetail = () => {
           }
           setBook(currentBook);
 
-          // KUNCI PERBAIKAN 3: Simpan panjang array halaman
           setTotalPages(pages ? pages.length : 0);
 
           if (isLoggedIn && token) {
@@ -106,7 +103,6 @@ const BookDetail = () => {
   };
 
   const handleToggleFavorite = async () => {
-    // ... (Logic handleToggleFavorite sama persis)
     if (!isLoggedIn) {
       setPopupConfig({
         image: popupFavImg,
@@ -151,7 +147,6 @@ const BookDetail = () => {
   };
 
   const handleToggleSave = async () => {
-    // ... (Logic handleToggleSave sama persis)
     if (!isLoggedIn) {
       setPopupConfig({
         image: popupBookmarkImg,
@@ -212,7 +207,6 @@ const BookDetail = () => {
     language === "en" && book.title_en ? book.title_en : book.title_id;
 
   return (
-    // DIUBAH: Kelas pb-12 dihapus agar menempel rapat dengan Footer
     <div className="w-full bg-booku-cream min-h-screen">
       <div className="w-full max-w-7xl mx-auto px-4 md:px-8 pt-10">
         <div className="text-center mb-10">
@@ -238,7 +232,8 @@ const BookDetail = () => {
           onToggleFullscreen={handleFullscreen}
         />
 
-        <div className="mt-16">
+        {/* DIUBAH: mb-16 ditambahkan ke sini untuk menjaga jarak lega dengan CtaDownload setelah CategorySection dihapus */}
+        <div className="mt-16 mb-16">
           <BookInfoBanner
             book={book}
             userRating={userRating}
@@ -246,18 +241,9 @@ const BookDetail = () => {
           />
         </div>
 
-        {/* Jarak bottom margin untuk kategori terakhir (mb-16) agar ada ruang lega SEBELUM CTADownload, BUKAN sesudahnya */}
-        {categoryData && (
-          <div className="mt-16 mb-16 bg-white p-6 md:p-10 rounded-[40px] border border-gray-100 shadow-sm">
-            <CategorySection
-              category={categoryData}
-              customTitle={`${language === "en" && categoryData.name_en ? categoryData.name_en : categoryData.name_id} ${t("bd_others")}`}
-            />
-          </div>
-        )}
+        {/* BLOK DIHAPUS: Rendering CategorySection sudah dihilangkan sepenuhnya */}
       </div>
 
-      {/* CtaDownload sekarang bebas dan akan menempel langsung dengan Footer yang ada di MainLayout */}
       <CtaDownload />
       <ActionPopupModal isOpen={popupConfig !== null} {...popupConfig} />
     </div>

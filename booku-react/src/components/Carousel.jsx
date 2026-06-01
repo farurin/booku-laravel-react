@@ -6,9 +6,8 @@ import "swiper/css/navigation";
 import Card from "./Card";
 import { useLanguage } from "../context/LanguageContext";
 
-// Icon SVG disesuaikan agar adaptif menggunakan currentColor dan bg-black/10
 const IconLike = () => (
-  <div className="bg-black/10 p-1.5 rounded-full flex items-center justify-center shrink-0">
+  <div className="bg-black/5 p-1.5 rounded-full flex items-center justify-center shrink-0">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="16"
@@ -20,25 +19,12 @@ const IconLike = () => (
     </svg>
   </div>
 );
-const IconFire = () => (
-  <div className="bg-black/10 p-1.5 rounded-full flex items-center justify-center shrink-0">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-    >
-      <path d="M12 22C6.477 22 2 17.523 2 12c0-4.478 3.158-8.23 7.5-9.613.56-.178 1.096.34 1.01.916-.145.975-.125 2.15.534 3.057.48.567 1.22.905 2.015.892 1.458-.024 2.85-.79 3.513-2.072.28-.544 1.08-.432 1.25.158A9.972 9.972 0 0 1 22 12c0 5.523-4.477 10-10 10Zm-2-7a2 2 0 1 0 4 0c0-1.105-.895-2-2-2s-2 .895-2 2Z" />
-    </svg>
-  </div>
-);
 const IconStar = () => (
-  <div className="bg-black/10 p-1.5 rounded-full flex items-center justify-center shrink-0">
+  <div className="bg-black/5 p-1.5 rounded-full flex items-center justify-center shrink-0">
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="18"
-      height="18"
+      width="16"
+      height="16"
       viewBox="0 0 24 24"
       fill="currentColor"
     >
@@ -59,9 +45,6 @@ const Carousel = ({ books = [] }) => {
         (b.saved_count || 0) -
         ((a.favorites_count || 0) + (a.saved_count || 0)),
     );
-    const popBooks = [...books].sort(
-      (a, b) => (b.views_count || 0) - (a.views_count || 0),
-    );
     const latestBooks = [...books].sort((a, b) => b.id - a.id);
     const LIMIT = 12;
 
@@ -71,29 +54,19 @@ const Carousel = ({ books = [] }) => {
         label: t("car_tab_recom"),
         icon: <IconLike />,
         activeClass:
-          "bg-booku-cyan border-booku-cyan text-gray-900 shadow-md cursor-default",
+          "bg-booku-cyan text-gray-950 shadow-md border-transparent cursor-default",
         inactiveClass:
-          "bg-booku-cyan/15 border-booku-cyan/30 text-teal-700 hover:bg-booku-cyan/30 cursor-pointer",
+          "bg-transparent border-transparent text-gray-600 hover:bg-gray-200/50 cursor-pointer",
         items: recomBooks.slice(0, LIMIT),
       },
       {
         id: 1,
-        label: t("car_tab_popular"),
-        icon: <IconFire />,
-        activeClass:
-          "bg-booku-coral border-booku-coral text-white shadow-md cursor-default",
-        inactiveClass:
-          "bg-booku-coral/10 border-booku-coral/30 text-orange-600 hover:bg-booku-coral/20 cursor-pointer",
-        items: popBooks.slice(0, LIMIT),
-      },
-      {
-        id: 2,
         label: t("car_tab_new"),
         icon: <IconStar />,
         activeClass:
-          "bg-booku-yellow border-booku-yellow text-gray-900 shadow-md cursor-default",
+          "bg-booku-yellow text-gray-955 shadow-md border-transparent cursor-default",
         inactiveClass:
-          "bg-booku-yellow/20 border-booku-yellow/40 text-yellow-700 hover:bg-booku-yellow/40 cursor-pointer",
+          "bg-transparent border-transparent text-gray-600 hover:bg-gray-200/50 cursor-pointer",
         items: latestBooks.slice(0, LIMIT),
       },
     ];
@@ -113,12 +86,11 @@ const Carousel = ({ books = [] }) => {
   }, [searchQuery, books, activeTab, categoriesData, language]);
 
   return (
-    <section className="pt-12 pb-16 w-full bg-linear-to-b from-gray-50 to-booku-cyan/15 overflow-hidden">
+    <section className="pt-14 pb-20 w-full bg-linear-to-b from-gray-50 via-white/10 to-booku-cyan overflow-hidden">
       <div className="w-full max-w-7xl mx-auto px-4 md:px-8">
-        {/* HEADER: Judul & Search */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10">
-          <h2 className="text-3xl md:text-4xl font-black text-gray-800 text-center lg:text-left">
-            {searchQuery ? t("car_search_res") : "Jelajahi Cerita"}
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-10">
+          <h2 className="text-3xl md:text-4xl font-black text-gray-950 text-center lg:text-left tracking-tight">
+            {searchQuery ? t("car_search_res") : t("car_title")}
           </h2>
 
           <div className="relative w-full lg:w-96 group">
@@ -127,9 +99,9 @@ const Carousel = ({ books = [] }) => {
               placeholder={t("car_search_ph")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-6 pr-14 py-3.5 rounded-full border-2 border-white focus:outline-none focus:border-booku-cyan text-base text-gray-700 shadow-sm bg-white transition-colors"
+              className="w-full pl-6 pr-14 py-4 rounded-full border-4 border-white focus:outline-none focus:border-booku-cyan text-base font-bold text-gray-800 shadow-sm bg-white transition-all focus:shadow-md"
             />
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-booku-coral rounded-full flex items-center justify-center text-white shadow-sm">
+            <div className="absolute right-3.5 top-1/2 -translate-y-1/2 w-10 h-10 bg-booku-coral rounded-full flex items-center justify-center text-white shadow-sm transition-transform group-focus-within:scale-105">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="18"
@@ -137,7 +109,7 @@ const Carousel = ({ books = [] }) => {
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                strokeWidth="2.5"
+                strokeWidth="3"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
@@ -148,101 +120,94 @@ const Carousel = ({ books = [] }) => {
           </div>
         </div>
 
-        {/* CONTAINER KONTEN - Dibungkus ke dalam div dengan background putih semi-transparan */}
-        <div className="relative w-full bg-white/80 backdrop-blur-sm rounded-4xl md:rounded-[40px] px-6 md:px-10 pt-8 pb-4 shadow-sm border border-white">
-          {/* KONTROL: Tabs Horizontal & Tombol Panah */}
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-4">
+        <div className="relative w-full bg-white rounded-[40px] px-4 md:px-10 pt-8 pb-6 shadow-sm border-4 border-white">
+          <div className="flex justify-center md:justify-start mb-8 md:ml-4">
             {!searchQuery && (
-              <div className="flex gap-3 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 scrollbar-hide px-1">
+              <div className="bg-gray-100 p-1.5 rounded-full border-2 border-gray-50 flex gap-1 shadow-inner">
                 {categoriesData.map((cat) => {
                   const isActive = activeTab === cat.id;
                   return (
                     <button
                       key={cat.id}
                       onClick={() => setActiveTab(cat.id)}
-                      className={`flex items-center gap-3 px-5 py-2.5 rounded-full font-bold transition-all whitespace-nowrap min-w-max border-2 ${
+                      className={`flex items-center gap-2 px-6 py-2.5 rounded-full font-black text-sm md:text-base transition-all select-none border-2 ${
                         isActive ? cat.activeClass : cat.inactiveClass
                       }`}
                     >
-                      <div className={`${!isActive && "opacity-70"}`}>
-                        {cat.icon}
-                      </div>
-                      <span className="text-sm md:text-base tracking-wide">
-                        {cat.label}
-                      </span>
+                      {cat.icon}
+                      <span className="tracking-wide">{cat.label}</span>
                     </button>
                   );
                 })}
               </div>
             )}
-
-            {listToDisplay.length > 0 && (
-              <div className="flex gap-2 ml-auto shrink-0 px-1">
-                <button className="carousel-prev w-10 h-10 bg-white rounded-full shadow-sm flex items-center justify-center text-booku-coral hover:bg-booku-cyan transition disabled:opacity-30 border border-gray-100 cursor-pointer">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M15 18l-6-6 6-6" />
-                  </svg>
-                </button>
-                <button className="carousel-next w-10 h-10 bg-white rounded-full shadow-sm flex items-center justify-center text-booku-coral hover:bg-booku-cyan transition disabled:opacity-30 border border-gray-100 cursor-pointer">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M9 18l6-6-6-6" />
-                  </svg>
-                </button>
-              </div>
-            )}
           </div>
 
-          {/* SLIDER BUKU */}
           {listToDisplay.length > 0 ? (
-            <div className="-mx-4 px-4">
-              <Swiper
-                key={searchQuery ? "search" : `tab-${activeTab}`}
-                modules={[Autoplay, Navigation]}
-                navigation={{
-                  prevEl: ".carousel-prev",
-                  nextEl: ".carousel-next",
-                }}
-                slidesPerView="auto"
-                spaceBetween={24}
-                autoplay={
-                  searchQuery
-                    ? false
-                    : { delay: 3500, disableOnInteraction: false }
-                }
-                className="w-full pt-4! pb-8!"
-              >
-                {listToDisplay.map((book) => (
-                  <SwiperSlide key={book.id} style={{ width: "160px" }}>
-                    <div className="h-full hover:-translate-y-3 transition-transform duration-300">
-                      <Card book={book} />
-                    </div>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+            <div className="relative w-full">
+              {/* PENYESUAIAN KUNCI: Wrapper Swiper diberi padding horizontal yang cukup lebar */}
+              <div className="px-12 md:px-16 w-full">
+                <Swiper
+                  key={searchQuery ? "search" : `tab-${activeTab}`}
+                  modules={[Autoplay, Navigation]}
+                  navigation={{
+                    prevEl: ".carousel-prev",
+                    nextEl: ".carousel-next",
+                  }}
+                  slidesPerView="auto"
+                  spaceBetween={24}
+                  autoplay={
+                    searchQuery
+                      ? false
+                      : { delay: 3500, disableOnInteraction: false }
+                  }
+                  className="w-full pt-2 pb-6"
+                >
+                  {listToDisplay.map((book) => (
+                    <SwiperSlide key={book.id} style={{ width: "160px" }}>
+                      <div className="h-full">
+                        <Card book={book} />
+                      </div>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </div>
+
+              {/* Panah ditempatkan secara absolut terhadap kontainer relative terluar, mengisi ruang padding Swiper */}
+              <button className="carousel-prev absolute left-0 md:left-2 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-booku-coral hover:bg-booku-cyan hover:text-gray-950 transition-all border-2 border-gray-100 disabled:opacity-0 disabled:pointer-events-none cursor-pointer transform hover:scale-110 active:scale-95">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="3.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M15 18l-6-6 6-6" />
+                </svg>
+              </button>
+              <button className="carousel-next absolute right-0 md:right-2 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-booku-coral hover:bg-booku-cyan hover:text-gray-950 transition-all border-2 border-gray-100 disabled:opacity-0 disabled:pointer-events-none cursor-pointer transform hover:scale-110 active:scale-95">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="3.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M9 18l6-6-6-6" />
+                </svg>
+              </button>
             </div>
           ) : (
-            <div className="w-full h-64 flex flex-col items-center justify-center text-gray-500 font-bold bg-white/50 rounded-3xl border-2 border-dashed border-gray-300 my-6">
-              <span className="text-4xl mb-4">🔍</span>
+            <div className="w-full h-64 flex flex-col items-center justify-center text-gray-400 font-black bg-gray-50 rounded-4xl border-4 border-dashed border-gray-200 my-4">
+              <span className="text-4xl mb-3 animate-bounce">🔍</span>
               {searchQuery ? t("car_empty_search") : t("car_empty_cat")}
             </div>
           )}

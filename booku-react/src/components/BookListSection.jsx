@@ -7,7 +7,6 @@ import Card from "./Card";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
 
-// Tambahkan "= 0" pada parameter index
 export const CategorySection = ({ category, index = 0 }) => {
   const { t, language } = useLanguage();
   const booksToShow = category.books ? category.books.slice(0, 10) : [];
@@ -19,7 +18,6 @@ export const CategorySection = ({ category, index = 0 }) => {
       ? category.description_en
       : category.description_id;
 
-  // Menentukan tema warna secara bergantian berdasarkan index agar bervariasi tanpa gambar
   const themes = [
     {
       bg: "bg-booku-cyan",
@@ -41,16 +39,14 @@ export const CategorySection = ({ category, index = 0 }) => {
     },
   ];
 
-  // Sekarang aman karena index pasti berupa angka
   const theme = themes[index % themes.length];
 
   return (
     <div className="w-full mb-12 lg:mb-16 bg-white rounded-4xl md:rounded-[40px] p-4 md:p-6 shadow-sm border border-gray-100 flex flex-col xl:flex-row gap-6">
-      {/* Kolom Judul & Dekorasi Kategori (KIRI) - Tanpa Gambar */}
+      {/* Kolom Judul & Dekorasi Kategori (KIRI) */}
       <div
         className={`w-full xl:w-72 shrink-0 relative overflow-hidden rounded-2xl md:rounded-[28px] ${theme.bg} group flex flex-col justify-between p-6 md:p-8 min-h-60`}
       >
-        {/* Dekorasi Bentuk Geometris (Menggantikan Gambar) */}
         <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full blur-xl -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -translate-x-1/3 translate-y-1/3 pointer-events-none"></div>
         <div className="absolute top-1/2 right-10 w-8 h-8 border-4 border-white/30 rounded-full pointer-events-none"></div>
@@ -105,11 +101,13 @@ export const CategorySection = ({ category, index = 0 }) => {
               }}
               slidesPerView="auto"
               spaceBetween={16}
+              // DIUBAH: Padding dikembalikan ke ukuran normal karena card sudah tidak melompat.
               className="w-full py-4 px-2 md:px-4"
             >
               {booksToShow.map((book) => (
                 <SwiperSlide key={book.id} style={{ width: "160px" }}>
-                  <div className="h-full hover:-translate-y-2 transition-transform duration-300">
+                  {/* DIUBAH: Menghapus class hover:-translate-y */}
+                  <div className="h-full">
                     <Card book={book} />
                   </div>
                 </SwiperSlide>
@@ -145,7 +143,6 @@ export const CategorySection = ({ category, index = 0 }) => {
 };
 
 const BookListSection = ({ data }) => {
-  // Hanya menampilkan data yang valid, tidak perlu mengecek c.image karena gambar sudah tidak digunakan
   const filtered = data.filter((c) => c && c.name_id);
 
   return (

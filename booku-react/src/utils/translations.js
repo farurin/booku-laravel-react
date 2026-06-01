@@ -193,6 +193,7 @@ export const translations = {
     bpm_btn_watch: "Tonton",
 
     // Carousel.jsx
+    car_title: "Jelajahi Cerita",
     car_tab_recom: "Rekomendasi",
     car_tab_popular: "Populer",
     car_tab_new: "Terbaru",
@@ -227,9 +228,10 @@ export const translations = {
       "Membangun imajinasi anak bangsa melalui cerita interaktif yang edukatif dan menyenangkan.",
     foot_loading: "Memuat...",
     foot_copyright: "© 2026 BookU.",
-    foot_made_with: "Dibuat dengan luv oleh",
+    foot_made_with: "Dibuat dengan ❤️ oleh",
 
     // HeroSection.jsx
+    hero_badge: "✨ Yuk, Membaca!",
     hero_title: "Buka Buku, Temukan Dunia Baru!",
     hero_subtitle:
       "Jelajahi koleksi cerita interaktif yang dirancang khusus untuk memantik imajinasi dan kreativitas anak-anak tanpa batas.",
@@ -523,6 +525,7 @@ export const translations = {
     bpm_btn_watch: "Watch",
 
     // Carousel.jsx
+    car_title: "Explore Stories",
     car_tab_recom: "Recommendations",
     car_tab_popular: "Popular",
     car_tab_new: "Latest",
@@ -557,9 +560,10 @@ export const translations = {
       "Building the imagination of the nation's children through educational and fun interactive stories.",
     foot_loading: "Loading...",
     foot_copyright: "© 2026 BookU.",
-    foot_made_with: "Made with luv by",
+    foot_made_with: "Made with ❤️ by",
 
     // HeroSection.jsx
+    hero_badge: "✨ Let's Read!",
     hero_title: "Open a Book, Discover a New World!",
     hero_subtitle:
       "Explore a collection of interactive stories designed specifically to spark children's boundless imagination and creativity.",

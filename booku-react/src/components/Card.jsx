@@ -41,10 +41,12 @@ const Card = ({ book }) => {
   return (
     <Link
       to={`${location.pathname}?preview=${book.id}`}
-      className="block w-full aspect-[294/419] rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-booku-cyan/30 transition-all duration-300 cursor-pointer bg-white group border-2 border-transparent hover:border-booku-cyan relative"
+      // DIUBAH: Menghapus ring luar dan menggantinya dengan border-4 transparent yang berubah jadi Cyan saat dihover.
+      className="block w-full aspect-[294/419] rounded-[20px] overflow-hidden shadow-sm hover:shadow-[0_12px_30px_-10px_rgba(20,184,166,0.5)] transition-all duration-300 cursor-pointer bg-gray-100 group relative border-4 border-transparent hover:border-booku-cyan"
     >
       {/* BADGE RATING MELAYANG */}
-      <div className="absolute top-2 right-2 z-20 bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm border border-booku-yellow/50">
+      {/* Penyesuaian posisi top & right agar tidak tertutup border tebal */}
+      <div className="absolute top-2.5 right-2.5 z-20 bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm border border-booku-yellow/50">
         <span className="text-booku-yellow">
           <IconStarSmall />
         </span>
@@ -53,8 +55,9 @@ const Card = ({ book }) => {
         </span>
       </div>
 
-      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 pointer-events-none"></div>
 
+      {/* GAMBAR: Akan membesar/zoom in berkat group-hover:scale-110 */}
       <img
         src={getImageUrl(coverUrl)}
         alt={bookTitle}
