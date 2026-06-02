@@ -24,47 +24,50 @@ const Progress = ({ data, search, type }) => {
   if (!hasResults) return null;
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 md:px-8 mb-24 flex flex-col gap-8">
-      {groups.map(([label, items]) => {
-        const filtered = filterBySearch(items);
-        if (filtered.length === 0) return null;
+    // Layer Luar: Ditambahkan <section className="w-full">
+    <section className="w-full">
+      {/* Layer Dalam: Tetap sama */}
+      <div className="w-full max-w-7xl mx-auto px-4 md:px-8 mb-24 flex flex-col gap-8">
+        {groups.map(([label, items]) => {
+          const filtered = filterBySearch(items);
+          if (filtered.length === 0) return null;
 
-        const showLabel = type === "riwayat";
+          const showLabel = type === "riwayat";
 
-        return (
-          // Pembungkus putih untuk memisahkan section dengan background krem
-          <div
-            key={label}
-            className="bg-white rounded-4xl md:rounded-[40px] p-6 md:p-10 shadow-sm border border-gray-100"
-          >
-            {showLabel && (
-              <div className="flex items-center gap-3 mb-8 border-b border-gray-100 pb-4">
-                <div className="w-3 h-8 bg-booku-cyan rounded-full"></div>
-                <h3 className="text-2xl font-black text-gray-800 tracking-tight">
-                  {label}
-                </h3>
-              </div>
-            )}
+          return (
+            <div
+              key={label}
+              className="bg-white rounded-4xl md:rounded-[40px] p-6 md:p-10 shadow-sm border border-gray-100"
+            >
+              {showLabel && (
+                <div className="flex items-center gap-3 mb-8 border-b border-gray-100 pb-4">
+                  <div className="w-3 h-8 bg-booku-cyan rounded-full"></div>
+                  <h3 className="text-2xl font-black text-gray-800 tracking-tight">
+                    {label}
+                  </h3>
+                </div>
+              )}
 
-            {type === "disimpan" ? (
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                {filtered.map((item) => (
-                  <SavedCard key={item.id} book={item.book || item} />
-                ))}
-              </div>
-            ) : (
-              <div className="flex flex-wrap gap-6">
-                {filtered.map((item) => (
-                  <div key={item.id} className="w-40 shrink-0">
-                    <ProgressCard progress={item} type={type} />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        );
-      })}
-    </div>
+              {type === "disimpan" ? (
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                  {filtered.map((item) => (
+                    <SavedCard key={item.id} book={item.book || item} />
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-wrap gap-6">
+                  {filtered.map((item) => (
+                    <div key={item.id} className="w-36 md:w-40 shrink-0">
+                      <ProgressCard progress={item} type={type} />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </section>
   );
 };
 

@@ -101,10 +101,10 @@ const Categories = () => {
               <Link
                 to={`/categories/${cat.id}`}
                 key={cat.id}
-                className="group block bg-white border-4 border-transparent rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl hover:border-booku-cyan hover:-translate-y-2 transition-all duration-300 relative"
+                className="group block bg-white border-4 border-transparent rounded-4xl overflow-hidden shadow-sm hover:shadow-xl hover:border-booku-cyan hover:-translate-y-2 transition-all duration-300 relative"
               >
-                <div className="w-full aspect-[2/1] bg-booku-cyan/20 overflow-hidden relative">
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity z-10"></div>
+                <div className="w-full aspect-2/1 bg-booku-cyan/20 overflow-hidden relative">
+                  <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity z-10"></div>
                   <img
                     src={getImageUrl(cat.image_card)}
                     alt={catName}

@@ -71,11 +71,10 @@ export default function FooterComponent() {
   }, []);
 
   return (
-    // margin-top diubah jadi negatif (-mt-10) agar masuk ke bawah lengkungan CtaDownload.
-    // pt (padding-top) ditambah agar kontennya tidak tertutup lengkungan tersebut.
-    // rounded-t dihapus karena sisi atasnya sudah tertutup oleh CtaDownload.
+    // Layer Luar
     <footer className="w-full bg-booku-cyan text-gray-900 pt-20 pb-6 -mt-10 relative z-10">
-      <div className="w-full max-w-7xl mx-auto px-6 md:px-12">
+      {/* Layer Dalam: Padding disesuaikan jadi px-4 md:px-8 */}
+      <div className="w-full max-w-7xl mx-auto px-4 md:px-8">
         <div className="flex flex-col lg:flex-row justify-between gap-10 border-b border-gray-900/10 pb-8">
           {/* KIRI: Logo & Deskripsi */}
           <div className="w-full lg:w-5/12 flex flex-col items-center lg:items-start text-center lg:text-left">
@@ -166,7 +165,7 @@ export default function FooterComponent() {
           </div>
         </div>
 
-        {/* COPYRIGHT CENTERED - Dijadikan 1 Baris */}
+        {/* COPYRIGHT CENTERED */}
         <div className="flex justify-center pt-6 text-[11px] md:text-xs font-black text-gray-800 uppercase tracking-wider text-center">
           <p>
             {t("foot_copyright")} &nbsp;|&nbsp; {t("foot_made_with")}{" "}

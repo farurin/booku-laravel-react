@@ -80,7 +80,6 @@ export { IconEye, IconEyeOff, IconGoogle, IconFacebook };
 const AuthLayout = ({ children }) => {
   return (
     <div className="w-full min-h-screen flex items-center justify-center p-4 md:p-8 overflow-hidden relative bg-booku-cream">
-      {/* Tombol Kembali - diposisikan Fixed/Absolute */}
       <Link
         to="/"
         className="absolute top-6 left-4 md:top-8 md:left-8 flex items-center gap-2 text-gray-600 hover:text-booku-coral transition-all font-bold z-50 bg-white/90 hover:bg-white px-4 py-2.5 rounded-2xl shadow-sm backdrop-blur-md cursor-pointer hover:-translate-y-1 border-2 border-gray-100"
@@ -89,13 +88,10 @@ const AuthLayout = ({ children }) => {
         <span className="hidden sm:inline">Kembali</span>
       </Link>
 
-      {/* Dekorasi Background CSS Murni (Menghindari image PNG lama) */}
       <div className="absolute top-[-10%] right-[-5%] w-100 h-100 bg-booku-yellow/30 rounded-full mix-blend-multiply filter blur-[80px] pointer-events-none"></div>
       <div className="absolute bottom-[-10%] left-[-5%] w-125 h-125 bg-booku-cyan/20 rounded-full mix-blend-multiply filter blur-[100px] pointer-events-none"></div>
 
-      {/* Kontainer Form - Bentuk White Island */}
       <div className="w-full max-w-125 bg-white p-8 md:p-12 rounded-[40px] shadow-sm z-10 border-4 border-white relative mt-16 md:mt-0 overflow-hidden">
-        {/* Dekorasi kecil di sudut card form */}
         <div className="absolute top-0 right-0 w-32 h-32 bg-booku-cyan/10 rounded-bl-full pointer-events-none"></div>
 
         <div className="relative z-10">{children}</div>

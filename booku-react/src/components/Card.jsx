@@ -42,7 +42,7 @@ const Card = ({ book }) => {
     <Link
       to={`${location.pathname}?preview=${book.id}`}
       // DIUBAH: Menghapus ring luar dan menggantinya dengan border-4 transparent yang berubah jadi Cyan saat dihover.
-      className="block w-full aspect-[294/419] rounded-[20px] overflow-hidden shadow-sm hover:shadow-[0_12px_30px_-10px_rgba(20,184,166,0.5)] transition-all duration-300 cursor-pointer bg-gray-100 group relative border-4 border-transparent hover:border-booku-cyan"
+      className="block w-full aspect-294/419 rounded-[20px] overflow-hidden shadow-sm hover:shadow-[0_12px_30px_-10px_rgba(20,184,166,0.5)] transition-all duration-300 cursor-pointer bg-gray-100 group relative border-4 border-transparent hover:border-booku-cyan"
     >
       {/* BADGE RATING MELAYANG */}
       {/* Penyesuaian posisi top & right agar tidak tertutup border tebal */}
@@ -55,7 +55,7 @@ const Card = ({ book }) => {
         </span>
       </div>
 
-      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 pointer-events-none"></div>
+      <div className="absolute inset-0 bg-linear-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 pointer-events-none"></div>
 
       {/* GAMBAR: Akan membesar/zoom in berkat group-hover:scale-110 */}
       <img

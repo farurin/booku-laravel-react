@@ -191,6 +191,7 @@ export const translations = {
     bpm_no_synopsis: "Sinopsis cerita belum tersedia.",
     bpm_btn_read: "Baca",
     bpm_btn_watch: "Tonton",
+    bpm_loading: "Memuat cerita...",
 
     // Carousel.jsx
     car_title: "Jelajahi Cerita",
@@ -206,10 +207,12 @@ export const translations = {
     cat_slider_title: "Kategori Cerita",
 
     // CtaDownload.jsx
-    cta_title: "Petualangan Cerita Seru Menunggumu!",
+    cta_title: "Pengalaman Membaca Lebih Seru di Genggamanmu!",
     cta_desc:
-      "Jelajahi petualangan, dongeng, dan kisah seru lainnya langsung dari aplikasi BookU.",
+      "Dapatkan pengalaman membaca yang jauh lebih menyenangkan dan interaktif dengan mengunduh aplikasi BookU sekarang juga. Tersedia secara gratis!",
     cta_soon: "Segera",
+    cta_stats:
+      "Menghadirkan <span class='text-booku-coral'>{{books}} Cerita</span> dalam <span class='text-booku-cyan'>{{categories}} Kategori</span>",
 
     // FilterCorner.jsx
     fc_history: "Riwayat",
@@ -523,6 +526,7 @@ export const translations = {
     bpm_no_synopsis: "Story synopsis is not available yet.",
     bpm_btn_read: "Read",
     bpm_btn_watch: "Watch",
+    bpm_loading: "Loading story...",
 
     // Carousel.jsx
     car_title: "Explore Stories",
@@ -538,10 +542,12 @@ export const translations = {
     cat_slider_title: "Story Categories",
 
     // CtaDownload.jsx
-    cta_title: "An Exciting Adventure of Stories Awaits You!",
+    cta_title: "A More Exciting Reading Experience in Your Hands!",
     cta_desc:
-      "Explore adventures, fairy tales, and other exciting stories directly from the BookU app.",
+      "Get a much more fun and interactive reading experience by downloading the BookU app right now. Available for free!",
     cta_soon: "Soon",
+    cta_stats:
+      "Presenting <span class='text-booku-coral'>{{books}} Stories</span> in <span class='text-booku-cyan'>{{categories}} Categories</span>",
 
     // FilterCorner.jsx
     fc_history: "History",

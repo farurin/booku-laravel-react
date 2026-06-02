@@ -125,23 +125,28 @@ const Corner = () => {
       />
 
       <div className="w-full min-h-[50vh]">
+        {/* ERROR STATE */}
         {error && !isLoading && (
-          <div className="w-full max-w-7xl mx-auto px-4 md:px-8 py-20 text-center bg-white mb-20 rounded-[40px] border-4 border-red-100 shadow-sm">
-            <h3 className="text-xl md:text-2xl font-black text-red-500 leading-tight">
-              {t("cor_err")}
-            </h3>
-            <p className="text-gray-500 mt-3 text-base max-w-lg mx-auto font-medium">
-              {error}
-            </p>
-            <button
-              onClick={fetchCornerData}
-              className="mt-8 px-10 py-3.5 bg-booku-coral text-white font-black rounded-full hover:bg-orange-600 hover:-translate-y-1 transition-all shadow-md"
-            >
-              {t("btn_retry")}
-            </button>
+          <div className="w-full max-w-7xl mx-auto px-4 md:px-8 mb-20">
+            {/* PERBAIKAN: bg-white dipisah ke layer dalam */}
+            <div className="w-full py-20 text-center bg-white rounded-[40px] border-4 border-red-100 shadow-sm">
+              <h3 className="text-xl md:text-2xl font-black text-red-500 leading-tight">
+                {t("cor_err")}
+              </h3>
+              <p className="text-gray-500 mt-3 text-base max-w-lg mx-auto font-medium">
+                {error}
+              </p>
+              <button
+                onClick={fetchCornerData}
+                className="mt-8 px-10 py-3.5 bg-booku-coral text-white font-black rounded-full hover:bg-orange-600 hover:-translate-y-1 transition-all shadow-md"
+              >
+                {t("btn_retry")}
+              </button>
+            </div>
           </div>
         )}
 
+        {/* LOADING STATE */}
         {isLoading && (
           <div className="w-full max-w-7xl mx-auto px-4 md:px-8 py-32 text-center flex flex-col items-center">
             <div className="w-12 h-12 border-4 border-booku-cyan border-t-transparent rounded-full animate-spin mb-4"></div>
@@ -151,34 +156,43 @@ const Corner = () => {
           </div>
         )}
 
+        {/* EMPTY ORIGINAL STATE */}
         {!isLoading && !error && hasNoBooksOriginal && !search && (
-          <div className="w-full max-w-7xl mx-auto px-4 md:px-8 py-32 text-center bg-white mb-24 rounded-[40px] shadow-sm border border-gray-100">
-            <div className="w-24 h-24 bg-booku-yellow/30 rounded-full mx-auto mb-8 flex items-center justify-center">
-              <span className="text-5xl">📚</span>
+          <div className="w-full max-w-7xl mx-auto px-4 md:px-8 mb-24">
+            {/* PERBAIKAN: bg-white dipisah ke layer dalam */}
+            <div className="w-full py-24 text-center bg-white rounded-[40px] shadow-sm border border-gray-100">
+              <div className="w-24 h-24 bg-booku-yellow/30 rounded-full mx-auto mb-8 flex items-center justify-center">
+                <span className="text-5xl">📚</span>
+              </div>
+              <h3 className="text-3xl font-black text-gray-800 leading-tight">
+                {emptyContent[activeFilter].title}
+              </h3>
+              <p className="text-gray-500 mt-4 text-lg font-medium max-w-md mx-auto">
+                {emptyContent[activeFilter].desc}
+              </p>
             </div>
-            <h3 className="text-3xl font-black text-gray-800 leading-tight">
-              {emptyContent[activeFilter].title}
-            </h3>
-            <p className="text-gray-500 mt-4 text-lg font-medium max-w-md mx-auto">
-              {emptyContent[activeFilter].desc}
-            </p>
           </div>
         )}
 
+        {/* EMPTY SEARCH RESULT STATE */}
         {!isLoading && !error && hasNoSearchResults && (
-          <div className="w-full max-w-7xl mx-auto px-4 md:px-8 py-24 text-center bg-white mb-20 rounded-[40px] shadow-sm border border-gray-100">
-            <span className="text-5xl mb-6 block">🔍</span>
-            <h3 className="text-2xl font-black text-gray-800 leading-tight">
-              {t("cor_empty_search")}
-            </h3>
-            <p className="text-gray-500 mt-3 text-lg font-medium">
-              {t("cor_empty_search_desc_1")}{" "}
-              <span className="font-black text-gray-700">"{search}"</span>{" "}
-              {t("cor_empty_search_desc_2")}
-            </p>
+          <div className="w-full max-w-7xl mx-auto px-4 md:px-8 mb-20">
+            {/* PERBAIKAN: bg-white dipisah ke layer dalam */}
+            <div className="w-full py-24 text-center bg-white rounded-[40px] shadow-sm border border-gray-100">
+              <span className="text-5xl mb-6 block">🔍</span>
+              <h3 className="text-2xl font-black text-gray-800 leading-tight">
+                {t("cor_empty_search")}
+              </h3>
+              <p className="text-gray-500 mt-3 text-lg font-medium">
+                {t("cor_empty_search_desc_1")}{" "}
+                <span className="font-black text-gray-700">"{search}"</span>{" "}
+                {t("cor_empty_search_desc_2")}
+              </p>
+            </div>
           </div>
         )}
 
+        {/* HASIL DATA */}
         {!isLoading && !error && !hasNoBooksOriginal && !hasNoSearchResults && (
           <>
             {activeFilter === "favorit" && !search && (
@@ -196,6 +210,7 @@ const Corner = () => {
                 </div>
               </div>
             )}
+
             {activeFilter === "disimpan" && !search && (
               <div className="w-full max-w-7xl mx-auto px-4 md:px-8 mb-6">
                 <div className="flex items-center gap-3 bg-white p-6 md:px-8 md:py-6 rounded-3xl shadow-sm border border-gray-100">
@@ -214,6 +229,7 @@ const Corner = () => {
                 </div>
               </div>
             )}
+
             {search && (
               <div className="w-full max-w-7xl mx-auto px-4 md:px-8 mb-6">
                 <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 text-center">
@@ -232,6 +248,7 @@ const Corner = () => {
           </>
         )}
       </div>
+
       <CtaDownload />
     </div>
   );

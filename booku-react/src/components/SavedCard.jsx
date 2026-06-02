@@ -71,7 +71,7 @@ const SavedCard = ({ book }) => {
 
   return (
     <div className="w-full bg-white rounded-2xl p-4 flex gap-5 transition-transform hover:-translate-y-1 shadow-sm hover:shadow-lg border-l-8 border-l-booku-yellow border-y border-r border-gray-100 group relative">
-      <div className="w-24 md:w-32 shrink-0 aspect-[2/3] rounded-xl overflow-hidden shadow-inner bg-booku-cream">
+      <div className="w-24 md:w-32 shrink-0 aspect-2/3 rounded-xl overflow-hidden shadow-inner bg-booku-cream">
         <img
           src={getImageUrl(coverUrl)}
           alt={bookTitle || "Cover"}

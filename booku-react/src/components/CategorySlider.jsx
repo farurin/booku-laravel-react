@@ -11,9 +11,10 @@ const CategorySlider = ({ categories, activeCategoryId }) => {
   const isDetailPage = activeCategoryId !== undefined;
 
   return (
-    // my-10 dihapus, border dipertebal (border-y-2) dan warnanya disesuaikan
+    // Layer Luar: Full Background
     <div className="w-full bg-white border-y-2 border-booku-yellow py-6 shadow-sm relative z-10">
-      <div className="max-w-7xl mx-auto px-4 md:px-8">
+      {/* Layer Dalam: Constrained Content (Ditambahkan w-full) */}
+      <div className="w-full max-w-7xl mx-auto px-4 md:px-8">
         {!isDetailPage && (
           <p className="text-sm font-black text-booku-coral uppercase tracking-widest mb-4">
             {t("cat_slider_title")}

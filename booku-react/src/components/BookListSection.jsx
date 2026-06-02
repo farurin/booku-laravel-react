@@ -43,7 +43,6 @@ export const CategorySection = ({ category, index = 0 }) => {
 
   return (
     <div className="w-full mb-12 lg:mb-16 bg-white rounded-4xl md:rounded-[40px] p-4 md:p-6 shadow-sm border border-gray-100 flex flex-col xl:flex-row gap-6">
-      {/* Kolom Judul & Dekorasi Kategori (KIRI) */}
       <div
         className={`w-full xl:w-72 shrink-0 relative overflow-hidden rounded-2xl md:rounded-[28px] ${theme.bg} group flex flex-col justify-between p-6 md:p-8 min-h-60`}
       >
@@ -71,7 +70,6 @@ export const CategorySection = ({ category, index = 0 }) => {
         </Link>
       </div>
 
-      {/* Kolom Slider Buku (KANAN) */}
       <div className="flex-1 min-w-0 relative flex items-center bg-gray-50/50 rounded-2xl md:rounded-[28px] p-2 md:p-4 border border-gray-50">
         {booksToShow.length > 0 ? (
           <>
@@ -101,12 +99,10 @@ export const CategorySection = ({ category, index = 0 }) => {
               }}
               slidesPerView="auto"
               spaceBetween={16}
-              // DIUBAH: Padding dikembalikan ke ukuran normal karena card sudah tidak melompat.
               className="w-full py-4 px-2 md:px-4"
             >
               {booksToShow.map((book) => (
                 <SwiperSlide key={book.id} style={{ width: "160px" }}>
-                  {/* DIUBAH: Menghapus class hover:-translate-y */}
                   <div className="h-full">
                     <Card book={book} />
                   </div>

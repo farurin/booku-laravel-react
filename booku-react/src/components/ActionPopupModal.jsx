@@ -6,17 +6,17 @@ const ActionPopupModal = ({
   title,
   description,
   primaryBtnText,
-  primaryBtnColor = "bg-booku-coral hover:brightness-110 text-white", // Default color diubah
+  primaryBtnColor = "bg-booku-coral hover:brightness-110 text-white",
   secondaryBtnText,
   onPrimaryClick,
   onSecondaryClick,
+  isLoading = false,
 }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm animate-fade-in">
+    <div className="fixed inset-0 z-120 flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm animate-fade-in">
       <div className="relative bg-white rounded-3xl w-[92%] max-w-lg pt-12 pb-8 px-6 md:px-10 flex flex-col items-center text-center shadow-2xl transform transition-transform mt-8">
-        {/* Gambar diletakkan di dalam box dengan aksen Kuning */}
         <div className="w-32 h-32 md:w-40 md:h-40 mb-6 shrink-0 flex items-center justify-center bg-booku-yellow/40 rounded-full p-4 border-4 border-white shadow-md -mt-24">
           <img
             src={image}
@@ -39,15 +39,23 @@ const ActionPopupModal = ({
         <div className="flex gap-4 w-full">
           <button
             onClick={onSecondaryClick}
-            className="flex-1 py-3 md:py-3.5 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-all shadow-sm active:scale-95 cursor-pointer border border-gray-200"
+            disabled={isLoading}
+            className="flex-1 py-3 md:py-3.5 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-all shadow-sm active:scale-95 cursor-pointer border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {secondaryBtnText}
           </button>
+
           <button
             onClick={onPrimaryClick}
-            className={`flex-1 py-3 md:py-3.5 rounded-xl font-bold transition-all shadow-md active:scale-95 cursor-pointer ${primaryBtnColor}`}
+            disabled={isLoading}
+            className={`flex-1 flex items-center justify-center gap-2 py-3 md:py-3.5 rounded-xl font-bold transition-all shadow-md active:scale-95 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed ${primaryBtnColor}`}
           >
-            {primaryBtnText}
+            {/* UI akan berubah jadi spinner putar jika isLoading true */}
+            {isLoading ? (
+              <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            ) : (
+              primaryBtnText
+            )}
           </button>
         </div>
       </div>

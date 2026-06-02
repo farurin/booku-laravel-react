@@ -75,6 +75,7 @@ const StoryActions = ({
   onToggleFavorite,
   onToggleFullscreen,
   onToggleSave,
+  isActionLoading = false, // STATE BARU
 }) => {
   const { t } = useLanguage();
 
@@ -82,7 +83,8 @@ const StoryActions = ({
     <div className="flex flex-wrap items-center justify-center gap-3 md:gap-5 my-10">
       <button
         onClick={onToggleFavorite}
-        className={`flex items-center gap-2 px-6 md:px-8 py-3.5 rounded-2xl font-black transition-all duration-300 shadow-sm hover:-translate-y-1 ${
+        disabled={isActionLoading}
+        className={`flex items-center gap-2 px-6 md:px-8 py-3.5 rounded-2xl font-black transition-all duration-300 shadow-sm hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed ${
           isFavorite
             ? "bg-pink-100 text-pink-600 border-2 border-pink-300"
             : "bg-white text-gray-600 border-2 border-gray-100 hover:border-booku-coral hover:text-booku-coral"
@@ -96,7 +98,8 @@ const StoryActions = ({
 
       <button
         onClick={onToggleFullscreen}
-        className="flex items-center gap-2 px-6 md:px-8 py-3.5 bg-booku-cyan text-gray-900 border-2 border-booku-cyan rounded-2xl font-black hover:bg-white hover:text-booku-cyan hover:-translate-y-1 transition-all duration-300 shadow-sm"
+        disabled={isActionLoading}
+        className="flex items-center gap-2 px-6 md:px-8 py-3.5 bg-booku-cyan text-gray-900 border-2 border-booku-cyan rounded-2xl font-black hover:bg-white hover:text-booku-cyan hover:-translate-y-1 transition-all duration-300 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <IconFullscreen />
         <span className="text-sm md:text-base tracking-wide">
@@ -106,7 +109,8 @@ const StoryActions = ({
 
       <button
         onClick={onToggleSave}
-        className={`flex items-center gap-2 px-6 md:px-8 py-3.5 rounded-2xl font-black transition-all duration-300 shadow-sm hover:-translate-y-1 ${
+        disabled={isActionLoading}
+        className={`flex items-center gap-2 px-6 md:px-8 py-3.5 rounded-2xl font-black transition-all duration-300 shadow-sm hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed ${
           isSaved
             ? "bg-booku-yellow text-gray-900 border-2 border-booku-yellow"
             : "bg-white text-gray-600 border-2 border-gray-100 hover:border-booku-yellow hover:text-gray-800"

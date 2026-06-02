@@ -82,7 +82,7 @@ const ProgressCard = ({ progress, type }) => {
         )}
 
         {/* Gambar Cover */}
-        <div className="w-full bg-booku-cream overflow-hidden aspect-[2/3] rounded-md relative shadow-inner">
+        <div className="w-full bg-booku-cream overflow-hidden aspect-2/3 rounded-md relative shadow-inner">
           <img
             src={getImageUrl(coverUrl)}
             alt={bookTitle}

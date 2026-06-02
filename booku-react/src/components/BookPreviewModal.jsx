@@ -154,6 +154,9 @@ const BookPreviewModal = () => {
   const [firstPageImage, setFirstPageImage] = useState(null);
   const [totalPages, setTotalPages] = useState(0);
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [isActionLoading, setIsActionLoading] = useState(false); // STATE BARU
+
   const [isFavorite, setIsFavorite] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [popupConfig, setPopupConfig] = useState(null);
@@ -184,6 +187,7 @@ const BookPreviewModal = () => {
     if (!previewId) return;
 
     const fetchModalData = async () => {
+      setIsLoading(true);
       try {
         const booksData = await getBooks();
         const foundBook = booksData.find((b) => b.id === parseInt(previewId));
@@ -205,6 +209,8 @@ const BookPreviewModal = () => {
         }
       } catch (err) {
         console.error("Gagal memuat data modal:", err);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchModalData();
@@ -251,7 +257,20 @@ const BookPreviewModal = () => {
     };
   }, [book, language, previewId]);
 
-  if (!previewId || !book) return null;
+  if (!previewId) return null;
+
+  if (isLoading || !book) {
+    return (
+      <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-gray-900/40 backdrop-blur-md animate-fade-in">
+        <div className="bg-white px-10 py-8 rounded-4xl shadow-2xl flex flex-col items-center border-4 border-booku-cream animate-pulse">
+          <div className="w-14 h-14 border-4 border-booku-cyan border-t-transparent rounded-full animate-spin mb-4"></div>
+          <p className="text-gray-500 font-bold tracking-wide">
+            {t("bpm_loading") || "Memuat cerita..."}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const handleReadClick = () => {
     if (audioInstanceRef.current) {
@@ -313,14 +332,18 @@ const BookPreviewModal = () => {
         primaryBtnText: t("bpm_btn_remove"),
         primaryBtnColor: "bg-red-500 hover:bg-red-600 text-white",
         secondaryBtnText: t("bpm_btn_cancel"),
-        onPrimaryClick: () => {
-          executeToggleFavAPI();
+        onPrimaryClick: async () => {
+          setIsActionLoading(true);
+          await executeToggleFavAPI();
+          setIsActionLoading(false);
           setPopupConfig(null);
         },
         onSecondaryClick: () => setPopupConfig(null),
       });
     } else {
+      setIsActionLoading(true);
       await executeToggleFavAPI();
+      setIsActionLoading(false);
       setPopupConfig({
         image: popupFavSvg,
         title: t("bpm_add_fav_title"),
@@ -368,9 +391,13 @@ const BookPreviewModal = () => {
     }
 
     if (isSaved) {
+      setIsActionLoading(true);
       await executeToggleSaveAPI();
+      setIsActionLoading(false);
     } else {
+      setIsActionLoading(true);
       await executeToggleSaveAPI();
+      setIsActionLoading(false);
       setPopupConfig({
         image: popupBookmarkSvg,
         title: t("bpm_add_save_title"),
@@ -419,11 +446,8 @@ const BookPreviewModal = () => {
 
   return (
     <>
-      {/* Latar Belakang Modal (Terang & Blur) */}
       <div className="fixed inset-0 z-100 flex items-center justify-center p-4 md:p-8 bg-gray-900/40 backdrop-blur-md">
-        {/* Kotak Modal Utama - Diubah menjadi max-w-2xl untuk layout Vertikal */}
         <div className="relative w-full max-w-2xl bg-white rounded-[40px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] flex flex-col overflow-hidden border-8 border-booku-cream animate-fade-in max-h-[90vh]">
-          {/* Tombol Tutup */}
           <button
             onClick={cleanupAndClose}
             className="absolute top-4 right-4 z-50 w-12 h-12 bg-white text-gray-500 rounded-full flex items-center justify-center shadow-md hover:bg-booku-coral hover:text-white transition-colors border border-gray-100 cursor-pointer"
@@ -431,13 +455,10 @@ const BookPreviewModal = () => {
             <IconClose />
           </button>
 
-          {/* BAGIAN ATAS: Header Cyan & Gambar Cover */}
           <div className="w-full h-64 md:h-80 bg-booku-cyan relative flex items-center justify-center shrink-0 overflow-hidden">
-            {/* Dekorasi Bentuk CSS */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-booku-yellow/40 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4"></div>
 
-            {/* Cover Buku */}
             <div className="w-36 md:w-48 aspect-2/3 rounded-2xl overflow-hidden shadow-xl border-4 border-white z-10 rotate-3 hover:rotate-0 transition-transform duration-500 bg-white">
               <img
                 src={getImageUrl(coverUrl)}
@@ -451,7 +472,6 @@ const BookPreviewModal = () => {
             </div>
           </div>
 
-          {/* BAGIAN BAWAH: Konten Teks (Bisa di-scroll jika layar kecil) */}
           <div className="flex-1 p-6 md:p-10 bg-white overflow-y-auto">
             <span className="text-booku-coral font-black text-sm tracking-widest uppercase mb-2 block">
               Preview Cerita
@@ -461,7 +481,6 @@ const BookPreviewModal = () => {
               {bookTitle}
             </h1>
 
-            {/* Badges Informasi */}
             <div className="flex flex-wrap items-center gap-2 md:gap-3 text-gray-700 text-xs md:text-sm font-bold">
               <span className="flex items-center gap-1.5 bg-gray-100 px-3 py-1.5 rounded-full border border-gray-200">
                 <IconPages /> {totalPages > 0 ? totalPages : "..."}{" "}
@@ -479,7 +498,6 @@ const BookPreviewModal = () => {
               </span>
             </div>
 
-            {/* Statistik View, Fav, Save */}
             <div className="flex items-center gap-5 md:gap-6 text-gray-500 text-xs md:text-sm font-bold mt-5 pb-5 border-b border-gray-100">
               <span className="flex items-center gap-1.5">
                 <IconViews /> {book.views_count || 0}
@@ -492,7 +510,6 @@ const BookPreviewModal = () => {
               </span>
             </div>
 
-            {/* Sinopsis */}
             <div className="mt-5 bg-booku-cream/50 p-5 rounded-2xl border border-booku-yellow/30">
               <h4 className="text-gray-900 font-black mb-2">
                 {t("bpm_synopsis")}
@@ -502,7 +519,6 @@ const BookPreviewModal = () => {
               </p>
             </div>
 
-            {/* --- BLOK ATRIBUSI LEGAL (TUNGGAL) --- */}
             {book.attribution_text && (
               <div className="mt-4 p-4 bg-booku-cyan/10 border border-booku-cyan/20 rounded-2xl">
                 <h6 className="text-xs font-black text-teal-700 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
@@ -514,7 +530,6 @@ const BookPreviewModal = () => {
               </div>
             )}
 
-            {/* Tombol Aksi */}
             <div className="mt-6 flex flex-col sm:flex-row gap-3 shrink-0">
               <div className="flex-1 flex gap-3 h-12 md:h-14">
                 <button
@@ -551,7 +566,23 @@ const BookPreviewModal = () => {
         </div>
       </div>
 
-      <ActionPopupModal isOpen={popupConfig !== null} {...popupConfig} />
+      <ActionPopupModal
+        isOpen={popupConfig !== null}
+        isLoading={isActionLoading}
+        {...popupConfig}
+      />
+
+      {/* OVERLAY GLOBAL SAAT LOADING */}
+      {isActionLoading && !popupConfig && (
+        <div className="fixed inset-0 z-120 flex items-center justify-center bg-gray-900/30 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white px-8 py-5 rounded-3xl shadow-xl flex items-center gap-4 border-4 border-booku-cream">
+            <div className="w-8 h-8 border-4 border-booku-cyan border-t-transparent rounded-full animate-spin"></div>
+            <span className="font-bold text-gray-700 tracking-wide">
+              Memproses...
+            </span>
+          </div>
+        </div>
+      )}
     </>
   );
 };

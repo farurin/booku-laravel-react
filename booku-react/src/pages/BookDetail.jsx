@@ -3,7 +3,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import StoryReader from "../components/StoryReader";
 import StoryActions from "../components/StoryActions";
 import BookInfoBanner from "../components/BookInfoBanner";
-// IMPORT DIHAPUS: CategorySection sudah tidak dipanggil
 import CtaDownload from "../components/CtaDownload";
 import { useAuth } from "../context/AuthContext";
 import { useLanguage } from "../context/LanguageContext";
@@ -37,6 +36,9 @@ const BookDetail = () => {
   const [popupConfig, setPopupConfig] = useState(null);
 
   const [totalPages, setTotalPages] = useState(0);
+
+  // --- STATE BARU UNTUK LOADING AKSI ---
+  const [isActionLoading, setIsActionLoading] = useState(false);
 
   useEffect(() => {
     const fetchBookData = async () => {
@@ -125,14 +127,18 @@ const BookDetail = () => {
         primaryBtnText: t("bd_btn_delete"),
         primaryBtnColor: "bg-red-500 hover:bg-red-600 text-white",
         secondaryBtnText: t("bd_btn_cancel"),
-        onPrimaryClick: () => {
-          executeToggleFavAPI();
+        onPrimaryClick: async () => {
+          setIsActionLoading(true);
+          await executeToggleFavAPI();
+          setIsActionLoading(false);
           setPopupConfig(null);
         },
         onSecondaryClick: () => setPopupConfig(null),
       });
     } else {
+      setIsActionLoading(true);
       await executeToggleFavAPI();
+      setIsActionLoading(false);
       setPopupConfig({
         image: popupFavImg,
         title: t("bd_add_fav_title"),
@@ -162,9 +168,13 @@ const BookDetail = () => {
     }
 
     if (isSaved) {
+      setIsActionLoading(true);
       await executeToggleSaveAPI();
+      setIsActionLoading(false);
     } else {
+      setIsActionLoading(true);
       await executeToggleSaveAPI();
+      setIsActionLoading(false);
       setPopupConfig({
         image: popupBookmarkImg,
         title: t("bd_add_save_title"),
@@ -224,15 +234,16 @@ const BookDetail = () => {
 
         <StoryReader book={book} />
 
+        {/* DIUBAH: Tambahkan props isActionLoading */}
         <StoryActions
           isFavorite={isFavorite}
           isSaved={isSaved}
           onToggleFavorite={handleToggleFavorite}
           onToggleSave={handleToggleSave}
           onToggleFullscreen={handleFullscreen}
+          isActionLoading={isActionLoading}
         />
 
-        {/* DIUBAH: mb-16 ditambahkan ke sini untuk menjaga jarak lega dengan CtaDownload setelah CategorySection dihapus */}
         <div className="mt-16 mb-16">
           <BookInfoBanner
             book={book}
@@ -240,12 +251,28 @@ const BookDetail = () => {
             totalPages={totalPages}
           />
         </div>
-
-        {/* BLOK DIHAPUS: Rendering CategorySection sudah dihilangkan sepenuhnya */}
       </div>
 
       <CtaDownload />
-      <ActionPopupModal isOpen={popupConfig !== null} {...popupConfig} />
+
+      {/* DIUBAH: Tambahkan props isLoading */}
+      <ActionPopupModal
+        isOpen={popupConfig !== null}
+        isLoading={isActionLoading}
+        {...popupConfig}
+      />
+
+      {/* OVERLAY GLOBAL SAAT LOADING */}
+      {isActionLoading && !popupConfig && (
+        <div className="fixed inset-0 z-120 flex items-center justify-center bg-gray-900/30 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white px-8 py-5 rounded-3xl shadow-xl flex items-center gap-4 border-4 border-booku-cream">
+            <div className="w-8 h-8 border-4 border-booku-cyan border-t-transparent rounded-full animate-spin"></div>
+            <span className="font-bold text-gray-700 tracking-wide">
+              Memproses...
+            </span>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -94,7 +94,11 @@ const ProfileInfoCard = () => {
   const [profileData, setProfileData] = useState(null);
   const [avatarList, setAvatarList] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // --- MODIFIKASI STATE LOGOUT ---
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [isLogoutLoading, setIsLogoutLoading] = useState(false);
+
   const [editData, setEditData] = useState({
     username: "",
     age: "",
@@ -157,17 +161,20 @@ const ProfileInfoCard = () => {
     }
   };
 
+  // --- MODIFIKASI HANDLER LOGOUT ---
   const handleConfirmLogout = () => {
-    setIsLogoutModalOpen(false);
-    navigate("/");
+    setIsLogoutLoading(true); // Putar spinner
+
+    // Memberikan jeda agar animasi terbaca sebelum unmount
     setTimeout(() => {
       logout();
-    }, 100);
+      navigate("/");
+    }, 800);
   };
 
   if (!profileData)
     return (
-      <div className="w-full bg-white rounded-[40px] p-8 flex flex-col justify-center items-center min-h-[400px] border-4 border-gray-50 shadow-sm">
+      <div className="w-full bg-white rounded-[40px] p-8 flex flex-col justify-center items-center min-h-100 border-4 border-gray-50 shadow-sm">
         <div className="w-12 h-12 border-4 border-booku-cyan border-t-transparent rounded-full animate-spin mb-4"></div>
         <p className="text-gray-500 font-bold text-lg animate-pulse">
           {t("pic_loading_status")}
@@ -177,117 +184,112 @@ const ProfileInfoCard = () => {
 
   return (
     <div className="w-full bg-white rounded-[40px] shadow-sm border-4 border-white animate-fade-in relative overflow-hidden">
-      {/* Dekorasi Background CSS Shapes (Menghindari gambar raster) */}
+      {/* Dekorasi Background CSS Shapes */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-booku-cyan/10 rounded-bl-full pointer-events-none"></div>
       <div className="absolute bottom-0 left-0 w-40 h-40 bg-booku-yellow/10 rounded-tr-full pointer-events-none"></div>
 
-      <div className="relative p-6 md:p-10 flex flex-col gap-8 z-10">
-        {/* Layout Grid Split untuk desktop: Kiri Profil, Kanan Stats */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
-          {/* --- KIRI: Info Profil Utama --- */}
-          <div className="lg:col-span-5 flex flex-col items-center text-center bg-gray-50/50 rounded-[32px] p-8 border-2 border-gray-100 relative shadow-sm h-full justify-center">
-            {/* Tombol Edit dipindah ke dalam kotak avatar agar lebih rapi */}
-            <button
-              onClick={handleOpenModal}
-              className="absolute top-4 right-4 flex items-center justify-center w-10 h-10 bg-white rounded-full text-gray-500 hover:bg-booku-yellow hover:text-gray-900 transition-all shadow-md cursor-pointer border border-gray-200 z-10 group"
-              title={t("pic_btn_edit")}
-            >
-              <div className="group-hover:scale-110 transition-transform">
-                <IconEdit />
-              </div>
-            </button>
+      <div className="relative p-6 md:p-10 flex flex-col items-center max-w-2xl mx-auto z-10">
+        {/* --- 1. AVATAR, NAMA, & UMUR --- */}
+        <div className="flex flex-col items-center text-center relative w-full mb-8">
+          <button
+            onClick={handleOpenModal}
+            className="absolute top-0 right-0 md:-right-4 flex items-center justify-center w-12 h-12 bg-white rounded-full text-gray-500 hover:bg-booku-yellow hover:text-gray-900 transition-all shadow-md cursor-pointer border-2 border-gray-100 z-10 group"
+            title={t("pic_btn_edit")}
+          >
+            <div className="group-hover:scale-110 transition-transform">
+              <IconEdit />
+            </div>
+          </button>
 
-            <div className="w-32 h-32 md:w-40 md:h-40 bg-booku-cream rounded-full border-[6px] border-white overflow-hidden shadow-lg mb-5 relative">
-              <img
-                src={getLocalAvatarUrl(profileData.avatar_url)}
-                alt="Avatar"
-                className="w-full h-full object-cover p-1"
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = `https://ui-avatars.com/api/?name=${profileData.username}&background=FFF6DE&color=F48F68`;
-                }}
-              />
-            </div>
-            <h2 className="text-3xl md:text-4xl font-black text-gray-900 leading-tight mb-3 tracking-tight">
-              {profileData.username}
-            </h2>
-            <div className="bg-booku-coral/10 text-booku-coral px-5 py-2 rounded-full border-2 border-booku-coral/20 inline-block font-black text-sm tracking-wide">
-              {profileData.age > 0
-                ? `${profileData.age} ${t("pic_age_years")}`
-                : t("pic_age_not_set")}
-            </div>
+          <div className="w-32 h-32 md:w-40 md:h-40 bg-booku-cream rounded-full border-[6px] border-white overflow-hidden shadow-lg mb-5 mt-2">
+            <img
+              src={getLocalAvatarUrl(profileData.avatar_url)}
+              alt="Avatar"
+              className="w-full h-full object-cover p-1"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = `https://ui-avatars.com/api/?name=${profileData.username}&background=FFF6DE&color=F48F68`;
+              }}
+            />
           </div>
 
-          {/* --- KANAN: Streak & Kalender --- */}
-          <div className="lg:col-span-7 flex flex-col gap-6 w-full">
-            {/* Streak: Diubah jadi Horizontal Floating Card */}
-            <div className="w-full bg-booku-cream rounded-[32px] p-6 flex items-center gap-5 border-4 border-booku-yellow/30 shadow-sm hover:-translate-y-1 transition-transform">
-              <div className="bg-white p-4 rounded-[20px] shadow-md shrink-0">
-                <IconFire />
-              </div>
-              <div className="text-left flex-1">
-                <p className="text-xs md:text-sm font-black text-orange-500 uppercase tracking-widest mb-1">
-                  {t("pic_daily_streak")}
-                </p>
-                <h4 className="text-3xl md:text-4xl font-black text-gray-900">
-                  {profileData.current_streak}{" "}
-                  <span className="text-lg text-gray-600 font-bold ml-1">
-                    Hari
-                  </span>
-                </h4>
-              </div>
-            </div>
+          <h2 className="text-3xl md:text-4xl font-black text-gray-900 leading-tight mb-3 tracking-tight">
+            {profileData.username}
+          </h2>
 
-            {/* Kalender */}
-            <div className="w-full bg-white p-5 md:p-6 rounded-[32px] overflow-x-auto scrollbar-hide border-2 border-gray-100 shadow-sm">
-              <div className="flex justify-between items-center min-w-[300px] gap-2 md:gap-3">
-                {profileData.calendar &&
-                  profileData.calendar.map((item, index) => (
-                    <div
-                      key={index}
-                      className={`flex flex-col items-center justify-center w-12 h-16 md:w-16 md:h-[84px] rounded-[20px] transition-all shrink-0 ${
-                        item.isActive
-                          ? "bg-booku-cyan text-gray-900 shadow-md border-2 border-booku-cyan/50 scale-105"
-                          : "bg-gray-50 border-2 border-gray-100"
-                      }`}
-                    >
-                      <div className="h-2 mb-1">
-                        {item.isToday && (
-                          <div
-                            className={`w-2 h-2 rounded-full ${item.isActive ? "bg-white" : "bg-gray-400"}`}
-                          ></div>
-                        )}
-                      </div>
-                      <span
-                        className={`text-[10px] md:text-xs font-black mb-1 ${item.isActive ? "opacity-70" : "text-gray-400"}`}
-                      >
-                        {dayTranslations[language][item.day] || item.day}
-                      </span>
-                      <span
-                        className={`text-base md:text-xl font-black ${item.isActive ? "text-gray-900" : "text-gray-800"}`}
-                      >
-                        {item.date}
-                      </span>
-                    </div>
-                  ))}
-              </div>
-            </div>
+          <div className="bg-booku-coral/10 text-booku-coral px-6 py-2 rounded-full border-2 border-booku-coral/20 inline-block font-black text-sm tracking-wide">
+            {profileData.age > 0
+              ? `${profileData.age} ${t("pic_age_years")}`
+              : t("pic_age_not_set")}
           </div>
         </div>
 
-        {/* --- BAWAH: Tombol Aksi --- */}
-        <div className="w-full flex flex-col sm:flex-row gap-4 mt-2 pt-8 border-t-2 border-dashed border-gray-200">
+        {/* --- 2. STREAK HARIAN --- */}
+        <div className="w-full bg-booku-cream rounded-full px-6 py-4 flex items-center justify-center gap-4 border-4 border-booku-yellow/30 shadow-sm hover:-translate-y-1 transition-transform mb-8">
+          <div className="bg-white p-3 rounded-full shadow-md shrink-0">
+            <IconFire />
+          </div>
+          <div className="text-left">
+            <p className="text-xs md:text-sm font-black text-orange-500 uppercase tracking-widest mb-0.5 leading-none mt-1">
+              {t("pic_daily_streak")}
+            </p>
+            <h4 className="text-2xl md:text-3xl font-black text-gray-900 leading-none mt-1">
+              {profileData.current_streak}{" "}
+              <span className="text-base text-gray-600 font-bold ml-1">
+                Hari
+              </span>
+            </h4>
+          </div>
+        </div>
+
+        {/* --- 3. KALENDER --- */}
+        <div className="w-full bg-gray-50/50 p-5 md:p-6 rounded-4xl overflow-x-auto scrollbar-hide border-2 border-gray-100 shadow-inner mb-10 flex justify-center">
+          <div className="flex justify-between items-center min-w-max gap-3 md:gap-5 px-2">
+            {profileData.calendar &&
+              profileData.calendar.map((item, index) => (
+                <div
+                  key={index}
+                  className="flex flex-col items-center gap-2 group"
+                >
+                  <span
+                    className={`text-[10px] md:text-xs font-black uppercase tracking-wider ${item.isActive ? "text-booku-cyan" : "text-gray-400"}`}
+                  >
+                    {dayTranslations[language][item.day] || item.day}
+                  </span>
+
+                  <div
+                    className={`flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full transition-all shrink-0 ${item.isActive ? "bg-booku-cyan text-gray-950 shadow-md border-2 border-booku-cyan/50 scale-110" : "bg-white border-2 border-gray-200 text-gray-500"}`}
+                  >
+                    <span className="text-lg md:text-xl font-black">
+                      {item.date}
+                    </span>
+                  </div>
+
+                  <div className="h-2 mt-1">
+                    {item.isToday ? (
+                      <div className="w-2 h-2 rounded-full bg-booku-coral animate-pulse"></div>
+                    ) : (
+                      <div className="w-2 h-2 rounded-full bg-transparent"></div>
+                    )}
+                  </div>
+                </div>
+              ))}
+          </div>
+        </div>
+
+        {/* --- 4. TOMBOL AKSI BAWAH --- */}
+        <div className="w-full flex flex-col sm:flex-row gap-4 border-t-2 border-dashed border-gray-200 pt-8">
           {isAdmin && (
             <button
               onClick={() => navigate("/admin/dashboard")}
-              className="flex-1 bg-gray-900 text-white font-black py-4 rounded-[24px] hover:bg-black hover:-translate-y-1 transition-all shadow-md cursor-pointer border border-gray-800"
+              className="flex-1 bg-gray-900 text-white font-black py-4 rounded-3xl hover:bg-black hover:-translate-y-1 transition-all shadow-md cursor-pointer border border-gray-800"
             >
               Dashboard Admin
             </button>
           )}
           <button
             onClick={() => setIsLogoutModalOpen(true)}
-            className="flex-1 bg-white text-red-500 font-black py-4 rounded-[24px] hover:bg-red-50 hover:-translate-y-1 transition-all shadow-sm cursor-pointer border-2 border-red-500"
+            className="flex-1 bg-white text-red-500 font-black py-4 rounded-3xl hover:bg-red-50 hover:-translate-y-1 transition-all shadow-sm cursor-pointer border-2 border-red-500"
           >
             {t("prof_btn_logout")}
           </button>
@@ -296,7 +298,7 @@ const ProfileInfoCard = () => {
 
       {/* Modal Edit Profil */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-md animate-fade-in">
+        <div className="fixed inset-0 z-120 flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-md animate-fade-in">
           <div className="bg-white rounded-[40px] w-full max-w-xl p-8 md:p-12 relative shadow-2xl scale-100 transition-transform max-h-[90vh] overflow-y-auto scrollbar-hide border-8 border-booku-cream">
             <button
               onClick={() => setIsModalOpen(false)}
@@ -310,7 +312,7 @@ const ProfileInfoCard = () => {
             </h2>
 
             <div className="space-y-5 mb-8">
-              <div className="bg-gray-50 rounded-[24px] px-6 py-4 border-2 border-gray-100 focus-within:border-booku-cyan transition-colors">
+              <div className="bg-gray-50 rounded-3xl px-6 py-4 border-2 border-gray-100 focus-within:border-booku-cyan transition-colors">
                 <label className="text-xs font-black text-gray-500 block mb-1 tracking-widest uppercase">
                   {t("pic_label_name")}
                 </label>
@@ -324,7 +326,7 @@ const ProfileInfoCard = () => {
                   placeholder={t("pic_ph_name")}
                 />
               </div>
-              <div className="bg-gray-50 rounded-[24px] px-6 py-4 border-2 border-gray-100 focus-within:border-booku-cyan transition-colors">
+              <div className="bg-gray-50 rounded-3xl px-6 py-4 border-2 border-gray-100 focus-within:border-booku-cyan transition-colors">
                 <label className="text-xs font-black text-gray-500 block mb-1 tracking-widest uppercase">
                   {t("pic_label_age")}
                 </label>
@@ -344,7 +346,7 @@ const ProfileInfoCard = () => {
               <h3 className="text-gray-800 font-black text-base mb-4 text-center tracking-wide">
                 {t("pic_select_char")}
               </h3>
-              <div className="grid grid-cols-4 md:grid-cols-5 gap-4 max-h-[30vh] overflow-y-auto p-4 bg-gray-50 rounded-[32px] border-2 border-gray-100">
+              <div className="grid grid-cols-4 md:grid-cols-5 gap-4 max-h-[30vh] overflow-y-auto p-4 bg-gray-50 rounded-4xl border-2 border-gray-100">
                 {avatarList && avatarList.length > 0 ? (
                   avatarList.map((avatar) => (
                     <button
@@ -383,7 +385,7 @@ const ProfileInfoCard = () => {
             <button
               onClick={handleSaveProfile}
               disabled={isSaving}
-              className="bg-booku-coral text-white hover:bg-orange-500 w-full py-4 rounded-[24px] font-black transition-transform shadow-md hover:-translate-y-1 disabled:opacity-50 cursor-pointer text-lg tracking-wide border-none"
+              className="bg-booku-coral text-white hover:bg-orange-500 w-full py-4 rounded-3xl font-black transition-transform shadow-md hover:-translate-y-1 disabled:opacity-50 cursor-pointer text-lg tracking-wide border-none"
             >
               {isSaving ? t("pic_btn_saving") : t("pic_btn_save")}
             </button>
@@ -391,9 +393,10 @@ const ProfileInfoCard = () => {
         </div>
       )}
 
-      {/* Modal Konfirmasi Logout */}
+      {/* DIUBAH: Tambahkan props isLoading ke ActionPopupModal */}
       <ActionPopupModal
         isOpen={isLogoutModalOpen}
+        isLoading={isLogoutLoading}
         image={popupDeleteFavSvg}
         title={t("prof_logout_confirm")}
         description={t("prof_logout_desc")}
