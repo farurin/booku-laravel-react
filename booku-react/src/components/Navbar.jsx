@@ -8,14 +8,13 @@ import {
 import { NavLink, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useLanguage } from "../context/LanguageContext";
-// Ganti nama import dan file aset logo kamu
 import LogoBookU from "../assets/logo-booku.png";
 
 const IconProfile = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={14}
-    height={14}
+    width={16}
+    height={16}
     viewBox="0 0 14 14"
   >
     <g fill="none" fillRule="evenodd" clipRule="evenodd">
@@ -98,10 +97,10 @@ const NavItem = ({ to, children }) => (
     to={to}
     end={to === "/"}
     className={({ isActive }) =>
-      `block xl:text-[18px] lg:text-[16px] md:text-[14px] text-base px-5 py-2.5 rounded-full transition-all whitespace-nowrap font-bold ${
+      `block xl:text-[18px] lg:text-[16px] md:text-[14px] text-base px-5 py-2.5 rounded-2xl transition-all whitespace-nowrap font-black ${
         isActive
-          ? "bg-booku-cyan text-gray-800 shadow-sm"
-          : "text-gray-600 hover:text-gray-900 hover:bg-booku-cream/50"
+          ? "bg-booku-cyan text-gray-900 shadow-sm"
+          : "text-gray-600 hover:text-gray-900 hover:bg-booku-cream"
       }`
     }
   >
@@ -115,7 +114,6 @@ export default function Navigation() {
   const [isLangOpen, setIsLangOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Mengubah daftar navigasi: Hapus Categories, Tambah About Us
   const navLinks = [
     { to: "/", label: t("nav_home") },
     { to: "/corner", label: t("nav_corner") },
@@ -140,11 +138,12 @@ export default function Navigation() {
             <img src={LogoBookU} alt="Logo BookU" className="h-8 md:h-10" />
           </NavbarBrand>
 
-          <div className="flex items-center gap-2 md:gap-3 md:order-2 py-3">
+          <div className="flex items-center gap-2 md:gap-4 md:order-2 py-3">
+            {/* BUTTON PROFILE / SIGN UP - Playful 3D Style */}
             {isLoggedIn ? (
               <Link
                 to="/profile"
-                className="flex items-center bg-booku-coral hover:bg-orange-500 text-white font-bold rounded-full px-4 py-2 md:px-5 md:py-2.5 gap-2 transition shadow-sm whitespace-nowrap"
+                className="flex items-center bg-booku-coral text-white font-black rounded-2xl px-4 py-2 md:px-5 md:py-2.5 gap-2 transition-all duration-200 border-b-4 border-orange-600 active:border-b-0 active:translate-y-1 hover:brightness-110 whitespace-nowrap shadow-sm"
               >
                 <IconProfile />
                 <span className="hidden md:inline text-sm lg:text-base">
@@ -154,7 +153,7 @@ export default function Navigation() {
             ) : (
               <Link
                 to="/register"
-                className="flex items-center bg-booku-coral hover:bg-orange-500 text-white font-bold rounded-full px-4 py-2 md:px-5 md:py-2.5 gap-2 transition shadow-sm whitespace-nowrap"
+                className="flex items-center bg-booku-coral text-white font-black rounded-2xl px-4 py-2 md:px-5 md:py-2.5 gap-2 transition-all duration-200 border-b-4 border-orange-600 active:border-b-0 active:translate-y-1 hover:brightness-110 whitespace-nowrap shadow-sm"
               >
                 <IconSignUp />
                 <span className="hidden md:inline text-sm lg:text-base">
@@ -163,10 +162,11 @@ export default function Navigation() {
               </Link>
             )}
 
+            {/* BUTTON LANGUAGE - Playful 3D Style */}
             <div className="flex relative z-50" ref={dropdownRef}>
               <button
                 onClick={() => setIsLangOpen(!isLangOpen)}
-                className="flex items-center bg-booku-yellow hover:brightness-95 text-gray-800 font-bold rounded-full px-3 md:px-4 py-2 md:py-2.5 gap-1 transition shadow-sm cursor-pointer shrink-0"
+                className="flex items-center bg-booku-yellow text-gray-900 font-black rounded-2xl px-3 md:px-4 py-2 md:py-2.5 gap-1.5 transition-all duration-200 border-b-4 border-yellow-500 active:border-b-0 active:translate-y-1 hover:brightness-105 cursor-pointer shrink-0"
               >
                 <IconLanguage />
                 <span className="tracking-wide hidden xl:inline text-base">
@@ -176,7 +176,7 @@ export default function Navigation() {
                   {language === "id" ? "ID" : "EN"}
                 </span>
                 <svg
-                  className={`w-3.5 h-3.5 ml-0.5 transition-transform duration-200 ${isLangOpen ? "rotate-180" : ""}`}
+                  className={`w-4 h-4 transition-transform duration-200 ${isLangOpen ? "rotate-180" : ""}`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -184,20 +184,21 @@ export default function Navigation() {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth="2.5"
+                    strokeWidth="3"
                     d="M19 9l-7 7-7-7"
                   ></path>
                 </svg>
               </button>
 
+              {/* DROPDOWN MENU - Disesuaikan dengan bentuk yang lebih playful */}
               {isLangOpen && (
-                <div className="absolute top-[120%] right-0 min-w-36 md:min-w-40 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden flex flex-col animate-fade-in">
+                <div className="absolute top-[120%] right-0 min-w-36 md:min-w-44 bg-white rounded-2xl shadow-xl border-4 border-booku-cream overflow-hidden flex flex-col animate-fade-in">
                   <button
                     onClick={() => {
                       changeLanguage("id");
                       setIsLangOpen(false);
                     }}
-                    className="flex items-center gap-3 hover:bg-booku-cream px-4 py-3 text-gray-800 font-bold text-sm transition-colors text-left"
+                    className="flex items-center gap-3 hover:bg-booku-yellow/20 px-5 py-3 text-gray-800 font-black text-sm md:text-base transition-colors text-left border-b-2 border-booku-cream"
                   >
                     <IconFlagID /> Indonesia
                   </button>
@@ -206,17 +207,17 @@ export default function Navigation() {
                       changeLanguage("en");
                       setIsLangOpen(false);
                     }}
-                    className="flex items-center gap-3 hover:bg-booku-cream px-4 py-3 text-gray-800 font-bold text-sm transition-colors text-left"
+                    className="flex items-center gap-3 hover:bg-booku-yellow/20 px-5 py-3 text-gray-800 font-black text-sm md:text-base transition-colors text-left"
                   >
                     <IconFlagEN /> English
                   </button>
                 </div>
               )}
             </div>
-            <NavbarToggle />
+            <NavbarToggle className="hover:bg-booku-cream rounded-2xl" />
           </div>
 
-          <NavbarCollapse className="md:flex md:items-center bg-white/95 backdrop-blur-md md:bg-transparent px-2 md:p-0 rounded-xl shadow-sm md:shadow-none border md:border-none border-gray-100 pb-4 md:pb-0">
+          <NavbarCollapse className="md:flex md:items-center bg-white/95 backdrop-blur-md md:bg-transparent px-2 md:p-0 rounded-2xl shadow-sm md:shadow-none border md:border-none border-gray-100 pb-4 md:pb-0">
             <div className="flex flex-col md:flex-row md:items-center md:h-full gap-2 md:gap-4 lg:gap-6 pt-2 md:pt-0">
               {navLinks.map(({ to, label }) => (
                 <NavItem key={to} to={to}>
