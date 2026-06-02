@@ -240,7 +240,9 @@ const StoryReader = ({ book }) => {
     if (hasStarted && !isBgmDisabled) {
       if (!bgmNode.src || !bgmNode.src.includes(book.bg_music_url)) {
         bgmNode.src = getImageUrl(book.bg_music_url);
-        bgmNode.volume = 0.35;
+        bgmNode.volume = 0.2;
+
+        bgmNode.load();
       }
       bgmNode.play().catch((err) => console.log("BGM autoplay blocked:", err));
     } else {
