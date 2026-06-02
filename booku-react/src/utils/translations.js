@@ -212,7 +212,7 @@ export const translations = {
       "Dapatkan pengalaman membaca yang jauh lebih menyenangkan dan interaktif dengan mengunduh aplikasi BookU sekarang juga. Tersedia secara gratis!",
     cta_soon: "Segera",
     cta_stats:
-      "Menghadirkan <span class='text-booku-coral'>{{books}} Cerita</span> dalam <span class='text-booku-cyan'>{{categories}} Kategori</span>",
+      "Menghadirkan <span class='text-booku-coral'>{{books}} Cerita</span>&nbsp; dalam <span class='text-booku-cyan'>{{categories}} Kategori</span>",
 
     // FilterCorner.jsx
     fc_history: "Riwayat",
@@ -547,7 +547,7 @@ export const translations = {
       "Get a much more fun and interactive reading experience by downloading the BookU app right now. Available for free!",
     cta_soon: "Soon",
     cta_stats:
-      "Presenting <span class='text-booku-coral'>{{books}} Stories</span> in <span class='text-booku-cyan'>{{categories}} Categories</span>",
+      "Presenting <span class='text-booku-coral'>{{books}} Stories</span>&nbsp; in <span class='text-booku-cyan'>{{categories}} Categories</span>",
 
     // FilterCorner.jsx
     fc_history: "History",
